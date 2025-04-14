@@ -1,32 +1,29 @@
 [project]
-name = "aymara-ai-sdk"
-version = "1.2.0"
-description = "The official Python library for the aymara-ai API"
+name = "aymara_sdk"
+version = "0.0.1-alpha.0"
+description = "The official Python library for the aymara-sdk API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Aymara AI", email = "support@aymara.ai" },
+{ name = "Aymara SDK", email = "dev-feedback@aymara-sdk.com" },
 ]
-
 dependencies = [
-  "httpx>=0.23.0, <1",
-  "pydantic>=1.9.0, <3",
-  "typing-extensions>=4.10, <5",
-  "anyio>=3.5.0, <5",
-  "distro>=1.7.0, <2",
-  "sniffio",
+    "httpx>=0.23.0, <1",
+    "pydantic>=1.9.0, <3",
+    "typing-extensions>=4.10, <5",
+    "anyio>=3.5.0, <5",
+    "distro>=1.7.0, <2",
+    "sniffio",
 ]
-
-requires-python = ">= 3.9"
+requires-python = ">= 3.8"
 classifiers = [
   "Typing :: Typed",
   "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3.14",
   "Operating System :: OS Independent",
   "Operating System :: POSIX",
   "Operating System :: MacOS",
@@ -37,18 +34,16 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/aymara-ai/aymara-sdk-python"
-Repository = "https://github.com/aymara-ai/aymara-sdk-python"
+Homepage = "https://github.com/stainless-sdks/aymara-sdk-python"
+Repository = "https://github.com/stainless-sdks/aymara-sdk-python"
 
-[project.optional-dependencies]
-aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.9"]
 
 [tool.rye]
 managed = true
 # version pins are in requirements-dev.lock
 dev-dependencies = [
-    "pyright==1.1.399",
-    "mypy==1.17",
+    "pyright>=1.1.359",
+    "mypy",
     "respx",
     "pytest",
     "pytest-asyncio",
@@ -58,7 +53,7 @@ dev-dependencies = [
     "dirty-equals>=0.6.0",
     "importlib-metadata>=6.7.0",
     "rich>=13.7.1",
-    "pytest-xdist>=3.6.1",
+    "nest_asyncio==1.6.0",
 ]
 
 [tool.rye.scripts]
@@ -80,14 +75,14 @@ format = { chain = [
 "check:ruff" = "ruff check ."
 "fix:ruff" = "ruff check --fix ."
 
-"check:importable" = "python -c 'import aymara_ai'"
+"check:importable" = "python -c 'import aymara_sdk'"
 
 typecheck = { chain = [
   "typecheck:pyright",
   "typecheck:mypy"
 ]}
 "typecheck:pyright" = "pyright"
-"typecheck:verify-types" = "pyright --verifytypes aymara_ai --ignoreexternal"
+"typecheck:verify-types" = "pyright --verifytypes aymara_sdk --ignoreexternal"
 "typecheck:mypy" = "mypy ."
 
 [build-system]
@@ -100,7 +95,7 @@ include = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/aymara_ai"]
+packages = ["src/aymara_sdk"]
 
 [tool.hatch.build.targets.sdist]
 # Basically everything except hidden files/directories (such as .github, .devcontainers, .python-version, etc)
@@ -126,11 +121,11 @@ path = "README.md"
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 # replace relative links with absolute links
 pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
-replacement = '[\1](https://github.com/aymara-ai/aymara-sdk-python/tree/main/\g<2>)'
+replacement = '[\1](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/\g<2>)'
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--tb=short -n auto"
+addopts = "--tb=short"
 xfail_strict = true
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
@@ -143,13 +138,12 @@ filterwarnings = [
 # there are a couple of flags that are still disabled by
 # default in strict mode as they are experimental and niche.
 typeCheckingMode = "strict"
-pythonVersion = "3.9"
+pythonVersion = "3.8"
 
 exclude = [
     "_dev",
     ".venv",
     ".nox",
-    ".git",
 ]
 
 reportImplicitOverride = true
@@ -158,62 +152,10 @@ reportOverlappingOverload = false
 reportImportCycles = false
 reportPrivateUsage = false
 
-[tool.mypy]
-pretty = true
-show_error_codes = true
-
-# Exclude _files.py because mypy isn't smart enough to apply
-# the correct type narrowing and as this is an internal module
-# it's fine to just use Pyright.
-#
-# We also exclude our `tests` as mypy doesn't always infer
-# types correctly and Pyright will still catch any type errors.
-exclude = ['src/aymara_ai/_files.py', '_dev/.*.py', 'tests/.*']
-
-strict_equality = true
-implicit_reexport = true
-check_untyped_defs = true
-no_implicit_optional = true
-
-warn_return_any = true
-warn_unreachable = true
-warn_unused_configs = true
-
-# Turn these options off as it could cause conflicts
-# with the Pyright options.
-warn_unused_ignores = false
-warn_redundant_casts = false
-
-disallow_any_generics = true
-disallow_untyped_defs = true
-disallow_untyped_calls = true
-disallow_subclassing_any = true
-disallow_incomplete_defs = true
-disallow_untyped_decorators = true
-cache_fine_grained = true
-
-# By default, mypy reports an error if you assign a value to the result
-# of a function call that doesn't return anything. We do this in our test
-# cases:
-# ```
-# result = ...
-# assert result is None
-# ```
-# Changing this codegen to make mypy happy would increase complexity
-# and would not be worth it.
-disable_error_code = "func-returns-value,overload-cannot-match"
-
-# https://github.com/python/mypy/issues/12162
-[[tool.mypy.overrides]]
-module = "black.files.*"
-ignore_errors = true
-ignore_missing_imports = true
-
-
 [tool.ruff]
 line-length = 120
 output-format = "grouped"
-target-version = "py38"
+target-version = "py37"
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -226,8 +168,6 @@ select = [
   "B",
   # remove unused imports
   "F401",
-  # check for missing future annotations
-  "FA102",
   # bare except statements
   "E722",
   # unused arguments
@@ -250,8 +190,6 @@ unfixable = [
   "T203",
 ]
 
-extend-safe-fixes = ["FA102"]
-
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "functools.lru_cache".msg = "This function does not retain type information for the wrapped function's arguments; The `lru_cache` function from `_utils` should be used instead"
 
@@ -260,7 +198,7 @@ length-sort = true
 length-sort-straight = true
 combine-as-imports = true
 extra-standard-library = ["typing_extensions"]
-known-first-party = ["aymara_ai", "tests"]
+known-first-party = ["aymara_sdk", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
 "bin/**.py" = ["T201", "T203"]

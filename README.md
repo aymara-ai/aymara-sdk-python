@@ -1,9 +1,8 @@
-# Aymara AI Python API library
+# Aymara SDK Python API library
 
-<!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg?label=pypi%20(stable))](https://pypi.org/project/aymara-ai-sdk/)
+[![PyPI version](https://img.shields.io/pypi/v/aymara_sdk.svg)](https://pypi.org/project/aymara_sdk/)
 
-The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.9+
+The Aymara SDK Python library provides convenient access to the Aymara SDK REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -11,14 +10,17 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The REST API documentation can be found on [docs.aymara.ai](https://docs.aymara.ai). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.aymara-sdk.com](https://docs.aymara-sdk.com). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
 ```sh
-# install from PyPI
-pip install aymara-ai-sdk
+# install from this staging repo
+pip install git+ssh://git@github.com/stainless-sdks/aymara-sdk-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre aymara_sdk`
 
 ## Usage
 
@@ -26,104 +28,48 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from aymara_ai import AymaraAI
+from aymara_sdk import AymaraSDK
 
-client = AymaraAI(
-    api_key=os.environ.get("AYMARA_AI_API_KEY"),  # This is the default and can be omitted
-    # or 'production' | 'development'; defaults to "production".
-    environment="staging",
+client = AymaraSDK(
+    api_key=os.environ.get("AYMARA_SDK_API_KEY"),  # This is the default and can be omitted
+    bearer_token=os.environ.get(
+        "AYMARA_SDK_BEARER_TOKEN"
+    ),  # This is the default and can be omitted
 )
 
-eval_run_result = client.evals.runs.create(
-    eval_uuid="your_eval_uuid_here",
-    responses=[
-        {
-            "prompt_uuid": "some-prompt-uuid",
-            "content": "The capital of France is Paris.",
-        }
-    ],
-)
-print(eval_run_result.eval_run_uuid)
+client.health.check()
 ```
 
 While you can provide an `api_key` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `AYMARA_AI_API_KEY="My API Key"` to your `.env` file
+to add `AYMARA_SDK_API_KEY="My API Key"` to your `.env` file
 so that your API Key is not stored in source control.
 
 ## Async usage
 
-Simply import `AsyncAymaraAI` instead of `AymaraAI` and use `await` with each API call:
+Simply import `AsyncAymaraSDK` instead of `AymaraSDK` and use `await` with each API call:
 
 ```python
 import os
 import asyncio
-from aymara_ai import AsyncAymaraAI
+from aymara_sdk import AsyncAymaraSDK
 
-client = AsyncAymaraAI(
-    api_key=os.environ.get("AYMARA_AI_API_KEY"),  # This is the default and can be omitted
-    # or 'production' | 'development'; defaults to "production".
-    environment="staging",
+client = AsyncAymaraSDK(
+    api_key=os.environ.get("AYMARA_SDK_API_KEY"),  # This is the default and can be omitted
+    bearer_token=os.environ.get(
+        "AYMARA_SDK_BEARER_TOKEN"
+    ),  # This is the default and can be omitted
 )
 
 
 async def main() -> None:
-    eval_run_result = await client.evals.runs.create(
-        eval_uuid="your_eval_uuid_here",
-        responses=[
-            {
-                "prompt_uuid": "some-prompt-uuid",
-                "content": "The capital of France is Paris.",
-            }
-        ],
-    )
-    print(eval_run_result.eval_run_uuid)
+    await client.health.check()
 
 
 asyncio.run(main())
 ```
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
-
-### With aiohttp
-
-By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
-
-You can enable this by installing `aiohttp`:
-
-```sh
-# install from PyPI
-pip install aymara-ai-sdk[aiohttp]
-```
-
-Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
-
-```python
-import os
-import asyncio
-from aymara_ai import DefaultAioHttpClient
-from aymara_ai import AsyncAymaraAI
-
-
-async def main() -> None:
-    async with AsyncAymaraAI(
-        api_key=os.environ.get("AYMARA_AI_API_KEY"),  # This is the default and can be omitted
-        http_client=DefaultAioHttpClient(),
-    ) as client:
-        eval_run_result = await client.evals.runs.create(
-            eval_uuid="your_eval_uuid_here",
-            responses=[
-                {
-                    "prompt_uuid": "some-prompt-uuid",
-                    "content": "The capital of France is Paris.",
-                }
-            ],
-        )
-        print(eval_run_result.eval_run_uuid)
-
-
-asyncio.run(main())
-```
 
 ## Using types
 
@@ -134,128 +80,29 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
-## Pagination
-
-List methods in the Aymara AI API are paginated.
-
-This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
-
-```python
-from aymara_ai import AymaraAI
-
-client = AymaraAI()
-
-all_evals = []
-# Automatically fetches more pages as needed.
-for eval in client.evals.list_prompts(
-    eval_uuid="some-eval-uuid",
-    limit=30,
-):
-    # Do something with eval here
-    all_evals.append(eval)
-print(all_evals)
-```
-
-Or, asynchronously:
-
-```python
-import asyncio
-from aymara_ai import AsyncAymaraAI
-
-client = AsyncAymaraAI()
-
-
-async def main() -> None:
-    all_evals = []
-    # Iterate through items across all pages, issuing requests as needed.
-    async for eval in client.evals.list_prompts(
-        eval_uuid="some-eval-uuid",
-        limit=30,
-    ):
-        all_evals.append(eval)
-    print(all_evals)
-
-
-asyncio.run(main())
-```
-
-Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
-
-```python
-first_page = await client.evals.list_prompts(
-    eval_uuid="some-eval-uuid",
-    limit=30,
-)
-if first_page.has_next_page():
-    print(f"will fetch next page using these details: {first_page.next_page_info()}")
-    next_page = await first_page.get_next_page()
-    print(f"number of items we just fetched: {len(next_page.items)}")
-
-# Remove `await` for non-async usage.
-```
-
-Or just work directly with the returned data:
-
-```python
-first_page = await client.evals.list_prompts(
-    eval_uuid="some-eval-uuid",
-    limit=30,
-)
-
-print(
-    f"the current start offset for this page: {first_page.count}"
-)  # => "the current start offset for this page: 1"
-for eval in first_page.items:
-    print(eval.prompt_uuid)
-
-# Remove `await` for non-async usage.
-```
-
-## File uploads
-
-Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
-
-```python
-from pathlib import Path
-from aymara_ai import AymaraAI
-
-client = AymaraAI()
-
-client.files.upload(
-    file=Path("/path/to/file"),
-)
-```
-
-The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
-
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `aymara_ai.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `aymara_sdk.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `aymara_ai.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `aymara_sdk.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `aymara_ai.APIError`.
+All errors inherit from `aymara_sdk.APIError`.
 
 ```python
-import aymara_ai
-from aymara_ai import AymaraAI
+import aymara_sdk
+from aymara_sdk import AymaraSDK
 
-client = AymaraAI()
+client = AymaraSDK()
 
 try:
-    client.evals.create(
-        ai_description="a very safe AI that is kind and helpful",
-        eval_type="safety",
-        ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-        name="basic safety eval",
-    )
-except aymara_ai.APIConnectionError as e:
+    client.health.check()
+except aymara_sdk.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except aymara_ai.RateLimitError as e:
+except aymara_sdk.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except aymara_ai.APIStatusError as e:
+except aymara_sdk.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -283,49 +130,39 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from aymara_ai import AymaraAI
+from aymara_sdk import AymaraSDK
 
 # Configure the default for all requests:
-client = AymaraAI(
+client = AymaraSDK(
     # default is 2
     max_retries=0,
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).evals.create(
-    ai_description="a very safe AI that is kind and helpful",
-    eval_type="safety",
-    ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-    name="basic safety eval",
-)
+client.with_options(max_retries=5).health.check()
 ```
 
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
 
 ```python
-from aymara_ai import AymaraAI
+from aymara_sdk import AymaraSDK
 
 # Configure the default for all requests:
-client = AymaraAI(
+client = AymaraSDK(
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
-client = AymaraAI(
+client = AymaraSDK(
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).evals.create(
-    ai_description="a very safe AI that is kind and helpful",
-    eval_type="safety",
-    ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-    name="basic safety eval",
-)
+client.with_options(timeout=5.0).health.check()
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -338,10 +175,10 @@ Note that requests that time out are [retried twice by default](#retries).
 
 We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
 
-You can enable logging by setting the environment variable `AYMARA_AI_LOG` to `info`.
+You can enable logging by setting the environment variable `AYMARA_SDK_LOG` to `info`.
 
 ```shell
-$ export AYMARA_AI_LOG=info
+$ export AYMARA_SDK_LOG=info
 ```
 
 Or to `debug` for more verbose logging.
@@ -363,24 +200,19 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from aymara_ai import AymaraAI
+from aymara_sdk import AymaraSDK
 
-client = AymaraAI()
-response = client.evals.with_raw_response.create(
-    ai_description="a very safe AI that is kind and helpful",
-    eval_type="safety",
-    ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-    name="basic safety eval",
-)
+client = AymaraSDK()
+response = client.health.with_raw_response.check()
 print(response.headers.get('X-My-Header'))
 
-eval = response.parse()  # get the object that `evals.create()` would have returned
-print(eval.eval_uuid)
+health = response.parse()  # get the object that `health.check()` would have returned
+print(health)
 ```
 
-These methods return an [`APIResponse`](https://github.com/aymara-ai/aymara-sdk-python/tree/main/src/aymara_ai/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara_sdk/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/aymara-ai/aymara-sdk-python/tree/main/src/aymara_ai/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara_sdk/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -389,12 +221,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.evals.with_streaming_response.create(
-    ai_description="a very safe AI that is kind and helpful",
-    eval_type="safety",
-    ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-    name="basic safety eval",
-) as response:
+with client.health.with_streaming_response.check() as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
@@ -447,10 +274,10 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from aymara_ai import AymaraAI, DefaultHttpxClient
+from aymara_sdk import AymaraSDK, DefaultHttpxClient
 
-client = AymaraAI(
-    # Or use the `AYMARA_AI_BASE_URL` env var
+client = AymaraSDK(
+    # Or use the `AYMARA_SDK_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
         proxy="http://my.test.proxy.example.com",
@@ -470,9 +297,9 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from aymara_ai import AymaraAI
+from aymara_sdk import AymaraSDK
 
-with AymaraAI() as client:
+with AymaraSDK() as client:
   # make requests here
   ...
 
@@ -489,7 +316,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/aymara-ai/aymara-sdk-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/aymara-sdk-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 
@@ -498,13 +325,13 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import aymara_ai
-print(aymara_ai.__version__)
+import aymara_sdk
+print(aymara_sdk.__version__)
 ```
 
 ## Requirements
 
-Python 3.9 or higher.
+Python 3.8 or higher.
 
 ## Contributing
 

@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_ai import AymaraAI, AsyncAymaraAI
+from aymara_sdk import AymaraSDK, AsyncAymaraSDK
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -15,15 +15,15 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestHealth:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip()
     @parametrize
-    def test_method_check(self, client: AymaraAI) -> None:
+    def test_method_check(self, client: AymaraSDK) -> None:
         health = client.health.check()
         assert health is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip()
     @parametrize
-    def test_raw_response_check(self, client: AymaraAI) -> None:
+    def test_raw_response_check(self, client: AymaraSDK) -> None:
         response = client.health.with_raw_response.check()
 
         assert response.is_closed is True
@@ -31,9 +31,9 @@ class TestHealth:
         health = response.parse()
         assert health is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_check(self, client: AymaraAI) -> None:
+    def test_streaming_response_check(self, client: AymaraSDK) -> None:
         with client.health.with_streaming_response.check() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -45,19 +45,17 @@ class TestHealth:
 
 
 class TestAsyncHealth:
-    parametrize = pytest.mark.parametrize(
-        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
-    )
+    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip()
     @parametrize
-    async def test_method_check(self, async_client: AsyncAymaraAI) -> None:
+    async def test_method_check(self, async_client: AsyncAymaraSDK) -> None:
         health = await async_client.health.check()
         assert health is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_check(self, async_client: AsyncAymaraAI) -> None:
+    async def test_raw_response_check(self, async_client: AsyncAymaraSDK) -> None:
         response = await async_client.health.with_raw_response.check()
 
         assert response.is_closed is True
@@ -65,9 +63,9 @@ class TestAsyncHealth:
         health = await response.parse()
         assert health is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_check(self, async_client: AsyncAymaraAI) -> None:
+    async def test_streaming_response_check(self, async_client: AsyncAymaraSDK) -> None:
         async with async_client.health.with_streaming_response.check() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
