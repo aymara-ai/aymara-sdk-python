@@ -56,7 +56,7 @@ Methods:
 Types:
 
 ```python
-from aymara_sdk.types import AnswerIn, AnswerOut, ScoreRunOut, ScoreGetAnswersResponse
+from aymara_sdk.types import AnswerIn, AnswerOut, ScoreRunIn, ScoreRunOut, ScoreGetAnswersResponse
 ```
 
 Methods:
