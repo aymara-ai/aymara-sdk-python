@@ -32,9 +32,8 @@ from aymara_sdk import AymaraSDK
 
 client = AymaraSDK(
     api_key=os.environ.get("AYMARA_SDK_API_KEY"),  # This is the default and can be omitted
-    bearer_token=os.environ.get(
-        "AYMARA_SDK_BEARER_TOKEN"
-    ),  # This is the default and can be omitted
+    # or 'production' | 'development'; defaults to "production".
+    environment="staging",
 )
 
 client.health.check()
@@ -56,9 +55,8 @@ from aymara_sdk import AsyncAymaraSDK
 
 client = AsyncAymaraSDK(
     api_key=os.environ.get("AYMARA_SDK_API_KEY"),  # This is the default and can be omitted
-    bearer_token=os.environ.get(
-        "AYMARA_SDK_BEARER_TOKEN"
-    ),  # This is the default and can be omitted
+    # or 'production' | 'development'; defaults to "production".
+    environment="staging",
 )
 
 
