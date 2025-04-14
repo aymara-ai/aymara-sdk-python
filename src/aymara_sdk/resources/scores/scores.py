@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Iterable, Optional
+
 import httpx
 
 from .image import (
@@ -12,7 +14,12 @@ from .image import (
     ImageResourceWithStreamingResponse,
     AsyncImageResourceWithStreamingResponse,
 )
-from ...types import score_delete_params, score_retrieve_params, score_get_answers_params
+from ...types import (
+    score_create_params,
+    score_delete_params,
+    score_retrieve_params,
+    score_get_answers_params,
+)
 from .summary import (
     SummaryResource,
     AsyncSummaryResource,
@@ -36,6 +43,7 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.score_run_out import ScoreRunOut
+from ...types.answer_in_param import AnswerInParam
 from ...types.score_get_answers_response import ScoreGetAnswersResponse
 
 __all__ = ["ScoresResource", "AsyncScoresResource"]
@@ -68,6 +76,61 @@ class ScoresResource(SyncAPIResource):
         For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
         return ScoresResourceWithStreamingResponse(self)
+
+    def create(
+        self,
+        *,
+        answers: Iterable[AnswerInParam],
+        test_uuid: str,
+        is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        score_run_examples: Optional[Iterable[score_create_params.ScoreRunExample]] | NotGiven = NOT_GIVEN,
+        student_description: Optional[str] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> ScoreRunOut:
+        """
+        Create Score Run
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/v1/scores/",
+            body=maybe_transform(
+                {
+                    "answers": answers,
+                    "test_uuid": test_uuid,
+                    "score_run_examples": score_run_examples,
+                    "student_description": student_description,
+                },
+                score_create_params.ScoreCreateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "is_sandbox": is_sandbox,
+                        "workspace_uuid": workspace_uuid,
+                    },
+                    score_create_params.ScoreCreateParams,
+                ),
+            ),
+            cast_to=ScoreRunOut,
+        )
 
     def retrieve(
         self,
@@ -222,6 +285,61 @@ class AsyncScoresResource(AsyncAPIResource):
         """
         return AsyncScoresResourceWithStreamingResponse(self)
 
+    async def create(
+        self,
+        *,
+        answers: Iterable[AnswerInParam],
+        test_uuid: str,
+        is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        score_run_examples: Optional[Iterable[score_create_params.ScoreRunExample]] | NotGiven = NOT_GIVEN,
+        student_description: Optional[str] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> ScoreRunOut:
+        """
+        Create Score Run
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/v1/scores/",
+            body=await async_maybe_transform(
+                {
+                    "answers": answers,
+                    "test_uuid": test_uuid,
+                    "score_run_examples": score_run_examples,
+                    "student_description": student_description,
+                },
+                score_create_params.ScoreCreateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "is_sandbox": is_sandbox,
+                        "workspace_uuid": workspace_uuid,
+                    },
+                    score_create_params.ScoreCreateParams,
+                ),
+            ),
+            cast_to=ScoreRunOut,
+        )
+
     async def retrieve(
         self,
         score_run_uuid: str,
@@ -355,6 +473,9 @@ class ScoresResourceWithRawResponse:
     def __init__(self, scores: ScoresResource) -> None:
         self._scores = scores
 
+        self.create = to_raw_response_wrapper(
+            scores.create,
+        )
         self.retrieve = to_raw_response_wrapper(
             scores.retrieve,
         )
@@ -378,6 +499,9 @@ class AsyncScoresResourceWithRawResponse:
     def __init__(self, scores: AsyncScoresResource) -> None:
         self._scores = scores
 
+        self.create = async_to_raw_response_wrapper(
+            scores.create,
+        )
         self.retrieve = async_to_raw_response_wrapper(
             scores.retrieve,
         )
@@ -401,6 +525,9 @@ class ScoresResourceWithStreamingResponse:
     def __init__(self, scores: ScoresResource) -> None:
         self._scores = scores
 
+        self.create = to_streamed_response_wrapper(
+            scores.create,
+        )
         self.retrieve = to_streamed_response_wrapper(
             scores.retrieve,
         )
@@ -424,6 +551,9 @@ class AsyncScoresResourceWithStreamingResponse:
     def __init__(self, scores: AsyncScoresResource) -> None:
         self._scores = scores
 
+        self.create = async_to_streamed_response_wrapper(
+            scores.create,
+        )
         self.retrieve = async_to_streamed_response_wrapper(
             scores.retrieve,
         )

@@ -29,6 +29,7 @@ from .policy_list_params import PolicyListParams as PolicyListParams
 from .test_create_params import TestCreateParams as TestCreateParams
 from .test_delete_params import TestDeleteParams as TestDeleteParams
 from .test_list_response import TestListResponse as TestListResponse
+from .score_create_params import ScoreCreateParams as ScoreCreateParams
 from .score_delete_params import ScoreDeleteParams as ScoreDeleteParams
 from .usage_list_response import UsageListResponse as UsageListResponse
 from .eval_retrieve_params import EvalRetrieveParams as EvalRetrieveParams

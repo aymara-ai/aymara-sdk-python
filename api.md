@@ -61,6 +61,7 @@ from aymara_sdk.types import AnswerIn, AnswerOut, ScoreRunOut, ScoreGetAnswersRe
 
 Methods:
 
+- <code title="post /v1/scores/">client.scores.<a href="./src/aymara_sdk/resources/scores/scores.py">create</a>(\*\*<a href="src/aymara_sdk/types/score_create_params.py">params</a>) -> <a href="./src/aymara_sdk/types/score_run_out.py">ScoreRunOut</a></code>
 - <code title="get /v1/scores/{score_run_uuid}">client.scores.<a href="./src/aymara_sdk/resources/scores/scores.py">retrieve</a>(score_run_uuid, \*\*<a href="src/aymara_sdk/types/score_retrieve_params.py">params</a>) -> <a href="./src/aymara_sdk/types/score_run_out.py">ScoreRunOut</a></code>
 - <code title="delete /v1/scores/{score_run_uuid}">client.scores.<a href="./src/aymara_sdk/resources/scores/scores.py">delete</a>(score_run_uuid, \*\*<a href="src/aymara_sdk/types/score_delete_params.py">params</a>) -> None</code>
 - <code title="get /v1/scores/{score_run_uuid}/answers">client.scores.<a href="./src/aymara_sdk/resources/scores/scores.py">get_answers</a>(score_run_uuid, \*\*<a href="src/aymara_sdk/types/score_get_answers_params.py">params</a>) -> <a href="./src/aymara_sdk/types/score_get_answers_response.py">ScoreGetAnswersResponse</a></code>
