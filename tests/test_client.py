@@ -375,18 +375,11 @@ class TestAymaraSDK:
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {bearer_token}"
 
         with pytest.raises(AymaraSDKError):
-            with update_env(
-                **{
-                    "AYMARA_SDK_API_KEY": Omit(),
-                    "AYMARA_SDK_BEARER_TOKEN": Omit(),
-                }
-            ):
+            with update_env(**{"AYMARA_SDK_API_KEY": Omit()}):
                 client2 = AymaraSDK(
-                    base_url=base_url, api_key=None, bearer_token=None, _strict_response_validation=True
+                    base_url=base_url, api_key=None, bearer_token=bearer_token, _strict_response_validation=True
                 )
             _ = client2
 
@@ -612,6 +605,25 @@ class TestAymaraSDK:
         with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
             client = AymaraSDK(api_key=api_key, bearer_token=bearer_token, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
+
+        # explicit environment arg requires explicitness
+        with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
+            with pytest.raises(ValueError, match=r"you must pass base_url=None"):
+                AymaraSDK(
+                    api_key=api_key,
+                    bearer_token=bearer_token,
+                    _strict_response_validation=True,
+                    environment="production",
+                )
+
+            client = AymaraSDK(
+                base_url=None,
+                api_key=api_key,
+                bearer_token=bearer_token,
+                _strict_response_validation=True,
+                environment="production",
+            )
+            assert str(client.base_url).startswith("https://api.example.com")
 
     @pytest.mark.parametrize(
         "client",
@@ -1217,18 +1229,11 @@ class TestAsyncAymaraSDK:
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {bearer_token}"
 
         with pytest.raises(AymaraSDKError):
-            with update_env(
-                **{
-                    "AYMARA_SDK_API_KEY": Omit(),
-                    "AYMARA_SDK_BEARER_TOKEN": Omit(),
-                }
-            ):
+            with update_env(**{"AYMARA_SDK_API_KEY": Omit()}):
                 client2 = AsyncAymaraSDK(
-                    base_url=base_url, api_key=None, bearer_token=None, _strict_response_validation=True
+                    base_url=base_url, api_key=None, bearer_token=bearer_token, _strict_response_validation=True
                 )
             _ = client2
 
@@ -1454,6 +1459,25 @@ class TestAsyncAymaraSDK:
         with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
             client = AsyncAymaraSDK(api_key=api_key, bearer_token=bearer_token, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
+
+        # explicit environment arg requires explicitness
+        with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
+            with pytest.raises(ValueError, match=r"you must pass base_url=None"):
+                AsyncAymaraSDK(
+                    api_key=api_key,
+                    bearer_token=bearer_token,
+                    _strict_response_validation=True,
+                    environment="production",
+                )
+
+            client = AsyncAymaraSDK(
+                base_url=None,
+                api_key=api_key,
+                bearer_token=bearer_token,
+                _strict_response_validation=True,
+                environment="production",
+            )
+            assert str(client.base_url).startswith("https://api.example.com")
 
     @pytest.mark.parametrize(
         "client",
