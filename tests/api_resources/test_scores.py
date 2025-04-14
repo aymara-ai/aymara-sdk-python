@@ -22,6 +22,71 @@ class TestScores:
 
     @pytest.mark.skip()
     @parametrize
+    def test_method_create(self, client: AymaraSDK) -> None:
+        score = client.scores.create(
+            answers=[{"question_uuid": "question_uuid"}],
+            test_uuid="test_uuid",
+        )
+        assert_matches_type(ScoreRunOut, score, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_create_with_all_params(self, client: AymaraSDK) -> None:
+        score = client.scores.create(
+            answers=[
+                {
+                    "question_uuid": "question_uuid",
+                    "answer_image_path": "answer_image_path",
+                    "answer_text": "answer_text",
+                    "exclude_from_scoring": True,
+                    "student_refused": True,
+                }
+            ],
+            test_uuid="test_uuid",
+            is_sandbox=True,
+            workspace_uuid="workspace_uuid",
+            score_run_examples=[
+                {
+                    "answer_text": "answer_text",
+                    "example_type": "pass",
+                    "explanation": "explanation",
+                    "question_text": "question_text",
+                }
+            ],
+            student_description="student_description",
+        )
+        assert_matches_type(ScoreRunOut, score, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_raw_response_create(self, client: AymaraSDK) -> None:
+        response = client.scores.with_raw_response.create(
+            answers=[{"question_uuid": "question_uuid"}],
+            test_uuid="test_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        score = response.parse()
+        assert_matches_type(ScoreRunOut, score, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_streaming_response_create(self, client: AymaraSDK) -> None:
+        with client.scores.with_streaming_response.create(
+            answers=[{"question_uuid": "question_uuid"}],
+            test_uuid="test_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            score = response.parse()
+            assert_matches_type(ScoreRunOut, score, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
     def test_method_retrieve(self, client: AymaraSDK) -> None:
         score = client.scores.retrieve(
             score_run_uuid="score_run_uuid",
@@ -178,6 +243,71 @@ class TestScores:
 
 class TestAsyncScores:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_create(self, async_client: AsyncAymaraSDK) -> None:
+        score = await async_client.scores.create(
+            answers=[{"question_uuid": "question_uuid"}],
+            test_uuid="test_uuid",
+        )
+        assert_matches_type(ScoreRunOut, score, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_create_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+        score = await async_client.scores.create(
+            answers=[
+                {
+                    "question_uuid": "question_uuid",
+                    "answer_image_path": "answer_image_path",
+                    "answer_text": "answer_text",
+                    "exclude_from_scoring": True,
+                    "student_refused": True,
+                }
+            ],
+            test_uuid="test_uuid",
+            is_sandbox=True,
+            workspace_uuid="workspace_uuid",
+            score_run_examples=[
+                {
+                    "answer_text": "answer_text",
+                    "example_type": "pass",
+                    "explanation": "explanation",
+                    "question_text": "question_text",
+                }
+            ],
+            student_description="student_description",
+        )
+        assert_matches_type(ScoreRunOut, score, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_raw_response_create(self, async_client: AsyncAymaraSDK) -> None:
+        response = await async_client.scores.with_raw_response.create(
+            answers=[{"question_uuid": "question_uuid"}],
+            test_uuid="test_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        score = await response.parse()
+        assert_matches_type(ScoreRunOut, score, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_streaming_response_create(self, async_client: AsyncAymaraSDK) -> None:
+        async with async_client.scores.with_streaming_response.create(
+            answers=[{"question_uuid": "question_uuid"}],
+            test_uuid="test_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            score = await response.parse()
+            assert_matches_type(ScoreRunOut, score, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
 
     @pytest.mark.skip()
     @parametrize
