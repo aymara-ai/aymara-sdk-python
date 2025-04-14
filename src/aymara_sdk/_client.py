@@ -85,7 +85,7 @@ class AymaraSDK(SyncAPIClient):
 
     # client options
     api_key: str
-    bearer_token: str
+    bearer_token: str | None
 
     _environment: Literal["production", "staging", "development"] | NotGiven
 
@@ -130,10 +130,6 @@ class AymaraSDK(SyncAPIClient):
 
         if bearer_token is None:
             bearer_token = os.environ.get("AYMARA_SDK_BEARER_TOKEN")
-        if bearer_token is None:
-            raise AymaraSDKError(
-                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the AYMARA_SDK_BEARER_TOKEN environment variable"
-            )
         self.bearer_token = bearer_token
 
         self._environment = environment
@@ -207,6 +203,8 @@ class AymaraSDK(SyncAPIClient):
     @property
     def _auth_bearer(self) -> dict[str, str]:
         bearer_token = self.bearer_token
+        if bearer_token is None:
+            return {}
         return {"Authorization": f"Bearer {bearer_token}"}
 
     @property
@@ -326,7 +324,7 @@ class AsyncAymaraSDK(AsyncAPIClient):
 
     # client options
     api_key: str
-    bearer_token: str
+    bearer_token: str | None
 
     _environment: Literal["production", "staging", "development"] | NotGiven
 
@@ -371,10 +369,6 @@ class AsyncAymaraSDK(AsyncAPIClient):
 
         if bearer_token is None:
             bearer_token = os.environ.get("AYMARA_SDK_BEARER_TOKEN")
-        if bearer_token is None:
-            raise AymaraSDKError(
-                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the AYMARA_SDK_BEARER_TOKEN environment variable"
-            )
         self.bearer_token = bearer_token
 
         self._environment = environment
@@ -448,6 +442,8 @@ class AsyncAymaraSDK(AsyncAPIClient):
     @property
     def _auth_bearer(self) -> dict[str, str]:
         bearer_token = self.bearer_token
+        if bearer_token is None:
+            return {}
         return {"Authorization": f"Bearer {bearer_token}"}
 
     @property
