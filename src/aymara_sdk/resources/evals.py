@@ -27,10 +27,10 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncOffsetPage, AsyncOffsetPage
+from .._base_client import AsyncPaginator, make_request_options
 from ..types.eval_out import EvalOut
 from ..types.content_type import ContentType
-from ..types.eval_list_response import EvalListResponse
 from ..types.prompt_example_in_param import PromptExampleInParam
 from ..types.eval_get_prompts_response import EvalGetPromptsResponse
 
@@ -176,7 +176,7 @@ class EvalsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalListResponse:
+    ) -> SyncOffsetPage[EvalOut]:
         """
         List all evals, with optional filtering.
 
@@ -193,8 +193,9 @@ class EvalsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v2/evals/",
+            page=SyncOffsetPage[EvalOut],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -209,7 +210,7 @@ class EvalsResource(SyncAPIResource):
                     eval_list_params.EvalListParams,
                 ),
             ),
-            cast_to=EvalListResponse,
+            model=EvalOut,
         )
 
     def delete(
@@ -438,7 +439,7 @@ class AsyncEvalsResource(AsyncAPIResource):
             cast_to=EvalOut,
         )
 
-    async def list(
+    def list(
         self,
         *,
         limit: int | NotGiven = NOT_GIVEN,
@@ -450,7 +451,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalListResponse:
+    ) -> AsyncPaginator[EvalOut, AsyncOffsetPage[EvalOut]]:
         """
         List all evals, with optional filtering.
 
@@ -467,14 +468,15 @@ class AsyncEvalsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v2/evals/",
+            page=AsyncOffsetPage[EvalOut],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "limit": limit,
                         "offset": offset,
@@ -483,7 +485,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     eval_list_params.EvalListParams,
                 ),
             ),
-            cast_to=EvalListResponse,
+            model=EvalOut,
         )
 
     async def delete(
