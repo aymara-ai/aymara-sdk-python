@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_sdk import AymaraSDK, AsyncAymaraSDK
+from aymara import Aymara, AsyncAymara
 from tests.utils import assert_matches_type
-from aymara_sdk.types.scores import ImageGetPresignedURLsResponse
+from aymara.types.scores import ImageGetPresignedURLsResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,7 +19,7 @@ class TestImage:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_get_presigned_urls(self, client: AymaraSDK) -> None:
+    def test_method_get_presigned_urls(self, client: Aymara) -> None:
         image = client.scores.image.get_presigned_urls(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -28,7 +28,7 @@ class TestImage:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_get_presigned_urls(self, client: AymaraSDK) -> None:
+    def test_raw_response_get_presigned_urls(self, client: Aymara) -> None:
         response = client.scores.image.with_raw_response.get_presigned_urls(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -41,7 +41,7 @@ class TestImage:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_get_presigned_urls(self, client: AymaraSDK) -> None:
+    def test_streaming_response_get_presigned_urls(self, client: Aymara) -> None:
         with client.scores.image.with_streaming_response.get_presigned_urls(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -60,7 +60,7 @@ class TestAsyncImage:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_get_presigned_urls(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_get_presigned_urls(self, async_client: AsyncAymara) -> None:
         image = await async_client.scores.image.get_presigned_urls(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -69,7 +69,7 @@ class TestAsyncImage:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_get_presigned_urls(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_get_presigned_urls(self, async_client: AsyncAymara) -> None:
         response = await async_client.scores.image.with_raw_response.get_presigned_urls(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -82,7 +82,7 @@ class TestAsyncImage:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_get_presigned_urls(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_get_presigned_urls(self, async_client: AsyncAymara) -> None:
         async with async_client.scores.image.with_streaming_response.get_presigned_urls(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",

@@ -8,13 +8,13 @@ from typing import TYPE_CHECKING
 import anyio
 
 if TYPE_CHECKING:
-    from ._client import AymaraSDK, AsyncAymaraSDK
+    from ._client import Aymara, AsyncAymara
 
 
 class SyncAPIResource:
-    _client: AymaraSDK
+    _client: Aymara
 
-    def __init__(self, client: AymaraSDK) -> None:
+    def __init__(self, client: Aymara) -> None:
         self._client = client
         self._get = client.get
         self._post = client.post
@@ -28,9 +28,9 @@ class SyncAPIResource:
 
 
 class AsyncAPIResource:
-    _client: AsyncAymaraSDK
+    _client: AsyncAymara
 
-    def __init__(self, client: AsyncAymaraSDK) -> None:
+    def __init__(self, client: AsyncAymara) -> None:
         self._client = client
         self._get = client.get
         self._post = client.post

@@ -1,11 +1,11 @@
 [project]
-name = "aymara_sdk"
+name = "aymara"
 version = "0.0.1-alpha.0"
-description = "The official Python library for the aymara-sdk API"
+description = "The official Python library for the aymara API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Aymara SDK", email = "dev-feedback@aymara-sdk.com" },
+{ name = "Aymara", email = "dev-feedback@aymara.ai" },
 ]
 dependencies = [
     "httpx>=0.23.0, <1",
@@ -75,14 +75,14 @@ format = { chain = [
 "check:ruff" = "ruff check ."
 "fix:ruff" = "ruff check --fix ."
 
-"check:importable" = "python -c 'import aymara_sdk'"
+"check:importable" = "python -c 'import aymara'"
 
 typecheck = { chain = [
   "typecheck:pyright",
   "typecheck:mypy"
 ]}
 "typecheck:pyright" = "pyright"
-"typecheck:verify-types" = "pyright --verifytypes aymara_sdk --ignoreexternal"
+"typecheck:verify-types" = "pyright --verifytypes aymara --ignoreexternal"
 "typecheck:mypy" = "mypy ."
 
 [build-system]
@@ -95,7 +95,7 @@ include = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/aymara_sdk"]
+packages = ["src/aymara"]
 
 [tool.hatch.build.targets.sdist]
 # Basically everything except hidden files/directories (such as .github, .devcontainers, .python-version, etc)
@@ -198,7 +198,7 @@ length-sort = true
 length-sort-straight = true
 combine-as-imports = true
 extra-standard-library = ["typing_extensions"]
-known-first-party = ["aymara_sdk", "tests"]
+known-first-party = ["aymara", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
 "bin/**.py" = ["T201", "T203"]

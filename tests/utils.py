@@ -8,8 +8,8 @@ from typing import Any, TypeVar, Iterator, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, get_origin, assert_type
 
-from aymara_sdk._types import Omit, NoneType
-from aymara_sdk._utils import (
+from aymara._types import Omit, NoneType
+from aymara._utils import (
     is_dict,
     is_list,
     is_list_type,
@@ -18,8 +18,8 @@ from aymara_sdk._utils import (
     is_annotated_type,
     is_type_alias_type,
 )
-from aymara_sdk._compat import PYDANTIC_V2, field_outer_type, get_model_fields
-from aymara_sdk._models import BaseModel
+from aymara._compat import PYDANTIC_V2, field_outer_type, get_model_fields
+from aymara._models import BaseModel
 
 BaseModelT = TypeVar("BaseModelT", bound=BaseModel)
 

@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_sdk import AymaraSDK, AsyncAymaraSDK
+from aymara import Aymara, AsyncAymara
 from tests.utils import assert_matches_type
-from aymara_sdk.types import FileUploadResponse
+from aymara.types import FileUploadResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,7 +19,7 @@ class TestFiles:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_upload(self, client: AymaraSDK) -> None:
+    def test_method_upload(self, client: Aymara) -> None:
         file = client.files.upload(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -28,7 +28,7 @@ class TestFiles:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_upload(self, client: AymaraSDK) -> None:
+    def test_raw_response_upload(self, client: Aymara) -> None:
         response = client.files.with_raw_response.upload(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -41,7 +41,7 @@ class TestFiles:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_upload(self, client: AymaraSDK) -> None:
+    def test_streaming_response_upload(self, client: Aymara) -> None:
         with client.files.with_streaming_response.upload(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -60,7 +60,7 @@ class TestAsyncFiles:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_upload(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_upload(self, async_client: AsyncAymara) -> None:
         file = await async_client.files.upload(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -69,7 +69,7 @@ class TestAsyncFiles:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_upload(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_upload(self, async_client: AsyncAymara) -> None:
         response = await async_client.files.with_raw_response.upload(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
@@ -82,7 +82,7 @@ class TestAsyncFiles:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_upload(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_upload(self, async_client: AsyncAymara) -> None:
         async with async_client.files.with_streaming_response.upload(
             answers=[{"question_uuid": "question_uuid"}],
             test_uuid="test_uuid",
