@@ -10,6 +10,7 @@ import pytest
 from aymara_sdk import AymaraSDK, AsyncAymaraSDK
 from tests.utils import assert_matches_type
 from aymara_sdk.types import PolicyListResponse
+from aymara_sdk.pagination import SyncOffsetPage, AsyncOffsetPage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -21,7 +22,7 @@ class TestPolicies:
     @parametrize
     def test_method_list(self, client: AymaraSDK) -> None:
         policy = client.policies.list()
-        assert_matches_type(PolicyListResponse, policy, path=["response"])
+        assert_matches_type(SyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -31,7 +32,7 @@ class TestPolicies:
             offset=0,
             test_type="test_type",
         )
-        assert_matches_type(PolicyListResponse, policy, path=["response"])
+        assert_matches_type(SyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -41,7 +42,7 @@ class TestPolicies:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         policy = response.parse()
-        assert_matches_type(PolicyListResponse, policy, path=["response"])
+        assert_matches_type(SyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -51,7 +52,7 @@ class TestPolicies:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             policy = response.parse()
-            assert_matches_type(PolicyListResponse, policy, path=["response"])
+            assert_matches_type(SyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -63,7 +64,7 @@ class TestAsyncPolicies:
     @parametrize
     async def test_method_list(self, async_client: AsyncAymaraSDK) -> None:
         policy = await async_client.policies.list()
-        assert_matches_type(PolicyListResponse, policy, path=["response"])
+        assert_matches_type(AsyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -73,7 +74,7 @@ class TestAsyncPolicies:
             offset=0,
             test_type="test_type",
         )
-        assert_matches_type(PolicyListResponse, policy, path=["response"])
+        assert_matches_type(AsyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -83,7 +84,7 @@ class TestAsyncPolicies:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         policy = await response.parse()
-        assert_matches_type(PolicyListResponse, policy, path=["response"])
+        assert_matches_type(AsyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -93,6 +94,6 @@ class TestAsyncPolicies:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             policy = await response.parse()
-            assert_matches_type(PolicyListResponse, policy, path=["response"])
+            assert_matches_type(AsyncOffsetPage[PolicyListResponse], policy, path=["response"])
 
         assert cast(Any, response.is_closed) is True

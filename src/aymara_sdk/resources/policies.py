@@ -6,10 +6,7 @@ import httpx
 
 from ..types import policy_list_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._utils import maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -18,7 +15,8 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncOffsetPage, AsyncOffsetPage
+from .._base_client import AsyncPaginator, make_request_options
 from ..types.policy_list_response import PolicyListResponse
 
 __all__ = ["PoliciesResource", "AsyncPoliciesResource"]
@@ -56,7 +54,7 @@ class PoliciesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> PolicyListResponse:
+    ) -> SyncOffsetPage[PolicyListResponse]:
         """
         List all policies, optionally filtered by test type.
 
@@ -69,8 +67,9 @@ class PoliciesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v1/policies/",
+            page=SyncOffsetPage[PolicyListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -85,7 +84,7 @@ class PoliciesResource(SyncAPIResource):
                     policy_list_params.PolicyListParams,
                 ),
             ),
-            cast_to=PolicyListResponse,
+            model=PolicyListResponse,
         )
 
 
@@ -109,7 +108,7 @@ class AsyncPoliciesResource(AsyncAPIResource):
         """
         return AsyncPoliciesResourceWithStreamingResponse(self)
 
-    async def list(
+    def list(
         self,
         *,
         limit: int | NotGiven = NOT_GIVEN,
@@ -121,7 +120,7 @@ class AsyncPoliciesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> PolicyListResponse:
+    ) -> AsyncPaginator[PolicyListResponse, AsyncOffsetPage[PolicyListResponse]]:
         """
         List all policies, optionally filtered by test type.
 
@@ -134,14 +133,15 @@ class AsyncPoliciesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v1/policies/",
+            page=AsyncOffsetPage[PolicyListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "limit": limit,
                         "offset": offset,
@@ -150,7 +150,7 @@ class AsyncPoliciesResource(AsyncAPIResource):
                     policy_list_params.PolicyListParams,
                 ),
             ),
-            cast_to=PolicyListResponse,
+            model=PolicyListResponse,
         )
 
 

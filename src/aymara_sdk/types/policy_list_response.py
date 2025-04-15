@@ -1,13 +1,12 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List
 
 from .._models import BaseModel
 
-__all__ = ["PolicyListResponse", "Item"]
+__all__ = ["PolicyListResponse"]
 
 
-class Item(BaseModel):
+class PolicyListResponse(BaseModel):
     aymara_policy_name: str
 
     display_name: str
@@ -17,9 +16,3 @@ class Item(BaseModel):
     test_language: str
 
     test_type: str
-
-
-class PolicyListResponse(BaseModel):
-    count: int
-
-    items: List[Item]

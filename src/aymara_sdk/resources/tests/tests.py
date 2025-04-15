@@ -35,10 +35,10 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
+from ...pagination import SyncOffsetPage, AsyncOffsetPage
+from ..._base_client import AsyncPaginator, make_request_options
 from ...types.test_out import TestOut
 from ...types.content_type import ContentType
-from ...types.test_list_response import TestListResponse
 from ...types.test_retrieve_questions_response import TestRetrieveQuestionsResponse
 
 __all__ = ["TestsResource", "AsyncTestsResource"]
@@ -193,7 +193,7 @@ class TestsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> TestListResponse:
+    ) -> SyncOffsetPage[TestOut]:
         """
         List Tests
 
@@ -206,8 +206,9 @@ class TestsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v1/tests/",
+            page=SyncOffsetPage[TestOut],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -222,7 +223,7 @@ class TestsResource(SyncAPIResource):
                     test_list_params.TestListParams,
                 ),
             ),
-            cast_to=TestListResponse,
+            model=TestOut,
         )
 
     def delete(
@@ -449,7 +450,7 @@ class AsyncTestsResource(AsyncAPIResource):
             cast_to=TestOut,
         )
 
-    async def list(
+    def list(
         self,
         *,
         limit: int | NotGiven = NOT_GIVEN,
@@ -461,7 +462,7 @@ class AsyncTestsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> TestListResponse:
+    ) -> AsyncPaginator[TestOut, AsyncOffsetPage[TestOut]]:
         """
         List Tests
 
@@ -474,14 +475,15 @@ class AsyncTestsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v1/tests/",
+            page=AsyncOffsetPage[TestOut],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "limit": limit,
                         "offset": offset,
@@ -490,7 +492,7 @@ class AsyncTestsResource(AsyncAPIResource):
                     test_list_params.TestListParams,
                 ),
             ),
-            cast_to=TestListResponse,
+            model=TestOut,
         )
 
     async def delete(

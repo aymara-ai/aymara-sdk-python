@@ -19,14 +19,14 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
+from ...pagination import SyncOffsetPage, AsyncOffsetPage
+from ..._base_client import AsyncPaginator, make_request_options
 from ...types.eval_runs import (
     summary_list_params,
     summary_create_params,
     summary_delete_params,
     summary_retrieve_params,
 )
-from ...types.eval_runs.summary_list_response import SummaryListResponse
 from ...types.eval_runs.eval_run_suite_summary import EvalRunSuiteSummary
 
 __all__ = ["SummaryResource", "AsyncSummaryResource"]
@@ -154,7 +154,7 @@ class SummaryResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SummaryListResponse:
+    ) -> SyncOffsetPage[EvalRunSuiteSummary]:
         """
         List all eval run suite summaries, with optional filtering.
 
@@ -169,8 +169,9 @@ class SummaryResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v2/eval-runs/summary/",
+            page=SyncOffsetPage[EvalRunSuiteSummary],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -185,7 +186,7 @@ class SummaryResource(SyncAPIResource):
                     summary_list_params.SummaryListParams,
                 ),
             ),
-            cast_to=SummaryListResponse,
+            model=EvalRunSuiteSummary,
         )
 
     def delete(
@@ -342,7 +343,7 @@ class AsyncSummaryResource(AsyncAPIResource):
             cast_to=EvalRunSuiteSummary,
         )
 
-    async def list(
+    def list(
         self,
         *,
         limit: int | NotGiven = NOT_GIVEN,
@@ -354,7 +355,7 @@ class AsyncSummaryResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SummaryListResponse:
+    ) -> AsyncPaginator[EvalRunSuiteSummary, AsyncOffsetPage[EvalRunSuiteSummary]]:
         """
         List all eval run suite summaries, with optional filtering.
 
@@ -369,14 +370,15 @@ class AsyncSummaryResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v2/eval-runs/summary/",
+            page=AsyncOffsetPage[EvalRunSuiteSummary],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "limit": limit,
                         "offset": offset,
@@ -385,7 +387,7 @@ class AsyncSummaryResource(AsyncAPIResource):
                     summary_list_params.SummaryListParams,
                 ),
             ),
-            cast_to=SummaryListResponse,
+            model=EvalRunSuiteSummary,
         )
 
     async def delete(

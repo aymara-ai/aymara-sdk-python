@@ -9,9 +9,9 @@ import pytest
 
 from aymara_sdk import AymaraSDK, AsyncAymaraSDK
 from tests.utils import assert_matches_type
+from aymara_sdk.pagination import SyncOffsetPage, AsyncOffsetPage
 from aymara_sdk.types.eval_runs import (
     EvalRunSuiteSummary,
-    SummaryListResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -119,7 +119,7 @@ class TestSummary:
     @parametrize
     def test_method_list(self, client: AymaraSDK) -> None:
         summary = client.eval_runs.summary.list()
-        assert_matches_type(SummaryListResponse, summary, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -129,7 +129,7 @@ class TestSummary:
             offset=0,
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(SummaryListResponse, summary, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -139,7 +139,7 @@ class TestSummary:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         summary = response.parse()
-        assert_matches_type(SummaryListResponse, summary, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -149,7 +149,7 @@ class TestSummary:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             summary = response.parse()
-            assert_matches_type(SummaryListResponse, summary, path=["response"])
+            assert_matches_type(SyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -307,7 +307,7 @@ class TestAsyncSummary:
     @parametrize
     async def test_method_list(self, async_client: AsyncAymaraSDK) -> None:
         summary = await async_client.eval_runs.summary.list()
-        assert_matches_type(SummaryListResponse, summary, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -317,7 +317,7 @@ class TestAsyncSummary:
             offset=0,
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(SummaryListResponse, summary, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -327,7 +327,7 @@ class TestAsyncSummary:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         summary = await response.parse()
-        assert_matches_type(SummaryListResponse, summary, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -337,7 +337,7 @@ class TestAsyncSummary:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             summary = await response.parse()
-            assert_matches_type(SummaryListResponse, summary, path=["response"])
+            assert_matches_type(AsyncOffsetPage[EvalRunSuiteSummary], summary, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

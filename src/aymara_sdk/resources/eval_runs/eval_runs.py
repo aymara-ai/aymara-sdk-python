@@ -43,9 +43,9 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
+from ...pagination import SyncOffsetPage, AsyncOffsetPage
+from ..._base_client import AsyncPaginator, make_request_options
 from ...types.eval_run import EvalRun
-from ...types.eval_run_list_response import EvalRunListResponse
 from ...types.eval_run_run_score_response import EvalRunRunScoreResponse
 from ...types.eval_run_get_responses_response import EvalRunGetResponsesResponse
 
@@ -199,7 +199,7 @@ class EvalRunsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalRunListResponse:
+    ) -> SyncOffsetPage[EvalRun]:
         """
         List all eval runs, with optional filtering.
 
@@ -214,8 +214,9 @@ class EvalRunsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v2/eval-runs/",
+            page=SyncOffsetPage[EvalRun],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -231,7 +232,7 @@ class EvalRunsResource(SyncAPIResource):
                     eval_run_list_params.EvalRunListParams,
                 ),
             ),
-            cast_to=EvalRunListResponse,
+            model=EvalRun,
         )
 
     def delete(
@@ -522,7 +523,7 @@ class AsyncEvalRunsResource(AsyncAPIResource):
             cast_to=EvalRun,
         )
 
-    async def list(
+    def list(
         self,
         *,
         eval_uuid: str | NotGiven = NOT_GIVEN,
@@ -535,7 +536,7 @@ class AsyncEvalRunsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalRunListResponse:
+    ) -> AsyncPaginator[EvalRun, AsyncOffsetPage[EvalRun]]:
         """
         List all eval runs, with optional filtering.
 
@@ -550,14 +551,15 @@ class AsyncEvalRunsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v2/eval-runs/",
+            page=AsyncOffsetPage[EvalRun],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "eval_uuid": eval_uuid,
                         "limit": limit,
@@ -567,7 +569,7 @@ class AsyncEvalRunsResource(AsyncAPIResource):
                     eval_run_list_params.EvalRunListParams,
                 ),
             ),
-            cast_to=EvalRunListResponse,
+            model=EvalRun,
         )
 
     async def delete(
