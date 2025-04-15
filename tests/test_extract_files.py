@@ -4,8 +4,8 @@ from typing import Sequence
 
 import pytest
 
-from aymara._types import FileTypes
-from aymara._utils import extract_files
+from aymara_ai._types import FileTypes
+from aymara_ai._utils import extract_files
 
 
 def test_removes_files_from_input() -> None:
