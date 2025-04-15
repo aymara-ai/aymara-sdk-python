@@ -117,19 +117,19 @@ class AymaraAI(SyncAPIClient):
         """Construct a new synchronous AymaraAI client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `api_key` from `AYMARA_API_KEY`
-        - `bearer_token` from `AYMARA_BEARER_TOKEN`
+        - `api_key` from `AYMARA_AI_API_KEY`
+        - `bearer_token` from `AYMARA_AI_BEARER_TOKEN`
         """
         if api_key is None:
-            api_key = os.environ.get("AYMARA_API_KEY")
+            api_key = os.environ.get("AYMARA_AI_API_KEY")
         if api_key is None:
             raise AymaraAIError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_API_KEY environment variable"
+                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_AI_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if bearer_token is None:
-            bearer_token = os.environ.get("AYMARA_BEARER_TOKEN")
+            bearer_token = os.environ.get("AYMARA_AI_BEARER_TOKEN")
         self.bearer_token = bearer_token
 
         self._environment = environment
@@ -356,19 +356,19 @@ class AsyncAymaraAI(AsyncAPIClient):
         """Construct a new async AsyncAymaraAI client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `api_key` from `AYMARA_API_KEY`
-        - `bearer_token` from `AYMARA_BEARER_TOKEN`
+        - `api_key` from `AYMARA_AI_API_KEY`
+        - `bearer_token` from `AYMARA_AI_BEARER_TOKEN`
         """
         if api_key is None:
-            api_key = os.environ.get("AYMARA_API_KEY")
+            api_key = os.environ.get("AYMARA_AI_API_KEY")
         if api_key is None:
             raise AymaraAIError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_API_KEY environment variable"
+                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_AI_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if bearer_token is None:
-            bearer_token = os.environ.get("AYMARA_BEARER_TOKEN")
+            bearer_token = os.environ.get("AYMARA_AI_BEARER_TOKEN")
         self.bearer_token = bearer_token
 
         self._environment = environment
