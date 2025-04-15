@@ -1,11 +1,11 @@
 [project]
 name = "aymara-ai"
 version = "0.0.1-alpha.0"
-description = "The official Python library for the aymara-sdk API"
+description = "The official Python library for the aymara-ai API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Aymara SDK", email = "dev-feedback@aymara-sdk.com" },
+{ name = "Aymara AI", email = "dev-feedback@aymara.ai" },
 ]
 dependencies = [
     "httpx>=0.23.0, <1",

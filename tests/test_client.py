@@ -21,11 +21,11 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from aymara_ai import AymaraSDK, AsyncAymaraSDK, APIResponseValidationError
+from aymara_ai import AymaraAI, AsyncAymaraAI, APIResponseValidationError
 from aymara_ai._types import Omit
 from aymara_ai._models import BaseModel, FinalRequestOptions
 from aymara_ai._constants import RAW_RESPONSE_HEADER
-from aymara_ai._exceptions import APIStatusError, AymaraSDKError, APITimeoutError, APIResponseValidationError
+from aymara_ai._exceptions import AymaraAIError, APIStatusError, APITimeoutError, APIResponseValidationError
 from aymara_ai._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -49,7 +49,7 @@ def _low_retry_timeout(*_args: Any, **_kwargs: Any) -> float:
     return 0.1
 
 
-def _get_open_connections(client: AymaraSDK | AsyncAymaraSDK) -> int:
+def _get_open_connections(client: AymaraAI | AsyncAymaraAI) -> int:
     transport = client._client._transport
     assert isinstance(transport, httpx.HTTPTransport) or isinstance(transport, httpx.AsyncHTTPTransport)
 
@@ -57,8 +57,8 @@ def _get_open_connections(client: AymaraSDK | AsyncAymaraSDK) -> int:
     return len(pool._requests)
 
 
-class TestAymaraSDK:
-    client = AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+class TestAymaraAI:
+    client = AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response(self, respx_mock: MockRouter) -> None:
@@ -105,7 +105,7 @@ class TestAymaraSDK:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = AymaraSDK(
+        client = AymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -139,7 +139,7 @@ class TestAymaraSDK:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = AymaraSDK(
+        client = AymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -264,7 +264,7 @@ class TestAymaraSDK:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = AymaraSDK(
+        client = AymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
@@ -275,7 +275,7 @@ class TestAymaraSDK:
     def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
-            client = AymaraSDK(
+            client = AymaraAI(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -285,7 +285,7 @@ class TestAymaraSDK:
 
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
-            client = AymaraSDK(
+            client = AymaraAI(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -295,7 +295,7 @@ class TestAymaraSDK:
 
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = AymaraSDK(
+            client = AymaraAI(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -306,7 +306,7 @@ class TestAymaraSDK:
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             async with httpx.AsyncClient() as http_client:
-                AymaraSDK(
+                AymaraAI(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -314,14 +314,14 @@ class TestAymaraSDK:
                 )
 
     def test_default_headers_option(self) -> None:
-        client = AymaraSDK(
+        client = AymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = AymaraSDK(
+        client2 = AymaraAI(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -335,17 +335,17 @@ class TestAymaraSDK:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
 
-        with pytest.raises(AymaraSDKError):
+        with pytest.raises(AymaraAIError):
             with update_env(**{"AYMARA_API_KEY": Omit()}):
-                client2 = AymaraSDK(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = AymaraAI(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = AymaraSDK(
+        client = AymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -459,7 +459,7 @@ class TestAymaraSDK:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, client: AymaraSDK) -> None:
+    def test_multipart_repeating_array(self, client: AymaraAI) -> None:
         request = client._build_request(
             FinalRequestOptions.construct(
                 method="get",
@@ -546,7 +546,7 @@ class TestAymaraSDK:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = AymaraSDK(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
+        client = AymaraAI(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -554,16 +554,16 @@ class TestAymaraSDK:
         assert client.base_url == "https://example.com/from_setter/"
 
     def test_base_url_env(self) -> None:
-        with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
-            client = AymaraSDK(api_key=api_key, _strict_response_validation=True)
+        with update_env(AYMARA_AI_BASE_URL="http://localhost:5000/from/env"):
+            client = AymaraAI(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
         # explicit environment arg requires explicitness
-        with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
+        with update_env(AYMARA_AI_BASE_URL="http://localhost:5000/from/env"):
             with pytest.raises(ValueError, match=r"you must pass base_url=None"):
-                AymaraSDK(api_key=api_key, _strict_response_validation=True, environment="production")
+                AymaraAI(api_key=api_key, _strict_response_validation=True, environment="production")
 
-            client = AymaraSDK(
+            client = AymaraAI(
                 base_url=None, api_key=api_key, _strict_response_validation=True, environment="production"
             )
             assert str(client.base_url).startswith("https://api.example.com")
@@ -571,8 +571,8 @@ class TestAymaraSDK:
     @pytest.mark.parametrize(
         "client",
         [
-            AymaraSDK(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            AymaraSDK(
+            AymaraAI(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            AymaraAI(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -581,7 +581,7 @@ class TestAymaraSDK:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: AymaraSDK) -> None:
+    def test_base_url_trailing_slash(self, client: AymaraAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -594,8 +594,8 @@ class TestAymaraSDK:
     @pytest.mark.parametrize(
         "client",
         [
-            AymaraSDK(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            AymaraSDK(
+            AymaraAI(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            AymaraAI(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -604,7 +604,7 @@ class TestAymaraSDK:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: AymaraSDK) -> None:
+    def test_base_url_no_trailing_slash(self, client: AymaraAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -617,8 +617,8 @@ class TestAymaraSDK:
     @pytest.mark.parametrize(
         "client",
         [
-            AymaraSDK(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            AymaraSDK(
+            AymaraAI(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            AymaraAI(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -627,7 +627,7 @@ class TestAymaraSDK:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: AymaraSDK) -> None:
+    def test_absolute_request_url(self, client: AymaraAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -638,7 +638,7 @@ class TestAymaraSDK:
         assert request.url == "https://myapi.com/foo"
 
     def test_copied_client_does_not_close_http(self) -> None:
-        client = AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -649,7 +649,7 @@ class TestAymaraSDK:
         assert not client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        client = AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -670,7 +670,7 @@ class TestAymaraSDK:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
+            AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
 
     @pytest.mark.respx(base_url=base_url)
     def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -679,12 +679,12 @@ class TestAymaraSDK:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        client = AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        client = AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -712,7 +712,7 @@ class TestAymaraSDK:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -745,7 +745,7 @@ class TestAymaraSDK:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
         self,
-        client: AymaraSDK,
+        client: AymaraAI,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -774,7 +774,7 @@ class TestAymaraSDK:
     @mock.patch("aymara_ai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_omit_retry_count_header(
-        self, client: AymaraSDK, failures_before_success: int, respx_mock: MockRouter
+        self, client: AymaraAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -797,7 +797,7 @@ class TestAymaraSDK:
     @mock.patch("aymara_ai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
-        self, client: AymaraSDK, failures_before_success: int, respx_mock: MockRouter
+        self, client: AymaraAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -817,8 +817,8 @@ class TestAymaraSDK:
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
 
-class TestAsyncAymaraSDK:
-    client = AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+class TestAsyncAymaraAI:
+    client = AsyncAymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
@@ -867,7 +867,7 @@ class TestAsyncAymaraSDK:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = AsyncAymaraSDK(
+        client = AsyncAymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -901,7 +901,7 @@ class TestAsyncAymaraSDK:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = AsyncAymaraSDK(
+        client = AsyncAymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -1026,7 +1026,7 @@ class TestAsyncAymaraSDK:
         assert timeout == httpx.Timeout(100.0)
 
     async def test_client_timeout_option(self) -> None:
-        client = AsyncAymaraSDK(
+        client = AsyncAymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
@@ -1037,7 +1037,7 @@ class TestAsyncAymaraSDK:
     async def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
-            client = AsyncAymaraSDK(
+            client = AsyncAymaraAI(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1047,7 +1047,7 @@ class TestAsyncAymaraSDK:
 
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
-            client = AsyncAymaraSDK(
+            client = AsyncAymaraAI(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1057,7 +1057,7 @@ class TestAsyncAymaraSDK:
 
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = AsyncAymaraSDK(
+            client = AsyncAymaraAI(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1068,7 +1068,7 @@ class TestAsyncAymaraSDK:
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             with httpx.Client() as http_client:
-                AsyncAymaraSDK(
+                AsyncAymaraAI(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -1076,14 +1076,14 @@ class TestAsyncAymaraSDK:
                 )
 
     def test_default_headers_option(self) -> None:
-        client = AsyncAymaraSDK(
+        client = AsyncAymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = AsyncAymaraSDK(
+        client2 = AsyncAymaraAI(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -1097,17 +1097,17 @@ class TestAsyncAymaraSDK:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncAymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
 
-        with pytest.raises(AymaraSDKError):
+        with pytest.raises(AymaraAIError):
             with update_env(**{"AYMARA_API_KEY": Omit()}):
-                client2 = AsyncAymaraSDK(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = AsyncAymaraAI(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = AsyncAymaraSDK(
+        client = AsyncAymaraAI(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1221,7 +1221,7 @@ class TestAsyncAymaraSDK:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, async_client: AsyncAymaraSDK) -> None:
+    def test_multipart_repeating_array(self, async_client: AsyncAymaraAI) -> None:
         request = async_client._build_request(
             FinalRequestOptions.construct(
                 method="get",
@@ -1308,7 +1308,7 @@ class TestAsyncAymaraSDK:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = AsyncAymaraSDK(
+        client = AsyncAymaraAI(
             base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
@@ -1318,16 +1318,16 @@ class TestAsyncAymaraSDK:
         assert client.base_url == "https://example.com/from_setter/"
 
     def test_base_url_env(self) -> None:
-        with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncAymaraSDK(api_key=api_key, _strict_response_validation=True)
+        with update_env(AYMARA_AI_BASE_URL="http://localhost:5000/from/env"):
+            client = AsyncAymaraAI(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
         # explicit environment arg requires explicitness
-        with update_env(AYMARA_SDK_BASE_URL="http://localhost:5000/from/env"):
+        with update_env(AYMARA_AI_BASE_URL="http://localhost:5000/from/env"):
             with pytest.raises(ValueError, match=r"you must pass base_url=None"):
-                AsyncAymaraSDK(api_key=api_key, _strict_response_validation=True, environment="production")
+                AsyncAymaraAI(api_key=api_key, _strict_response_validation=True, environment="production")
 
-            client = AsyncAymaraSDK(
+            client = AsyncAymaraAI(
                 base_url=None, api_key=api_key, _strict_response_validation=True, environment="production"
             )
             assert str(client.base_url).startswith("https://api.example.com")
@@ -1335,10 +1335,10 @@ class TestAsyncAymaraSDK:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncAymaraSDK(
+            AsyncAymaraAI(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncAymaraSDK(
+            AsyncAymaraAI(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1347,7 +1347,7 @@ class TestAsyncAymaraSDK:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: AsyncAymaraSDK) -> None:
+    def test_base_url_trailing_slash(self, client: AsyncAymaraAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1360,10 +1360,10 @@ class TestAsyncAymaraSDK:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncAymaraSDK(
+            AsyncAymaraAI(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncAymaraSDK(
+            AsyncAymaraAI(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1372,7 +1372,7 @@ class TestAsyncAymaraSDK:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: AsyncAymaraSDK) -> None:
+    def test_base_url_no_trailing_slash(self, client: AsyncAymaraAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1385,10 +1385,10 @@ class TestAsyncAymaraSDK:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncAymaraSDK(
+            AsyncAymaraAI(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncAymaraSDK(
+            AsyncAymaraAI(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1397,7 +1397,7 @@ class TestAsyncAymaraSDK:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: AsyncAymaraSDK) -> None:
+    def test_absolute_request_url(self, client: AsyncAymaraAI) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1408,7 +1408,7 @@ class TestAsyncAymaraSDK:
         assert request.url == "https://myapi.com/foo"
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        client = AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncAymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -1420,7 +1420,7 @@ class TestAsyncAymaraSDK:
         assert not client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        client = AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncAymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         async with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -1442,7 +1442,7 @@ class TestAsyncAymaraSDK:
 
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            AsyncAymaraSDK(
+            AsyncAymaraAI(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
@@ -1454,12 +1454,12 @@ class TestAsyncAymaraSDK:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = AsyncAymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        client = AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        client = AsyncAymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = await client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1488,7 +1488,7 @@ class TestAsyncAymaraSDK:
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
     async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncAymaraAI(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -1526,7 +1526,7 @@ class TestAsyncAymaraSDK:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
-        async_client: AsyncAymaraSDK,
+        async_client: AsyncAymaraAI,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -1556,7 +1556,7 @@ class TestAsyncAymaraSDK:
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_omit_retry_count_header(
-        self, async_client: AsyncAymaraSDK, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncAymaraAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1580,7 +1580,7 @@ class TestAsyncAymaraSDK:
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_overwrite_retry_count_header(
-        self, async_client: AsyncAymaraSDK, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncAymaraAI, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 

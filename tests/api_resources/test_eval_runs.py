@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_ai import AymaraSDK, AsyncAymaraSDK
+from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
 from aymara_ai.types import (
     EvalRun,
@@ -24,7 +24,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_create(self, client: AymaraSDK) -> None:
+    def test_method_create(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -38,7 +38,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_create_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_create_with_all_params(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -72,7 +72,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_create(self, client: AymaraSDK) -> None:
+    def test_raw_response_create(self, client: AymaraAI) -> None:
         response = client.eval_runs.with_raw_response.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -90,7 +90,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_create(self, client: AymaraSDK) -> None:
+    def test_streaming_response_create(self, client: AymaraAI) -> None:
         with client.eval_runs.with_streaming_response.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -110,7 +110,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve(self, client: AymaraSDK) -> None:
+    def test_method_retrieve(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.retrieve(
             eval_run_uuid="eval_run_uuid",
         )
@@ -118,7 +118,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_retrieve_with_all_params(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.retrieve(
             eval_run_uuid="eval_run_uuid",
             workspace_uuid="workspace_uuid",
@@ -127,7 +127,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_retrieve(self, client: AymaraSDK) -> None:
+    def test_raw_response_retrieve(self, client: AymaraAI) -> None:
         response = client.eval_runs.with_raw_response.retrieve(
             eval_run_uuid="eval_run_uuid",
         )
@@ -139,7 +139,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_retrieve(self, client: AymaraSDK) -> None:
+    def test_streaming_response_retrieve(self, client: AymaraAI) -> None:
         with client.eval_runs.with_streaming_response.retrieve(
             eval_run_uuid="eval_run_uuid",
         ) as response:
@@ -153,7 +153,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_retrieve(self, client: AymaraSDK) -> None:
+    def test_path_params_retrieve(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             client.eval_runs.with_raw_response.retrieve(
                 eval_run_uuid="",
@@ -161,13 +161,13 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_list(self, client: AymaraSDK) -> None:
+    def test_method_list(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.list()
         assert_matches_type(SyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_list_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_list_with_all_params(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.list(
             eval_uuid="eval_uuid",
             limit=1,
@@ -178,7 +178,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_list(self, client: AymaraSDK) -> None:
+    def test_raw_response_list(self, client: AymaraAI) -> None:
         response = client.eval_runs.with_raw_response.list()
 
         assert response.is_closed is True
@@ -188,7 +188,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_list(self, client: AymaraSDK) -> None:
+    def test_streaming_response_list(self, client: AymaraAI) -> None:
         with client.eval_runs.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -200,7 +200,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_delete(self, client: AymaraSDK) -> None:
+    def test_method_delete(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.delete(
             eval_run_uuid="eval_run_uuid",
         )
@@ -208,7 +208,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_delete_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_delete_with_all_params(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.delete(
             eval_run_uuid="eval_run_uuid",
             workspace_uuid="workspace_uuid",
@@ -217,7 +217,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_delete(self, client: AymaraSDK) -> None:
+    def test_raw_response_delete(self, client: AymaraAI) -> None:
         response = client.eval_runs.with_raw_response.delete(
             eval_run_uuid="eval_run_uuid",
         )
@@ -229,7 +229,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_delete(self, client: AymaraSDK) -> None:
+    def test_streaming_response_delete(self, client: AymaraAI) -> None:
         with client.eval_runs.with_streaming_response.delete(
             eval_run_uuid="eval_run_uuid",
         ) as response:
@@ -243,7 +243,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_delete(self, client: AymaraSDK) -> None:
+    def test_path_params_delete(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             client.eval_runs.with_raw_response.delete(
                 eval_run_uuid="",
@@ -251,7 +251,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_get_responses(self, client: AymaraSDK) -> None:
+    def test_method_get_responses(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.get_responses(
             eval_run_uuid="eval_run_uuid",
         )
@@ -259,7 +259,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_get_responses_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_get_responses_with_all_params(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.get_responses(
             eval_run_uuid="eval_run_uuid",
             limit=1,
@@ -270,7 +270,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_get_responses(self, client: AymaraSDK) -> None:
+    def test_raw_response_get_responses(self, client: AymaraAI) -> None:
         response = client.eval_runs.with_raw_response.get_responses(
             eval_run_uuid="eval_run_uuid",
         )
@@ -282,7 +282,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_get_responses(self, client: AymaraSDK) -> None:
+    def test_streaming_response_get_responses(self, client: AymaraAI) -> None:
         with client.eval_runs.with_streaming_response.get_responses(
             eval_run_uuid="eval_run_uuid",
         ) as response:
@@ -296,7 +296,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_get_responses(self, client: AymaraSDK) -> None:
+    def test_path_params_get_responses(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             client.eval_runs.with_raw_response.get_responses(
                 eval_run_uuid="",
@@ -304,7 +304,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_run_score(self, client: AymaraSDK) -> None:
+    def test_method_run_score(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.run_score(
             eval_uuid="eval_uuid",
             responses=[
@@ -318,7 +318,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_run_score_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_run_score_with_all_params(self, client: AymaraAI) -> None:
         eval_run = client.eval_runs.run_score(
             eval_uuid="eval_uuid",
             responses=[
@@ -352,7 +352,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_run_score(self, client: AymaraSDK) -> None:
+    def test_raw_response_run_score(self, client: AymaraAI) -> None:
         response = client.eval_runs.with_raw_response.run_score(
             eval_uuid="eval_uuid",
             responses=[
@@ -370,7 +370,7 @@ class TestEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_run_score(self, client: AymaraSDK) -> None:
+    def test_streaming_response_run_score(self, client: AymaraAI) -> None:
         with client.eval_runs.with_streaming_response.run_score(
             eval_uuid="eval_uuid",
             responses=[
@@ -394,7 +394,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_create(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_create(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -408,7 +408,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_create_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_create_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -442,7 +442,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_create(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_create(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.eval_runs.with_raw_response.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -460,7 +460,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_create(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_create(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.eval_runs.with_streaming_response.create(
             eval_uuid="eval_uuid",
             responses=[
@@ -480,7 +480,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_retrieve(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.retrieve(
             eval_run_uuid="eval_run_uuid",
         )
@@ -488,7 +488,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.retrieve(
             eval_run_uuid="eval_run_uuid",
             workspace_uuid="workspace_uuid",
@@ -497,7 +497,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_retrieve(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.eval_runs.with_raw_response.retrieve(
             eval_run_uuid="eval_run_uuid",
         )
@@ -509,7 +509,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_retrieve(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.eval_runs.with_streaming_response.retrieve(
             eval_run_uuid="eval_run_uuid",
         ) as response:
@@ -523,7 +523,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_path_params_retrieve(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             await async_client.eval_runs.with_raw_response.retrieve(
                 eval_run_uuid="",
@@ -531,13 +531,13 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_list(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.list()
         assert_matches_type(AsyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_list_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_list_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.list(
             eval_uuid="eval_uuid",
             limit=1,
@@ -548,7 +548,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_list(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.eval_runs.with_raw_response.list()
 
         assert response.is_closed is True
@@ -558,7 +558,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_list(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.eval_runs.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -570,7 +570,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_delete(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_delete(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.delete(
             eval_run_uuid="eval_run_uuid",
         )
@@ -578,7 +578,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_delete_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_delete_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.delete(
             eval_run_uuid="eval_run_uuid",
             workspace_uuid="workspace_uuid",
@@ -587,7 +587,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_delete(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_delete(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.eval_runs.with_raw_response.delete(
             eval_run_uuid="eval_run_uuid",
         )
@@ -599,7 +599,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_delete(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_delete(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.eval_runs.with_streaming_response.delete(
             eval_run_uuid="eval_run_uuid",
         ) as response:
@@ -613,7 +613,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_delete(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_path_params_delete(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             await async_client.eval_runs.with_raw_response.delete(
                 eval_run_uuid="",
@@ -621,7 +621,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_get_responses(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_get_responses(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.get_responses(
             eval_run_uuid="eval_run_uuid",
         )
@@ -629,7 +629,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_get_responses_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_get_responses_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.get_responses(
             eval_run_uuid="eval_run_uuid",
             limit=1,
@@ -640,7 +640,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_get_responses(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_get_responses(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.eval_runs.with_raw_response.get_responses(
             eval_run_uuid="eval_run_uuid",
         )
@@ -652,7 +652,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_get_responses(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_get_responses(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.eval_runs.with_streaming_response.get_responses(
             eval_run_uuid="eval_run_uuid",
         ) as response:
@@ -666,7 +666,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_get_responses(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_path_params_get_responses(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             await async_client.eval_runs.with_raw_response.get_responses(
                 eval_run_uuid="",
@@ -674,7 +674,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_run_score(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_run_score(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.run_score(
             eval_uuid="eval_uuid",
             responses=[
@@ -688,7 +688,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_run_score_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_run_score_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         eval_run = await async_client.eval_runs.run_score(
             eval_uuid="eval_uuid",
             responses=[
@@ -722,7 +722,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_run_score(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_run_score(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.eval_runs.with_raw_response.run_score(
             eval_uuid="eval_uuid",
             responses=[
@@ -740,7 +740,7 @@ class TestAsyncEvalRuns:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_run_score(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_run_score(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.eval_runs.with_streaming_response.run_score(
             eval_uuid="eval_uuid",
             responses=[

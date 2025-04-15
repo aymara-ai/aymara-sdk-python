@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_ai import AymaraSDK, AsyncAymaraSDK
+from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
 from aymara_ai.types import User
 
@@ -19,13 +19,13 @@ class TestAccounts:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve_me(self, client: AymaraSDK) -> None:
+    def test_method_retrieve_me(self, client: AymaraAI) -> None:
         account = client.accounts.retrieve_me()
         assert_matches_type(User, account, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_retrieve_me(self, client: AymaraSDK) -> None:
+    def test_raw_response_retrieve_me(self, client: AymaraAI) -> None:
         response = client.accounts.with_raw_response.retrieve_me()
 
         assert response.is_closed is True
@@ -35,7 +35,7 @@ class TestAccounts:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_retrieve_me(self, client: AymaraSDK) -> None:
+    def test_streaming_response_retrieve_me(self, client: AymaraAI) -> None:
         with client.accounts.with_streaming_response.retrieve_me() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -51,13 +51,13 @@ class TestAsyncAccounts:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve_me(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_retrieve_me(self, async_client: AsyncAymaraAI) -> None:
         account = await async_client.accounts.retrieve_me()
         assert_matches_type(User, account, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_retrieve_me(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_retrieve_me(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.accounts.with_raw_response.retrieve_me()
 
         assert response.is_closed is True
@@ -67,7 +67,7 @@ class TestAsyncAccounts:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_retrieve_me(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_retrieve_me(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.accounts.with_streaming_response.retrieve_me() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
