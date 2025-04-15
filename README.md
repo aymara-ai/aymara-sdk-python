@@ -31,7 +31,7 @@ import os
 from aymara_ai import AymaraAI
 
 client = AymaraAI(
-    api_key=os.environ.get("AYMARA_API_KEY"),  # This is the default and can be omitted
+    api_key=os.environ.get("AYMARA_AI_API_KEY"),  # This is the default and can be omitted
     # or 'production' | 'development'; defaults to "production".
     environment="staging",
 )
@@ -41,7 +41,7 @@ client.health.check()
 
 While you can provide an `api_key` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `AYMARA_API_KEY="My API Key"` to your `.env` file
+to add `AYMARA_AI_API_KEY="My API Key"` to your `.env` file
 so that your API Key is not stored in source control.
 
 ## Async usage
@@ -54,7 +54,7 @@ import asyncio
 from aymara_ai import AsyncAymaraAI
 
 client = AsyncAymaraAI(
-    api_key=os.environ.get("AYMARA_API_KEY"),  # This is the default and can be omitted
+    api_key=os.environ.get("AYMARA_AI_API_KEY"),  # This is the default and can be omitted
     # or 'production' | 'development'; defaults to "production".
     environment="staging",
 )

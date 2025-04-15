@@ -340,7 +340,7 @@ class TestAymaraAI:
         assert request.headers.get("x-api-key") == api_key
 
         with pytest.raises(AymaraAIError):
-            with update_env(**{"AYMARA_API_KEY": Omit()}):
+            with update_env(**{"AYMARA_AI_API_KEY": Omit()}):
                 client2 = AymaraAI(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
@@ -1102,7 +1102,7 @@ class TestAsyncAymaraAI:
         assert request.headers.get("x-api-key") == api_key
 
         with pytest.raises(AymaraAIError):
-            with update_env(**{"AYMARA_API_KEY": Omit()}):
+            with update_env(**{"AYMARA_AI_API_KEY": Omit()}):
                 client2 = AsyncAymaraAI(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
