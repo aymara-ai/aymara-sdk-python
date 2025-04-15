@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Any, Dict, Mapping, cast
+from typing import Any, Dict, Union, Mapping, cast
 from typing_extensions import Self, Literal, override
 
 import httpx
@@ -11,32 +11,41 @@ import httpx
 from . import _exceptions
 from ._qs import Querystring
 from ._types import (
+    NOT_GIVEN,
     Omit,
     Timeout,
     NotGiven,
     Transport,
     ProxiesTypes,
     RequestOptions,
-    not_given,
 )
-from ._utils import is_given, get_async_library, maybe_coerce_boolean
-from ._compat import cached_property
+from ._utils import (
+    is_given,
+    get_async_library,
+)
 from ._version import __version__
+from .resources import (
+    evals,
+    files,
+    usage,
+    health,
+    accounts,
+    policies,
+    webhooks,
+    eval_types,
+    workspaces,
+    integration_test,
+)
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import AymaraAIError, APIStatusError
+from ._exceptions import APIStatusError, AymaraSDKError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
     AsyncAPIClient,
 )
-
-if TYPE_CHECKING:
-    from .resources import evals, files, health, reports, eval_types
-    from .resources.files import FilesResource, AsyncFilesResource
-    from .resources.health import HealthResource, AsyncHealthResource
-    from .resources.reports import ReportsResource, AsyncReportsResource
-    from .resources.eval_types import EvalTypesResource, AsyncEvalTypesResource
-    from .resources.evals.evals import EvalsResource, AsyncEvalsResource
+from .resources.tests import tests
+from .resources.scores import scores
+from .resources.eval_runs import eval_runs
 
 __all__ = [
     "ENVIRONMENTS",
@@ -44,24 +53,39 @@ __all__ = [
     "Transport",
     "ProxiesTypes",
     "RequestOptions",
-    "AymaraAI",
-    "AsyncAymaraAI",
+    "AymaraSDK",
+    "AsyncAymaraSDK",
     "Client",
     "AsyncClient",
 ]
 
 ENVIRONMENTS: Dict[str, str] = {
-    "production": "https://api.aymara.ai",
-    "staging": "https://staging-api.aymara.ai",
+    "production": "https://api.example.com",
+    "staging": "https://staging-api.example.com",
     "development": "http://localhost:8000",
 }
 
 
-class AymaraAI(SyncAPIClient):
+class AymaraSDK(SyncAPIClient):
+    health: health.HealthResource
+    integration_test: integration_test.IntegrationTestResource
+    tests: tests.TestsResource
+    scores: scores.ScoresResource
+    workspaces: workspaces.WorkspacesResource
+    webhooks: webhooks.WebhooksResource
+    accounts: accounts.AccountsResource
+    usage: usage.UsageResource
+    policies: policies.PoliciesResource
+    evals: evals.EvalsResource
+    eval_types: eval_types.EvalTypesResource
+    eval_runs: eval_runs.EvalRunsResource
+    files: files.FilesResource
+    with_raw_response: AymaraSDKWithRawResponse
+    with_streaming_response: AymaraSDKWithStreamedResponse
+
     # client options
     api_key: str
     bearer_token: str | None
-    use_sandbox: bool | None
 
     _environment: Literal["production", "staging", "development"] | NotGiven
 
@@ -70,10 +94,9 @@ class AymaraAI(SyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
-        use_sandbox: bool | None = None,
-        environment: Literal["production", "staging", "development"] | NotGiven = not_given,
-        base_url: str | httpx.URL | None | NotGiven = not_given,
-        timeout: float | Timeout | None | NotGiven = not_given,
+        environment: Literal["production", "staging", "development"] | NotGiven = NOT_GIVEN,
+        base_url: str | httpx.URL | None | NotGiven = NOT_GIVEN,
+        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -91,39 +114,34 @@ class AymaraAI(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous AymaraAI client instance.
+        """Construct a new synchronous AymaraSDK client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `api_key` from `AYMARA_AI_API_KEY`
-        - `bearer_token` from `AYMARA_AI_BEARER_TOKEN`
-        - `use_sandbox` from `AYMARA_AI_USE_SANDBOX`
+        - `api_key` from `AYMARA_API_KEY`
+        - `bearer_token` from `AYMARA_BEARER_TOKEN`
         """
         if api_key is None:
-            api_key = os.environ.get("AYMARA_AI_API_KEY")
+            api_key = os.environ.get("AYMARA_API_KEY")
         if api_key is None:
-            raise AymaraAIError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_AI_API_KEY environment variable"
+            raise AymaraSDKError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if bearer_token is None:
-            bearer_token = os.environ.get("AYMARA_AI_BEARER_TOKEN")
+            bearer_token = os.environ.get("AYMARA_BEARER_TOKEN")
         self.bearer_token = bearer_token
-
-        if use_sandbox is None:
-            use_sandbox = maybe_coerce_boolean(os.environ.get("AYMARA_AI_USE_SANDBOX")) or False
-        self.use_sandbox = use_sandbox
 
         self._environment = environment
 
-        base_url_env = os.environ.get("AYMARA_AI_BASE_URL")
+        base_url_env = os.environ.get("AYMARA_SDK_BASE_URL")
         if is_given(base_url) and base_url is not None:
             # cast required because mypy doesn't understand the type narrowing
             base_url = cast("str | httpx.URL", base_url)  # pyright: ignore[reportUnnecessaryCast]
         elif is_given(environment):
             if base_url_env and base_url is not None:
                 raise ValueError(
-                    "Ambiguous URL; The `AYMARA_AI_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
+                    "Ambiguous URL; The `AYMARA_SDK_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
                 )
 
             try:
@@ -151,43 +169,21 @@ class AymaraAI(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-    @cached_property
-    def health(self) -> HealthResource:
-        from .resources.health import HealthResource
-
-        return HealthResource(self)
-
-    @cached_property
-    def evals(self) -> EvalsResource:
-        from .resources.evals import EvalsResource
-
-        return EvalsResource(self)
-
-    @cached_property
-    def eval_types(self) -> EvalTypesResource:
-        from .resources.eval_types import EvalTypesResource
-
-        return EvalTypesResource(self)
-
-    @cached_property
-    def reports(self) -> ReportsResource:
-        from .resources.reports import ReportsResource
-
-        return ReportsResource(self)
-
-    @cached_property
-    def files(self) -> FilesResource:
-        from .resources.files import FilesResource
-
-        return FilesResource(self)
-
-    @cached_property
-    def with_raw_response(self) -> AymaraAIWithRawResponse:
-        return AymaraAIWithRawResponse(self)
-
-    @cached_property
-    def with_streaming_response(self) -> AymaraAIWithStreamedResponse:
-        return AymaraAIWithStreamedResponse(self)
+        self.health = health.HealthResource(self)
+        self.integration_test = integration_test.IntegrationTestResource(self)
+        self.tests = tests.TestsResource(self)
+        self.scores = scores.ScoresResource(self)
+        self.workspaces = workspaces.WorkspacesResource(self)
+        self.webhooks = webhooks.WebhooksResource(self)
+        self.accounts = accounts.AccountsResource(self)
+        self.usage = usage.UsageResource(self)
+        self.policies = policies.PoliciesResource(self)
+        self.evals = evals.EvalsResource(self)
+        self.eval_types = eval_types.EvalTypesResource(self)
+        self.eval_runs = eval_runs.EvalRunsResource(self)
+        self.files = files.FilesResource(self)
+        self.with_raw_response = AymaraSDKWithRawResponse(self)
+        self.with_streaming_response = AymaraSDKWithStreamedResponse(self)
 
     @property
     @override
@@ -217,7 +213,6 @@ class AymaraAI(SyncAPIClient):
         return {
             **super().default_headers,
             "X-Stainless-Async": "false",
-            "X-Use-Sandbox": str(self.use_sandbox) if self.use_sandbox is not None else Omit(),
             **self._custom_headers,
         }
 
@@ -226,12 +221,11 @@ class AymaraAI(SyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
-        use_sandbox: bool | None = None,
         environment: Literal["production", "staging", "development"] | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = not_given,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.Client | None = None,
-        max_retries: int | NotGiven = not_given,
+        max_retries: int | NotGiven = NOT_GIVEN,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -263,7 +257,6 @@ class AymaraAI(SyncAPIClient):
         return self.__class__(
             api_key=api_key or self.api_key,
             bearer_token=bearer_token or self.bearer_token,
-            use_sandbox=use_sandbox or self.use_sandbox,
             base_url=base_url or self.base_url,
             environment=environment or self._environment,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
@@ -312,11 +305,26 @@ class AymaraAI(SyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AsyncAymaraAI(AsyncAPIClient):
+class AsyncAymaraSDK(AsyncAPIClient):
+    health: health.AsyncHealthResource
+    integration_test: integration_test.AsyncIntegrationTestResource
+    tests: tests.AsyncTestsResource
+    scores: scores.AsyncScoresResource
+    workspaces: workspaces.AsyncWorkspacesResource
+    webhooks: webhooks.AsyncWebhooksResource
+    accounts: accounts.AsyncAccountsResource
+    usage: usage.AsyncUsageResource
+    policies: policies.AsyncPoliciesResource
+    evals: evals.AsyncEvalsResource
+    eval_types: eval_types.AsyncEvalTypesResource
+    eval_runs: eval_runs.AsyncEvalRunsResource
+    files: files.AsyncFilesResource
+    with_raw_response: AsyncAymaraSDKWithRawResponse
+    with_streaming_response: AsyncAymaraSDKWithStreamedResponse
+
     # client options
     api_key: str
     bearer_token: str | None
-    use_sandbox: bool | None
 
     _environment: Literal["production", "staging", "development"] | NotGiven
 
@@ -325,10 +333,9 @@ class AsyncAymaraAI(AsyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
-        use_sandbox: bool | None = None,
-        environment: Literal["production", "staging", "development"] | NotGiven = not_given,
-        base_url: str | httpx.URL | None | NotGiven = not_given,
-        timeout: float | Timeout | None | NotGiven = not_given,
+        environment: Literal["production", "staging", "development"] | NotGiven = NOT_GIVEN,
+        base_url: str | httpx.URL | None | NotGiven = NOT_GIVEN,
+        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -346,39 +353,34 @@ class AsyncAymaraAI(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async AsyncAymaraAI client instance.
+        """Construct a new async AsyncAymaraSDK client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `api_key` from `AYMARA_AI_API_KEY`
-        - `bearer_token` from `AYMARA_AI_BEARER_TOKEN`
-        - `use_sandbox` from `AYMARA_AI_USE_SANDBOX`
+        - `api_key` from `AYMARA_API_KEY`
+        - `bearer_token` from `AYMARA_BEARER_TOKEN`
         """
         if api_key is None:
-            api_key = os.environ.get("AYMARA_AI_API_KEY")
+            api_key = os.environ.get("AYMARA_API_KEY")
         if api_key is None:
-            raise AymaraAIError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_AI_API_KEY environment variable"
+            raise AymaraSDKError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if bearer_token is None:
-            bearer_token = os.environ.get("AYMARA_AI_BEARER_TOKEN")
+            bearer_token = os.environ.get("AYMARA_BEARER_TOKEN")
         self.bearer_token = bearer_token
-
-        if use_sandbox is None:
-            use_sandbox = maybe_coerce_boolean(os.environ.get("AYMARA_AI_USE_SANDBOX")) or False
-        self.use_sandbox = use_sandbox
 
         self._environment = environment
 
-        base_url_env = os.environ.get("AYMARA_AI_BASE_URL")
+        base_url_env = os.environ.get("AYMARA_SDK_BASE_URL")
         if is_given(base_url) and base_url is not None:
             # cast required because mypy doesn't understand the type narrowing
             base_url = cast("str | httpx.URL", base_url)  # pyright: ignore[reportUnnecessaryCast]
         elif is_given(environment):
             if base_url_env and base_url is not None:
                 raise ValueError(
-                    "Ambiguous URL; The `AYMARA_AI_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
+                    "Ambiguous URL; The `AYMARA_SDK_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
                 )
 
             try:
@@ -406,43 +408,21 @@ class AsyncAymaraAI(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-    @cached_property
-    def health(self) -> AsyncHealthResource:
-        from .resources.health import AsyncHealthResource
-
-        return AsyncHealthResource(self)
-
-    @cached_property
-    def evals(self) -> AsyncEvalsResource:
-        from .resources.evals import AsyncEvalsResource
-
-        return AsyncEvalsResource(self)
-
-    @cached_property
-    def eval_types(self) -> AsyncEvalTypesResource:
-        from .resources.eval_types import AsyncEvalTypesResource
-
-        return AsyncEvalTypesResource(self)
-
-    @cached_property
-    def reports(self) -> AsyncReportsResource:
-        from .resources.reports import AsyncReportsResource
-
-        return AsyncReportsResource(self)
-
-    @cached_property
-    def files(self) -> AsyncFilesResource:
-        from .resources.files import AsyncFilesResource
-
-        return AsyncFilesResource(self)
-
-    @cached_property
-    def with_raw_response(self) -> AsyncAymaraAIWithRawResponse:
-        return AsyncAymaraAIWithRawResponse(self)
-
-    @cached_property
-    def with_streaming_response(self) -> AsyncAymaraAIWithStreamedResponse:
-        return AsyncAymaraAIWithStreamedResponse(self)
+        self.health = health.AsyncHealthResource(self)
+        self.integration_test = integration_test.AsyncIntegrationTestResource(self)
+        self.tests = tests.AsyncTestsResource(self)
+        self.scores = scores.AsyncScoresResource(self)
+        self.workspaces = workspaces.AsyncWorkspacesResource(self)
+        self.webhooks = webhooks.AsyncWebhooksResource(self)
+        self.accounts = accounts.AsyncAccountsResource(self)
+        self.usage = usage.AsyncUsageResource(self)
+        self.policies = policies.AsyncPoliciesResource(self)
+        self.evals = evals.AsyncEvalsResource(self)
+        self.eval_types = eval_types.AsyncEvalTypesResource(self)
+        self.eval_runs = eval_runs.AsyncEvalRunsResource(self)
+        self.files = files.AsyncFilesResource(self)
+        self.with_raw_response = AsyncAymaraSDKWithRawResponse(self)
+        self.with_streaming_response = AsyncAymaraSDKWithStreamedResponse(self)
 
     @property
     @override
@@ -472,7 +452,6 @@ class AsyncAymaraAI(AsyncAPIClient):
         return {
             **super().default_headers,
             "X-Stainless-Async": f"async:{get_async_library()}",
-            "X-Use-Sandbox": str(self.use_sandbox) if self.use_sandbox is not None else Omit(),
             **self._custom_headers,
         }
 
@@ -481,12 +460,11 @@ class AsyncAymaraAI(AsyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
-        use_sandbox: bool | None = None,
         environment: Literal["production", "staging", "development"] | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = not_given,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.AsyncClient | None = None,
-        max_retries: int | NotGiven = not_given,
+        max_retries: int | NotGiven = NOT_GIVEN,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -518,7 +496,6 @@ class AsyncAymaraAI(AsyncAPIClient):
         return self.__class__(
             api_key=api_key or self.api_key,
             bearer_token=bearer_token or self.bearer_token,
-            use_sandbox=use_sandbox or self.use_sandbox,
             base_url=base_url or self.base_url,
             environment=environment or self._environment,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
@@ -567,154 +544,76 @@ class AsyncAymaraAI(AsyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AymaraAIWithRawResponse:
-    _client: AymaraAI
-
-    def __init__(self, client: AymaraAI) -> None:
-        self._client = client
-
-    @cached_property
-    def health(self) -> health.HealthResourceWithRawResponse:
-        from .resources.health import HealthResourceWithRawResponse
-
-        return HealthResourceWithRawResponse(self._client.health)
-
-    @cached_property
-    def evals(self) -> evals.EvalsResourceWithRawResponse:
-        from .resources.evals import EvalsResourceWithRawResponse
-
-        return EvalsResourceWithRawResponse(self._client.evals)
-
-    @cached_property
-    def eval_types(self) -> eval_types.EvalTypesResourceWithRawResponse:
-        from .resources.eval_types import EvalTypesResourceWithRawResponse
-
-        return EvalTypesResourceWithRawResponse(self._client.eval_types)
-
-    @cached_property
-    def reports(self) -> reports.ReportsResourceWithRawResponse:
-        from .resources.reports import ReportsResourceWithRawResponse
-
-        return ReportsResourceWithRawResponse(self._client.reports)
-
-    @cached_property
-    def files(self) -> files.FilesResourceWithRawResponse:
-        from .resources.files import FilesResourceWithRawResponse
-
-        return FilesResourceWithRawResponse(self._client.files)
+class AymaraSDKWithRawResponse:
+    def __init__(self, client: AymaraSDK) -> None:
+        self.health = health.HealthResourceWithRawResponse(client.health)
+        self.integration_test = integration_test.IntegrationTestResourceWithRawResponse(client.integration_test)
+        self.tests = tests.TestsResourceWithRawResponse(client.tests)
+        self.scores = scores.ScoresResourceWithRawResponse(client.scores)
+        self.workspaces = workspaces.WorkspacesResourceWithRawResponse(client.workspaces)
+        self.webhooks = webhooks.WebhooksResourceWithRawResponse(client.webhooks)
+        self.accounts = accounts.AccountsResourceWithRawResponse(client.accounts)
+        self.usage = usage.UsageResourceWithRawResponse(client.usage)
+        self.policies = policies.PoliciesResourceWithRawResponse(client.policies)
+        self.evals = evals.EvalsResourceWithRawResponse(client.evals)
+        self.eval_types = eval_types.EvalTypesResourceWithRawResponse(client.eval_types)
+        self.eval_runs = eval_runs.EvalRunsResourceWithRawResponse(client.eval_runs)
+        self.files = files.FilesResourceWithRawResponse(client.files)
 
 
-class AsyncAymaraAIWithRawResponse:
-    _client: AsyncAymaraAI
-
-    def __init__(self, client: AsyncAymaraAI) -> None:
-        self._client = client
-
-    @cached_property
-    def health(self) -> health.AsyncHealthResourceWithRawResponse:
-        from .resources.health import AsyncHealthResourceWithRawResponse
-
-        return AsyncHealthResourceWithRawResponse(self._client.health)
-
-    @cached_property
-    def evals(self) -> evals.AsyncEvalsResourceWithRawResponse:
-        from .resources.evals import AsyncEvalsResourceWithRawResponse
-
-        return AsyncEvalsResourceWithRawResponse(self._client.evals)
-
-    @cached_property
-    def eval_types(self) -> eval_types.AsyncEvalTypesResourceWithRawResponse:
-        from .resources.eval_types import AsyncEvalTypesResourceWithRawResponse
-
-        return AsyncEvalTypesResourceWithRawResponse(self._client.eval_types)
-
-    @cached_property
-    def reports(self) -> reports.AsyncReportsResourceWithRawResponse:
-        from .resources.reports import AsyncReportsResourceWithRawResponse
-
-        return AsyncReportsResourceWithRawResponse(self._client.reports)
-
-    @cached_property
-    def files(self) -> files.AsyncFilesResourceWithRawResponse:
-        from .resources.files import AsyncFilesResourceWithRawResponse
-
-        return AsyncFilesResourceWithRawResponse(self._client.files)
+class AsyncAymaraSDKWithRawResponse:
+    def __init__(self, client: AsyncAymaraSDK) -> None:
+        self.health = health.AsyncHealthResourceWithRawResponse(client.health)
+        self.integration_test = integration_test.AsyncIntegrationTestResourceWithRawResponse(client.integration_test)
+        self.tests = tests.AsyncTestsResourceWithRawResponse(client.tests)
+        self.scores = scores.AsyncScoresResourceWithRawResponse(client.scores)
+        self.workspaces = workspaces.AsyncWorkspacesResourceWithRawResponse(client.workspaces)
+        self.webhooks = webhooks.AsyncWebhooksResourceWithRawResponse(client.webhooks)
+        self.accounts = accounts.AsyncAccountsResourceWithRawResponse(client.accounts)
+        self.usage = usage.AsyncUsageResourceWithRawResponse(client.usage)
+        self.policies = policies.AsyncPoliciesResourceWithRawResponse(client.policies)
+        self.evals = evals.AsyncEvalsResourceWithRawResponse(client.evals)
+        self.eval_types = eval_types.AsyncEvalTypesResourceWithRawResponse(client.eval_types)
+        self.eval_runs = eval_runs.AsyncEvalRunsResourceWithRawResponse(client.eval_runs)
+        self.files = files.AsyncFilesResourceWithRawResponse(client.files)
 
 
-class AymaraAIWithStreamedResponse:
-    _client: AymaraAI
-
-    def __init__(self, client: AymaraAI) -> None:
-        self._client = client
-
-    @cached_property
-    def health(self) -> health.HealthResourceWithStreamingResponse:
-        from .resources.health import HealthResourceWithStreamingResponse
-
-        return HealthResourceWithStreamingResponse(self._client.health)
-
-    @cached_property
-    def evals(self) -> evals.EvalsResourceWithStreamingResponse:
-        from .resources.evals import EvalsResourceWithStreamingResponse
-
-        return EvalsResourceWithStreamingResponse(self._client.evals)
-
-    @cached_property
-    def eval_types(self) -> eval_types.EvalTypesResourceWithStreamingResponse:
-        from .resources.eval_types import EvalTypesResourceWithStreamingResponse
-
-        return EvalTypesResourceWithStreamingResponse(self._client.eval_types)
-
-    @cached_property
-    def reports(self) -> reports.ReportsResourceWithStreamingResponse:
-        from .resources.reports import ReportsResourceWithStreamingResponse
-
-        return ReportsResourceWithStreamingResponse(self._client.reports)
-
-    @cached_property
-    def files(self) -> files.FilesResourceWithStreamingResponse:
-        from .resources.files import FilesResourceWithStreamingResponse
-
-        return FilesResourceWithStreamingResponse(self._client.files)
+class AymaraSDKWithStreamedResponse:
+    def __init__(self, client: AymaraSDK) -> None:
+        self.health = health.HealthResourceWithStreamingResponse(client.health)
+        self.integration_test = integration_test.IntegrationTestResourceWithStreamingResponse(client.integration_test)
+        self.tests = tests.TestsResourceWithStreamingResponse(client.tests)
+        self.scores = scores.ScoresResourceWithStreamingResponse(client.scores)
+        self.workspaces = workspaces.WorkspacesResourceWithStreamingResponse(client.workspaces)
+        self.webhooks = webhooks.WebhooksResourceWithStreamingResponse(client.webhooks)
+        self.accounts = accounts.AccountsResourceWithStreamingResponse(client.accounts)
+        self.usage = usage.UsageResourceWithStreamingResponse(client.usage)
+        self.policies = policies.PoliciesResourceWithStreamingResponse(client.policies)
+        self.evals = evals.EvalsResourceWithStreamingResponse(client.evals)
+        self.eval_types = eval_types.EvalTypesResourceWithStreamingResponse(client.eval_types)
+        self.eval_runs = eval_runs.EvalRunsResourceWithStreamingResponse(client.eval_runs)
+        self.files = files.FilesResourceWithStreamingResponse(client.files)
 
 
-class AsyncAymaraAIWithStreamedResponse:
-    _client: AsyncAymaraAI
-
-    def __init__(self, client: AsyncAymaraAI) -> None:
-        self._client = client
-
-    @cached_property
-    def health(self) -> health.AsyncHealthResourceWithStreamingResponse:
-        from .resources.health import AsyncHealthResourceWithStreamingResponse
-
-        return AsyncHealthResourceWithStreamingResponse(self._client.health)
-
-    @cached_property
-    def evals(self) -> evals.AsyncEvalsResourceWithStreamingResponse:
-        from .resources.evals import AsyncEvalsResourceWithStreamingResponse
-
-        return AsyncEvalsResourceWithStreamingResponse(self._client.evals)
-
-    @cached_property
-    def eval_types(self) -> eval_types.AsyncEvalTypesResourceWithStreamingResponse:
-        from .resources.eval_types import AsyncEvalTypesResourceWithStreamingResponse
-
-        return AsyncEvalTypesResourceWithStreamingResponse(self._client.eval_types)
-
-    @cached_property
-    def reports(self) -> reports.AsyncReportsResourceWithStreamingResponse:
-        from .resources.reports import AsyncReportsResourceWithStreamingResponse
-
-        return AsyncReportsResourceWithStreamingResponse(self._client.reports)
-
-    @cached_property
-    def files(self) -> files.AsyncFilesResourceWithStreamingResponse:
-        from .resources.files import AsyncFilesResourceWithStreamingResponse
-
-        return AsyncFilesResourceWithStreamingResponse(self._client.files)
+class AsyncAymaraSDKWithStreamedResponse:
+    def __init__(self, client: AsyncAymaraSDK) -> None:
+        self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
+        self.integration_test = integration_test.AsyncIntegrationTestResourceWithStreamingResponse(
+            client.integration_test
+        )
+        self.tests = tests.AsyncTestsResourceWithStreamingResponse(client.tests)
+        self.scores = scores.AsyncScoresResourceWithStreamingResponse(client.scores)
+        self.workspaces = workspaces.AsyncWorkspacesResourceWithStreamingResponse(client.workspaces)
+        self.webhooks = webhooks.AsyncWebhooksResourceWithStreamingResponse(client.webhooks)
+        self.accounts = accounts.AsyncAccountsResourceWithStreamingResponse(client.accounts)
+        self.usage = usage.AsyncUsageResourceWithStreamingResponse(client.usage)
+        self.policies = policies.AsyncPoliciesResourceWithStreamingResponse(client.policies)
+        self.evals = evals.AsyncEvalsResourceWithStreamingResponse(client.evals)
+        self.eval_types = eval_types.AsyncEvalTypesResourceWithStreamingResponse(client.eval_types)
+        self.eval_runs = eval_runs.AsyncEvalRunsResourceWithStreamingResponse(client.eval_runs)
+        self.files = files.AsyncFilesResourceWithStreamingResponse(client.files)
 
 
-Client = AymaraAI
+Client = AymaraSDK
 
-AsyncClient = AsyncAymaraAI
+AsyncClient = AsyncAymaraSDK

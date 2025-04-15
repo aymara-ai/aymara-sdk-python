@@ -12,7 +12,7 @@ import httpx
 from ._utils import extract_type_var_from_base
 
 if TYPE_CHECKING:
-    from ._client import AymaraAI, AsyncAymaraAI
+    from ._client import AymaraSDK, AsyncAymaraSDK
 
 
 _T = TypeVar("_T")
@@ -30,7 +30,7 @@ class Stream(Generic[_T]):
         *,
         cast_to: type[_T],
         response: httpx.Response,
-        client: AymaraAI,
+        client: AymaraSDK,
     ) -> None:
         self.response = response
         self._cast_to = cast_to
@@ -54,12 +54,12 @@ class Stream(Generic[_T]):
         process_data = self._client._process_response_data
         iterator = self._iter_events()
 
-        try:
-            for sse in iterator:
-                yield process_data(data=sse.json(), cast_to=cast_to, response=response)
-        finally:
-            # Ensure the response is closed even if the consumer doesn't read all data
-            response.close()
+        for sse in iterator:
+            yield process_data(data=sse.json(), cast_to=cast_to, response=response)
+
+        # Ensure the entire stream is consumed
+        for _sse in iterator:
+            ...
 
     def __enter__(self) -> Self:
         return self
@@ -93,7 +93,7 @@ class AsyncStream(Generic[_T]):
         *,
         cast_to: type[_T],
         response: httpx.Response,
-        client: AsyncAymaraAI,
+        client: AsyncAymaraSDK,
     ) -> None:
         self.response = response
         self._cast_to = cast_to
@@ -118,12 +118,12 @@ class AsyncStream(Generic[_T]):
         process_data = self._client._process_response_data
         iterator = self._iter_events()
 
-        try:
-            async for sse in iterator:
-                yield process_data(data=sse.json(), cast_to=cast_to, response=response)
-        finally:
-            # Ensure the response is closed even if the consumer doesn't read all data
-            await response.aclose()
+        async for sse in iterator:
+            yield process_data(data=sse.json(), cast_to=cast_to, response=response)
+
+        # Ensure the entire stream is consumed
+        async for _sse in iterator:
+            ...
 
     async def __aenter__(self) -> Self:
         return self

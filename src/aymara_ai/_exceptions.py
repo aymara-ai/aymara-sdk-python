@@ -18,11 +18,11 @@ __all__ = [
 ]
 
 
-class AymaraAIError(Exception):
+class AymaraSDKError(Exception):
     pass
 
 
-class APIError(AymaraAIError):
+class APIError(AymaraSDKError):
     message: str
     request: httpx.Request
 

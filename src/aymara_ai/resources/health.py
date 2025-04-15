@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from .._types import Body, Query, Headers, NoneType, NotGiven, not_given
+from .._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -25,7 +25,7 @@ class HealthResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return HealthResourceWithRawResponse(self)
 
@@ -34,7 +34,7 @@ class HealthResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
         return HealthResourceWithStreamingResponse(self)
 
@@ -46,7 +46,7 @@ class HealthResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
         """Health Check"""
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
@@ -66,7 +66,7 @@ class AsyncHealthResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return AsyncHealthResourceWithRawResponse(self)
 
@@ -75,7 +75,7 @@ class AsyncHealthResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
         return AsyncHealthResourceWithStreamingResponse(self)
 
@@ -87,7 +87,7 @@ class AsyncHealthResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
         """Health Check"""
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}

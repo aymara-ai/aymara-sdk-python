@@ -4,9 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..types import eval_type_list_params, eval_type_find_instructions_params, eval_type_list_instructions_params
-from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from .._utils import maybe_transform
+from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -15,10 +13,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncOffsetPage, AsyncOffsetPage
-from .._base_client import AsyncPaginator, make_request_options
+from .._base_client import make_request_options
 from ..types.eval_type import EvalType
-from ..types.ai_instruction import AIInstruction
+from ..types.eval_type_list_response import EvalTypeListResponse
 
 __all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]
 
@@ -30,7 +27,7 @@ class EvalTypesResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return EvalTypesResourceWithRawResponse(self)
 
@@ -39,113 +36,11 @@ class EvalTypesResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
         return EvalTypesResourceWithStreamingResponse(self)
 
-    def list(
-        self,
-        *,
-        limit: int | Omit = omit,
-        offset: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncOffsetPage[EvalType]:
-        """
-        List all available eval types.
-
-        Returns: list[EvalTypeSchema]: List of available eval types.
-
-        Raises: AymaraAPIError: If the request is invalid.
-
-        Example: GET /api/eval-types
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v2/eval-types",
-            page=SyncOffsetPage[EvalType],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "limit": limit,
-                        "offset": offset,
-                    },
-                    eval_type_list_params.EvalTypeListParams,
-                ),
-            ),
-            model=EvalType,
-        )
-
-    def find_instructions(
-        self,
-        *,
-        eval_type_slug: str,
-        limit: int | Omit = omit,
-        offset: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncOffsetPage[AIInstruction]:
-        """
-        Retrieve instructions for a specific eval type by its slug.
-
-        Args: eval_type_slug (str): Slug identifier for the eval type.
-
-        Returns: list[AiInstruction]: List of AI instructions for the eval type.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/-/instructions?eval_type_slug=...
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v2/eval-types/-/instructions",
-            page=SyncOffsetPage[AIInstruction],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "eval_type_slug": eval_type_slug,
-                        "limit": limit,
-                        "offset": offset,
-                    },
-                    eval_type_find_instructions_params.EvalTypeFindInstructionsParams,
-                ),
-            ),
-            model=AIInstruction,
-        )
-
-    def get(
+    def retrieve(
         self,
         eval_type_uuid: str,
         *,
@@ -154,18 +49,10 @@ class EvalTypesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalType:
         """
-        Retrieve a specific eval type by its UUID.
-
-        Args: eval_type_uuid (str): UUID of the eval type to retrieve.
-
-        Returns: EvalTypeSchema: The eval type data.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/{eval_type_uuid}
+        Get a specific eval type by UUID.
 
         Args:
           extra_headers: Send extra headers
@@ -186,58 +73,23 @@ class EvalTypesResource(SyncAPIResource):
             cast_to=EvalType,
         )
 
-    def list_instructions(
+    def list(
         self,
-        eval_type_uuid: str,
         *,
-        limit: int | Omit = omit,
-        offset: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncOffsetPage[AIInstruction]:
-        """
-        Retrieve AI instructions for a specific eval type by its UUID.
-
-        Args: eval_type_uuid (str): UUID of the eval type.
-
-        Returns: list[AiInstruction]: List of AI instructions for the eval type.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/{eval_type_uuid}/instructions
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not eval_type_uuid:
-            raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
-        return self._get_api_list(
-            f"/v2/eval-types/{eval_type_uuid}/instructions",
-            page=SyncOffsetPage[AIInstruction],
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalTypeListResponse:
+        """List all available eval types."""
+        return self._get(
+            "/v2/eval-types/",
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "limit": limit,
-                        "offset": offset,
-                    },
-                    eval_type_list_instructions_params.EvalTypeListInstructionsParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            model=AIInstruction,
+            cast_to=EvalTypeListResponse,
         )
 
 
@@ -248,7 +100,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return AsyncEvalTypesResourceWithRawResponse(self)
 
@@ -257,113 +109,11 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
         return AsyncEvalTypesResourceWithStreamingResponse(self)
 
-    def list(
-        self,
-        *,
-        limit: int | Omit = omit,
-        offset: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[EvalType, AsyncOffsetPage[EvalType]]:
-        """
-        List all available eval types.
-
-        Returns: list[EvalTypeSchema]: List of available eval types.
-
-        Raises: AymaraAPIError: If the request is invalid.
-
-        Example: GET /api/eval-types
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v2/eval-types",
-            page=AsyncOffsetPage[EvalType],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "limit": limit,
-                        "offset": offset,
-                    },
-                    eval_type_list_params.EvalTypeListParams,
-                ),
-            ),
-            model=EvalType,
-        )
-
-    def find_instructions(
-        self,
-        *,
-        eval_type_slug: str,
-        limit: int | Omit = omit,
-        offset: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[AIInstruction, AsyncOffsetPage[AIInstruction]]:
-        """
-        Retrieve instructions for a specific eval type by its slug.
-
-        Args: eval_type_slug (str): Slug identifier for the eval type.
-
-        Returns: list[AiInstruction]: List of AI instructions for the eval type.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/-/instructions?eval_type_slug=...
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v2/eval-types/-/instructions",
-            page=AsyncOffsetPage[AIInstruction],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "eval_type_slug": eval_type_slug,
-                        "limit": limit,
-                        "offset": offset,
-                    },
-                    eval_type_find_instructions_params.EvalTypeFindInstructionsParams,
-                ),
-            ),
-            model=AIInstruction,
-        )
-
-    async def get(
+    async def retrieve(
         self,
         eval_type_uuid: str,
         *,
@@ -372,18 +122,10 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalType:
         """
-        Retrieve a specific eval type by its UUID.
-
-        Args: eval_type_uuid (str): UUID of the eval type to retrieve.
-
-        Returns: EvalTypeSchema: The eval type data.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/{eval_type_uuid}
+        Get a specific eval type by UUID.
 
         Args:
           extra_headers: Send extra headers
@@ -404,58 +146,23 @@ class AsyncEvalTypesResource(AsyncAPIResource):
             cast_to=EvalType,
         )
 
-    def list_instructions(
+    async def list(
         self,
-        eval_type_uuid: str,
         *,
-        limit: int | Omit = omit,
-        offset: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[AIInstruction, AsyncOffsetPage[AIInstruction]]:
-        """
-        Retrieve AI instructions for a specific eval type by its UUID.
-
-        Args: eval_type_uuid (str): UUID of the eval type.
-
-        Returns: list[AiInstruction]: List of AI instructions for the eval type.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/{eval_type_uuid}/instructions
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not eval_type_uuid:
-            raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
-        return self._get_api_list(
-            f"/v2/eval-types/{eval_type_uuid}/instructions",
-            page=AsyncOffsetPage[AIInstruction],
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalTypeListResponse:
+        """List all available eval types."""
+        return await self._get(
+            "/v2/eval-types/",
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "limit": limit,
-                        "offset": offset,
-                    },
-                    eval_type_list_instructions_params.EvalTypeListInstructionsParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            model=AIInstruction,
+            cast_to=EvalTypeListResponse,
         )
 
 
@@ -463,17 +170,11 @@ class EvalTypesResourceWithRawResponse:
     def __init__(self, eval_types: EvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.retrieve = to_raw_response_wrapper(
+            eval_types.retrieve,
+        )
         self.list = to_raw_response_wrapper(
             eval_types.list,
-        )
-        self.find_instructions = to_raw_response_wrapper(
-            eval_types.find_instructions,
-        )
-        self.get = to_raw_response_wrapper(
-            eval_types.get,
-        )
-        self.list_instructions = to_raw_response_wrapper(
-            eval_types.list_instructions,
         )
 
 
@@ -481,17 +182,11 @@ class AsyncEvalTypesResourceWithRawResponse:
     def __init__(self, eval_types: AsyncEvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.retrieve = async_to_raw_response_wrapper(
+            eval_types.retrieve,
+        )
         self.list = async_to_raw_response_wrapper(
             eval_types.list,
-        )
-        self.find_instructions = async_to_raw_response_wrapper(
-            eval_types.find_instructions,
-        )
-        self.get = async_to_raw_response_wrapper(
-            eval_types.get,
-        )
-        self.list_instructions = async_to_raw_response_wrapper(
-            eval_types.list_instructions,
         )
 
 
@@ -499,17 +194,11 @@ class EvalTypesResourceWithStreamingResponse:
     def __init__(self, eval_types: EvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.retrieve = to_streamed_response_wrapper(
+            eval_types.retrieve,
+        )
         self.list = to_streamed_response_wrapper(
             eval_types.list,
-        )
-        self.find_instructions = to_streamed_response_wrapper(
-            eval_types.find_instructions,
-        )
-        self.get = to_streamed_response_wrapper(
-            eval_types.get,
-        )
-        self.list_instructions = to_streamed_response_wrapper(
-            eval_types.list_instructions,
         )
 
 
@@ -517,15 +206,9 @@ class AsyncEvalTypesResourceWithStreamingResponse:
     def __init__(self, eval_types: AsyncEvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.retrieve = async_to_streamed_response_wrapper(
+            eval_types.retrieve,
+        )
         self.list = async_to_streamed_response_wrapper(
             eval_types.list,
-        )
-        self.find_instructions = async_to_streamed_response_wrapper(
-            eval_types.find_instructions,
-        )
-        self.get = async_to_streamed_response_wrapper(
-            eval_types.get,
-        )
-        self.list_instructions = async_to_streamed_response_wrapper(
-            eval_types.list_instructions,
         )

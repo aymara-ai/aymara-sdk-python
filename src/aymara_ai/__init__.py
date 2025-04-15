@@ -1,20 +1,18 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import typing as _t
-
 from . import types
-from ._types import NOT_GIVEN, Omit, NoneType, NotGiven, Transport, ProxiesTypes, omit, not_given
+from ._types import NOT_GIVEN, Omit, NoneType, NotGiven, Transport, ProxiesTypes
 from ._utils import file_from_path
 from ._client import (
     ENVIRONMENTS,
     Client,
     Stream,
     Timeout,
-    AymaraAI,
+    AymaraSDK,
     Transport,
     AsyncClient,
     AsyncStream,
-    AsyncAymaraAI,
+    AsyncAymaraSDK,
     RequestOptions,
 )
 from ._models import BaseModel
@@ -23,10 +21,10 @@ from ._response import APIResponse as APIResponse, AsyncAPIResponse as AsyncAPIR
 from ._constants import DEFAULT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_CONNECTION_LIMITS
 from ._exceptions import (
     APIError,
-    AymaraAIError,
     ConflictError,
     NotFoundError,
     APIStatusError,
+    AymaraSDKError,
     RateLimitError,
     APITimeoutError,
     BadRequestError,
@@ -37,7 +35,7 @@ from ._exceptions import (
     UnprocessableEntityError,
     APIResponseValidationError,
 )
-from ._base_client import DefaultHttpxClient, DefaultAioHttpClient, DefaultAsyncHttpxClient
+from ._base_client import DefaultHttpxClient, DefaultAsyncHttpxClient
 from ._utils._logs import setup_logging as _setup_logging
 
 __all__ = [
@@ -49,10 +47,8 @@ __all__ = [
     "ProxiesTypes",
     "NotGiven",
     "NOT_GIVEN",
-    "not_given",
     "Omit",
-    "omit",
-    "AymaraAIError",
+    "AymaraSDKError",
     "APIError",
     "APIStatusError",
     "APITimeoutError",
@@ -72,8 +68,8 @@ __all__ = [
     "AsyncClient",
     "Stream",
     "AsyncStream",
-    "AymaraAI",
-    "AsyncAymaraAI",
+    "AymaraSDK",
+    "AsyncAymaraSDK",
     "ENVIRONMENTS",
     "file_from_path",
     "BaseModel",
@@ -82,11 +78,7 @@ __all__ = [
     "DEFAULT_CONNECTION_LIMITS",
     "DefaultHttpxClient",
     "DefaultAsyncHttpxClient",
-    "DefaultAioHttpClient",
 ]
-
-if not _t.TYPE_CHECKING:
-    from ._utils._resources_proxy import resources as resources
 
 _setup_logging()
 

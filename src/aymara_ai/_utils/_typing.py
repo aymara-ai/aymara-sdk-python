@@ -15,7 +15,7 @@ from typing_extensions import (
 
 from ._utils import lru_cache
 from .._types import InheritsGeneric
-from ._compat import is_union as _is_union
+from .._compat import is_union as _is_union
 
 
 def is_annotated_type(typ: type) -> bool:
@@ -24,11 +24,6 @@ def is_annotated_type(typ: type) -> bool:
 
 def is_list_type(typ: type) -> bool:
     return (get_origin(typ) or typ) == list
-
-
-def is_sequence_type(typ: type) -> bool:
-    origin = get_origin(typ) or typ
-    return origin == typing_extensions.Sequence or origin == typing.Sequence or origin == _c_abc.Sequence
 
 
 def is_iterable_type(typ: type) -> bool:
@@ -115,7 +110,7 @@ def extract_type_var_from_base(
     ```
     """
     cls = cast(object, get_origin(typ) or typ)
-    if cls in generic_bases:  # pyright: ignore[reportUnnecessaryContains]
+    if cls in generic_bases:
         # we're given the class directly
         return extract_type_arg(typ, index)
 

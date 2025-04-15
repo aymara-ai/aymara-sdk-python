@@ -7,9 +7,11 @@ from typing import Any, cast
 
 import pytest
 
-from aymara import Aymara, AsyncAymara
+from aymara_ai import AymaraSDK, AsyncAymaraSDK
 from tests.utils import assert_matches_type
-from aymara.types.scores import ScoreRunSuiteSummaryOut
+from aymara_ai.types.scores import (
+    ScoreRunSuiteSummaryOut,
+)
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,7 +21,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_delete_summary(self, client: Aymara) -> None:
+    def test_method_delete_summary(self, client: AymaraSDK) -> None:
         summary = client.scores.summary.delete_summary(
             summary_uuid="summary_uuid",
         )
@@ -27,7 +29,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_delete_summary_with_all_params(self, client: Aymara) -> None:
+    def test_method_delete_summary_with_all_params(self, client: AymaraSDK) -> None:
         summary = client.scores.summary.delete_summary(
             summary_uuid="summary_uuid",
             workspace_uuid="workspace_uuid",
@@ -36,7 +38,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_delete_summary(self, client: Aymara) -> None:
+    def test_raw_response_delete_summary(self, client: AymaraSDK) -> None:
         response = client.scores.summary.with_raw_response.delete_summary(
             summary_uuid="summary_uuid",
         )
@@ -48,7 +50,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_delete_summary(self, client: Aymara) -> None:
+    def test_streaming_response_delete_summary(self, client: AymaraSDK) -> None:
         with client.scores.summary.with_streaming_response.delete_summary(
             summary_uuid="summary_uuid",
         ) as response:
@@ -62,7 +64,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_delete_summary(self, client: Aymara) -> None:
+    def test_path_params_delete_summary(self, client: AymaraSDK) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `summary_uuid` but received ''"):
             client.scores.summary.with_raw_response.delete_summary(
                 summary_uuid="",
@@ -70,7 +72,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve_summary(self, client: Aymara) -> None:
+    def test_method_retrieve_summary(self, client: AymaraSDK) -> None:
         summary = client.scores.summary.retrieve_summary(
             summary_uuid="summary_uuid",
         )
@@ -78,7 +80,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve_summary_with_all_params(self, client: Aymara) -> None:
+    def test_method_retrieve_summary_with_all_params(self, client: AymaraSDK) -> None:
         summary = client.scores.summary.retrieve_summary(
             summary_uuid="summary_uuid",
             workspace_uuid="workspace_uuid",
@@ -87,7 +89,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_retrieve_summary(self, client: Aymara) -> None:
+    def test_raw_response_retrieve_summary(self, client: AymaraSDK) -> None:
         response = client.scores.summary.with_raw_response.retrieve_summary(
             summary_uuid="summary_uuid",
         )
@@ -99,7 +101,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_retrieve_summary(self, client: Aymara) -> None:
+    def test_streaming_response_retrieve_summary(self, client: AymaraSDK) -> None:
         with client.scores.summary.with_streaming_response.retrieve_summary(
             summary_uuid="summary_uuid",
         ) as response:
@@ -113,7 +115,7 @@ class TestSummary:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_retrieve_summary(self, client: Aymara) -> None:
+    def test_path_params_retrieve_summary(self, client: AymaraSDK) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `summary_uuid` but received ''"):
             client.scores.summary.with_raw_response.retrieve_summary(
                 summary_uuid="",
@@ -125,7 +127,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_delete_summary(self, async_client: AsyncAymara) -> None:
+    async def test_method_delete_summary(self, async_client: AsyncAymaraSDK) -> None:
         summary = await async_client.scores.summary.delete_summary(
             summary_uuid="summary_uuid",
         )
@@ -133,7 +135,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_delete_summary_with_all_params(self, async_client: AsyncAymara) -> None:
+    async def test_method_delete_summary_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
         summary = await async_client.scores.summary.delete_summary(
             summary_uuid="summary_uuid",
             workspace_uuid="workspace_uuid",
@@ -142,7 +144,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_delete_summary(self, async_client: AsyncAymara) -> None:
+    async def test_raw_response_delete_summary(self, async_client: AsyncAymaraSDK) -> None:
         response = await async_client.scores.summary.with_raw_response.delete_summary(
             summary_uuid="summary_uuid",
         )
@@ -154,7 +156,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_delete_summary(self, async_client: AsyncAymara) -> None:
+    async def test_streaming_response_delete_summary(self, async_client: AsyncAymaraSDK) -> None:
         async with async_client.scores.summary.with_streaming_response.delete_summary(
             summary_uuid="summary_uuid",
         ) as response:
@@ -168,7 +170,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_delete_summary(self, async_client: AsyncAymara) -> None:
+    async def test_path_params_delete_summary(self, async_client: AsyncAymaraSDK) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `summary_uuid` but received ''"):
             await async_client.scores.summary.with_raw_response.delete_summary(
                 summary_uuid="",
@@ -176,7 +178,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve_summary(self, async_client: AsyncAymara) -> None:
+    async def test_method_retrieve_summary(self, async_client: AsyncAymaraSDK) -> None:
         summary = await async_client.scores.summary.retrieve_summary(
             summary_uuid="summary_uuid",
         )
@@ -184,7 +186,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve_summary_with_all_params(self, async_client: AsyncAymara) -> None:
+    async def test_method_retrieve_summary_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
         summary = await async_client.scores.summary.retrieve_summary(
             summary_uuid="summary_uuid",
             workspace_uuid="workspace_uuid",
@@ -193,7 +195,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_retrieve_summary(self, async_client: AsyncAymara) -> None:
+    async def test_raw_response_retrieve_summary(self, async_client: AsyncAymaraSDK) -> None:
         response = await async_client.scores.summary.with_raw_response.retrieve_summary(
             summary_uuid="summary_uuid",
         )
@@ -205,7 +207,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_retrieve_summary(self, async_client: AsyncAymara) -> None:
+    async def test_streaming_response_retrieve_summary(self, async_client: AsyncAymaraSDK) -> None:
         async with async_client.scores.summary.with_streaming_response.retrieve_summary(
             summary_uuid="summary_uuid",
         ) as response:
@@ -219,7 +221,7 @@ class TestAsyncSummary:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_retrieve_summary(self, async_client: AsyncAymara) -> None:
+    async def test_path_params_retrieve_summary(self, async_client: AsyncAymaraSDK) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `summary_uuid` but received ''"):
             await async_client.scores.summary.with_raw_response.retrieve_summary(
                 summary_uuid="",

@@ -29,7 +29,7 @@ from ._utils import is_given, extract_type_arg, is_annotated_type, is_type_alias
 from ._models import BaseModel, is_basemodel
 from ._constants import RAW_RESPONSE_HEADER, OVERRIDE_CAST_TO_HEADER
 from ._streaming import Stream, AsyncStream, is_stream_class_type, extract_stream_chunk_type
-from ._exceptions import AymaraAIError, APIResponseValidationError
+from ._exceptions import AymaraSDKError, APIResponseValidationError
 
 if TYPE_CHECKING:
     from ._models import FinalRequestOptions
@@ -233,7 +233,7 @@ class BaseAPIResponse(Generic[R]):
         # split is required to handle cases where additional information is included
         # in the response, e.g. application/json; charset=utf-8
         content_type, *_ = response.headers.get("content-type", "*").split(";")
-        if not content_type.endswith("json"):
+        if content_type != "application/json":
             if is_basemodel(cast_to):
                 try:
                     data = response.json()
@@ -560,7 +560,7 @@ class MissingStreamClassError(TypeError):
         )
 
 
-class StreamAlreadyConsumed(AymaraAIError):
+class StreamAlreadyConsumed(AymaraSDKError):
     """
     Attempted to read or stream content, but the content has already
     been streamed.
