@@ -5,14 +5,14 @@ from ._types import NOT_GIVEN, Omit, NoneType, NotGiven, Transport, ProxiesTypes
 from ._utils import file_from_path
 from ._client import (
     ENVIRONMENTS,
-    Aymara,
     Client,
     Stream,
     Timeout,
+    AymaraSDK,
     Transport,
-    AsyncAymara,
     AsyncClient,
     AsyncStream,
+    AsyncAymaraSDK,
     RequestOptions,
 )
 from ._models import BaseModel
@@ -21,10 +21,10 @@ from ._response import APIResponse as APIResponse, AsyncAPIResponse as AsyncAPIR
 from ._constants import DEFAULT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_CONNECTION_LIMITS
 from ._exceptions import (
     APIError,
-    AymaraError,
     ConflictError,
     NotFoundError,
     APIStatusError,
+    AymaraSDKError,
     RateLimitError,
     APITimeoutError,
     BadRequestError,
@@ -48,7 +48,7 @@ __all__ = [
     "NotGiven",
     "NOT_GIVEN",
     "Omit",
-    "AymaraError",
+    "AymaraSDKError",
     "APIError",
     "APIStatusError",
     "APITimeoutError",
@@ -68,8 +68,8 @@ __all__ = [
     "AsyncClient",
     "Stream",
     "AsyncStream",
-    "Aymara",
-    "AsyncAymara",
+    "AymaraSDK",
+    "AsyncAymaraSDK",
     "ENVIRONMENTS",
     "file_from_path",
     "BaseModel",
@@ -85,12 +85,12 @@ _setup_logging()
 # Update the __module__ attribute for exported symbols so that
 # error messages point to this module instead of the module
 # it was originally defined in, e.g.
-# aymara._exceptions.NotFoundError -> aymara.NotFoundError
+# aymara_ai._exceptions.NotFoundError -> aymara_ai.NotFoundError
 __locals = locals()
 for __name in __all__:
     if not __name.startswith("__"):
         try:
-            __locals[__name].__module__ = "aymara"
+            __locals[__name].__module__ = "aymara_ai"
         except (TypeError, AttributeError):
             # Some of our exported symbols are builtins which we can't set attributes for.
             pass

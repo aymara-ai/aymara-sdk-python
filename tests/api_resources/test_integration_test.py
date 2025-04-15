@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from aymara import Aymara, AsyncAymara
+from aymara_ai import AymaraSDK, AsyncAymaraSDK
 from tests.utils import assert_matches_type
-from aymara.types import IntegrationTestRunResponse
+from aymara_ai.types import IntegrationTestRunResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,13 +19,13 @@ class TestIntegrationTest:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_run(self, client: Aymara) -> None:
+    def test_method_run(self, client: AymaraSDK) -> None:
         integration_test = client.integration_test.run()
         assert_matches_type(IntegrationTestRunResponse, integration_test, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_run(self, client: Aymara) -> None:
+    def test_raw_response_run(self, client: AymaraSDK) -> None:
         response = client.integration_test.with_raw_response.run()
 
         assert response.is_closed is True
@@ -35,7 +35,7 @@ class TestIntegrationTest:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_run(self, client: Aymara) -> None:
+    def test_streaming_response_run(self, client: AymaraSDK) -> None:
         with client.integration_test.with_streaming_response.run() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -51,13 +51,13 @@ class TestAsyncIntegrationTest:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_run(self, async_client: AsyncAymara) -> None:
+    async def test_method_run(self, async_client: AsyncAymaraSDK) -> None:
         integration_test = await async_client.integration_test.run()
         assert_matches_type(IntegrationTestRunResponse, integration_test, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_run(self, async_client: AsyncAymara) -> None:
+    async def test_raw_response_run(self, async_client: AsyncAymaraSDK) -> None:
         response = await async_client.integration_test.with_raw_response.run()
 
         assert response.is_closed is True
@@ -67,7 +67,7 @@ class TestAsyncIntegrationTest:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_run(self, async_client: AsyncAymara) -> None:
+    async def test_streaming_response_run(self, async_client: AsyncAymaraSDK) -> None:
         async with async_client.integration_test.with_streaming_response.run() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

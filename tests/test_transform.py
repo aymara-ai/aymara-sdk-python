@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from aymara._types import NOT_GIVEN, Base64FileInput
-from aymara._utils import (
+from aymara_ai._types import NOT_GIVEN, Base64FileInput
+from aymara_ai._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from aymara._compat import PYDANTIC_V2
-from aymara._models import BaseModel
+from aymara_ai._compat import PYDANTIC_V2
+from aymara_ai._models import BaseModel
 
 _T = TypeVar("_T")
 
