@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_ai import AymaraSDK, AsyncAymaraSDK
+from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
 from aymara_ai.types.tests import MultiturnContinueResponse
 
@@ -19,7 +19,7 @@ class TestMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_continue(self, client: AymaraSDK) -> None:
+    def test_method_continue(self, client: AymaraAI) -> None:
         multiturn = client.tests.multiturn.continue_(
             test_uuid="test_uuid",
         )
@@ -27,7 +27,7 @@ class TestMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_continue_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_continue_with_all_params(self, client: AymaraAI) -> None:
         multiturn = client.tests.multiturn.continue_(
             test_uuid="test_uuid",
             continue_eval=True,
@@ -46,7 +46,7 @@ class TestMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_continue(self, client: AymaraSDK) -> None:
+    def test_raw_response_continue(self, client: AymaraAI) -> None:
         response = client.tests.multiturn.with_raw_response.continue_(
             test_uuid="test_uuid",
         )
@@ -58,7 +58,7 @@ class TestMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_continue(self, client: AymaraSDK) -> None:
+    def test_streaming_response_continue(self, client: AymaraAI) -> None:
         with client.tests.multiturn.with_streaming_response.continue_(
             test_uuid="test_uuid",
         ) as response:
@@ -76,7 +76,7 @@ class TestAsyncMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_continue(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_continue(self, async_client: AsyncAymaraAI) -> None:
         multiturn = await async_client.tests.multiturn.continue_(
             test_uuid="test_uuid",
         )
@@ -84,7 +84,7 @@ class TestAsyncMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_continue_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_continue_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         multiturn = await async_client.tests.multiturn.continue_(
             test_uuid="test_uuid",
             continue_eval=True,
@@ -103,7 +103,7 @@ class TestAsyncMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_continue(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_continue(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.tests.multiturn.with_raw_response.continue_(
             test_uuid="test_uuid",
         )
@@ -115,7 +115,7 @@ class TestAsyncMultiturn:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_continue(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_continue(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.tests.multiturn.with_streaming_response.continue_(
             test_uuid="test_uuid",
         ) as response:

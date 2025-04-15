@@ -37,7 +37,7 @@ from .resources import (
     integration_test,
 )
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import APIStatusError, AymaraSDKError
+from ._exceptions import AymaraAIError, APIStatusError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -53,8 +53,8 @@ __all__ = [
     "Transport",
     "ProxiesTypes",
     "RequestOptions",
-    "AymaraSDK",
-    "AsyncAymaraSDK",
+    "AymaraAI",
+    "AsyncAymaraAI",
     "Client",
     "AsyncClient",
 ]
@@ -66,7 +66,7 @@ ENVIRONMENTS: Dict[str, str] = {
 }
 
 
-class AymaraSDK(SyncAPIClient):
+class AymaraAI(SyncAPIClient):
     health: health.HealthResource
     integration_test: integration_test.IntegrationTestResource
     tests: tests.TestsResource
@@ -80,8 +80,8 @@ class AymaraSDK(SyncAPIClient):
     eval_types: eval_types.EvalTypesResource
     eval_runs: eval_runs.EvalRunsResource
     files: files.FilesResource
-    with_raw_response: AymaraSDKWithRawResponse
-    with_streaming_response: AymaraSDKWithStreamedResponse
+    with_raw_response: AymaraAIWithRawResponse
+    with_streaming_response: AymaraAIWithStreamedResponse
 
     # client options
     api_key: str
@@ -114,7 +114,7 @@ class AymaraSDK(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous AymaraSDK client instance.
+        """Construct a new synchronous AymaraAI client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `AYMARA_API_KEY`
@@ -123,7 +123,7 @@ class AymaraSDK(SyncAPIClient):
         if api_key is None:
             api_key = os.environ.get("AYMARA_API_KEY")
         if api_key is None:
-            raise AymaraSDKError(
+            raise AymaraAIError(
                 "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_API_KEY environment variable"
             )
         self.api_key = api_key
@@ -134,14 +134,14 @@ class AymaraSDK(SyncAPIClient):
 
         self._environment = environment
 
-        base_url_env = os.environ.get("AYMARA_SDK_BASE_URL")
+        base_url_env = os.environ.get("AYMARA_AI_BASE_URL")
         if is_given(base_url) and base_url is not None:
             # cast required because mypy doesn't understand the type narrowing
             base_url = cast("str | httpx.URL", base_url)  # pyright: ignore[reportUnnecessaryCast]
         elif is_given(environment):
             if base_url_env and base_url is not None:
                 raise ValueError(
-                    "Ambiguous URL; The `AYMARA_SDK_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
+                    "Ambiguous URL; The `AYMARA_AI_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
                 )
 
             try:
@@ -182,8 +182,8 @@ class AymaraSDK(SyncAPIClient):
         self.eval_types = eval_types.EvalTypesResource(self)
         self.eval_runs = eval_runs.EvalRunsResource(self)
         self.files = files.FilesResource(self)
-        self.with_raw_response = AymaraSDKWithRawResponse(self)
-        self.with_streaming_response = AymaraSDKWithStreamedResponse(self)
+        self.with_raw_response = AymaraAIWithRawResponse(self)
+        self.with_streaming_response = AymaraAIWithStreamedResponse(self)
 
     @property
     @override
@@ -305,7 +305,7 @@ class AymaraSDK(SyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AsyncAymaraSDK(AsyncAPIClient):
+class AsyncAymaraAI(AsyncAPIClient):
     health: health.AsyncHealthResource
     integration_test: integration_test.AsyncIntegrationTestResource
     tests: tests.AsyncTestsResource
@@ -319,8 +319,8 @@ class AsyncAymaraSDK(AsyncAPIClient):
     eval_types: eval_types.AsyncEvalTypesResource
     eval_runs: eval_runs.AsyncEvalRunsResource
     files: files.AsyncFilesResource
-    with_raw_response: AsyncAymaraSDKWithRawResponse
-    with_streaming_response: AsyncAymaraSDKWithStreamedResponse
+    with_raw_response: AsyncAymaraAIWithRawResponse
+    with_streaming_response: AsyncAymaraAIWithStreamedResponse
 
     # client options
     api_key: str
@@ -353,7 +353,7 @@ class AsyncAymaraSDK(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async AsyncAymaraSDK client instance.
+        """Construct a new async AsyncAymaraAI client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `AYMARA_API_KEY`
@@ -362,7 +362,7 @@ class AsyncAymaraSDK(AsyncAPIClient):
         if api_key is None:
             api_key = os.environ.get("AYMARA_API_KEY")
         if api_key is None:
-            raise AymaraSDKError(
+            raise AymaraAIError(
                 "The api_key client option must be set either by passing api_key to the client or by setting the AYMARA_API_KEY environment variable"
             )
         self.api_key = api_key
@@ -373,14 +373,14 @@ class AsyncAymaraSDK(AsyncAPIClient):
 
         self._environment = environment
 
-        base_url_env = os.environ.get("AYMARA_SDK_BASE_URL")
+        base_url_env = os.environ.get("AYMARA_AI_BASE_URL")
         if is_given(base_url) and base_url is not None:
             # cast required because mypy doesn't understand the type narrowing
             base_url = cast("str | httpx.URL", base_url)  # pyright: ignore[reportUnnecessaryCast]
         elif is_given(environment):
             if base_url_env and base_url is not None:
                 raise ValueError(
-                    "Ambiguous URL; The `AYMARA_SDK_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
+                    "Ambiguous URL; The `AYMARA_AI_BASE_URL` env var and the `environment` argument are given. If you want to use the environment, you must pass base_url=None",
                 )
 
             try:
@@ -421,8 +421,8 @@ class AsyncAymaraSDK(AsyncAPIClient):
         self.eval_types = eval_types.AsyncEvalTypesResource(self)
         self.eval_runs = eval_runs.AsyncEvalRunsResource(self)
         self.files = files.AsyncFilesResource(self)
-        self.with_raw_response = AsyncAymaraSDKWithRawResponse(self)
-        self.with_streaming_response = AsyncAymaraSDKWithStreamedResponse(self)
+        self.with_raw_response = AsyncAymaraAIWithRawResponse(self)
+        self.with_streaming_response = AsyncAymaraAIWithStreamedResponse(self)
 
     @property
     @override
@@ -544,8 +544,8 @@ class AsyncAymaraSDK(AsyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AymaraSDKWithRawResponse:
-    def __init__(self, client: AymaraSDK) -> None:
+class AymaraAIWithRawResponse:
+    def __init__(self, client: AymaraAI) -> None:
         self.health = health.HealthResourceWithRawResponse(client.health)
         self.integration_test = integration_test.IntegrationTestResourceWithRawResponse(client.integration_test)
         self.tests = tests.TestsResourceWithRawResponse(client.tests)
@@ -561,8 +561,8 @@ class AymaraSDKWithRawResponse:
         self.files = files.FilesResourceWithRawResponse(client.files)
 
 
-class AsyncAymaraSDKWithRawResponse:
-    def __init__(self, client: AsyncAymaraSDK) -> None:
+class AsyncAymaraAIWithRawResponse:
+    def __init__(self, client: AsyncAymaraAI) -> None:
         self.health = health.AsyncHealthResourceWithRawResponse(client.health)
         self.integration_test = integration_test.AsyncIntegrationTestResourceWithRawResponse(client.integration_test)
         self.tests = tests.AsyncTestsResourceWithRawResponse(client.tests)
@@ -578,8 +578,8 @@ class AsyncAymaraSDKWithRawResponse:
         self.files = files.AsyncFilesResourceWithRawResponse(client.files)
 
 
-class AymaraSDKWithStreamedResponse:
-    def __init__(self, client: AymaraSDK) -> None:
+class AymaraAIWithStreamedResponse:
+    def __init__(self, client: AymaraAI) -> None:
         self.health = health.HealthResourceWithStreamingResponse(client.health)
         self.integration_test = integration_test.IntegrationTestResourceWithStreamingResponse(client.integration_test)
         self.tests = tests.TestsResourceWithStreamingResponse(client.tests)
@@ -595,8 +595,8 @@ class AymaraSDKWithStreamedResponse:
         self.files = files.FilesResourceWithStreamingResponse(client.files)
 
 
-class AsyncAymaraSDKWithStreamedResponse:
-    def __init__(self, client: AsyncAymaraSDK) -> None:
+class AsyncAymaraAIWithStreamedResponse:
+    def __init__(self, client: AsyncAymaraAI) -> None:
         self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
         self.integration_test = integration_test.AsyncIntegrationTestResourceWithStreamingResponse(
             client.integration_test
@@ -614,6 +614,6 @@ class AsyncAymaraSDKWithStreamedResponse:
         self.files = files.AsyncFilesResourceWithStreamingResponse(client.files)
 
 
-Client = AymaraSDK
+Client = AymaraAI
 
-AsyncClient = AsyncAymaraSDK
+AsyncClient = AsyncAymaraAI
