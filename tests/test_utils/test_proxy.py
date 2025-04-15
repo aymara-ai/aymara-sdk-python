@@ -2,7 +2,7 @@ import operator
 from typing import Any
 from typing_extensions import override
 
-from aymara_sdk._utils import LazyProxy
+from aymara._utils import LazyProxy
 
 
 class RecursiveLazyProxy(LazyProxy[Any]):

@@ -1,8 +1,8 @@
-# Aymara SDK Python API library
+# Aymara Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/aymara_sdk.svg)](https://pypi.org/project/aymara_sdk/)
+[![PyPI version](https://img.shields.io/pypi/v/aymara.svg)](https://pypi.org/project/aymara/)
 
-The Aymara SDK Python library provides convenient access to the Aymara SDK REST API from any Python 3.8+
+The Aymara Python library provides convenient access to the Aymara REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -10,7 +10,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The REST API documentation can be found on [docs.aymara-sdk.com](https://docs.aymara-sdk.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.aymara.ai](https://docs.aymara.ai). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/stainless-sdks/aymara-sdk-python.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre aymara_sdk`
+> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre aymara`
 
 ## Usage
 
@@ -28,9 +28,9 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from aymara_sdk import AymaraSDK
+from aymara import Aymara
 
-client = AymaraSDK(
+client = Aymara(
     api_key=os.environ.get("AYMARA_API_KEY"),  # This is the default and can be omitted
     # or 'production' | 'development'; defaults to "production".
     environment="staging",
@@ -46,14 +46,14 @@ so that your API Key is not stored in source control.
 
 ## Async usage
 
-Simply import `AsyncAymaraSDK` instead of `AymaraSDK` and use `await` with each API call:
+Simply import `AsyncAymara` instead of `Aymara` and use `await` with each API call:
 
 ```python
 import os
 import asyncio
-from aymara_sdk import AsyncAymaraSDK
+from aymara import AsyncAymara
 
-client = AsyncAymaraSDK(
+client = AsyncAymara(
     api_key=os.environ.get("AYMARA_API_KEY"),  # This is the default and can be omitted
     # or 'production' | 'development'; defaults to "production".
     environment="staging",
@@ -80,27 +80,27 @@ Typed requests and responses provide autocomplete and documentation within your 
 
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `aymara_sdk.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `aymara.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `aymara_sdk.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `aymara.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `aymara_sdk.APIError`.
+All errors inherit from `aymara.APIError`.
 
 ```python
-import aymara_sdk
-from aymara_sdk import AymaraSDK
+import aymara
+from aymara import Aymara
 
-client = AymaraSDK()
+client = Aymara()
 
 try:
     client.health.check()
-except aymara_sdk.APIConnectionError as e:
+except aymara.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except aymara_sdk.RateLimitError as e:
+except aymara.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except aymara_sdk.APIStatusError as e:
+except aymara.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -128,10 +128,10 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from aymara_sdk import AymaraSDK
+from aymara import Aymara
 
 # Configure the default for all requests:
-client = AymaraSDK(
+client = Aymara(
     # default is 2
     max_retries=0,
 )
@@ -146,16 +146,16 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
 
 ```python
-from aymara_sdk import AymaraSDK
+from aymara import Aymara
 
 # Configure the default for all requests:
-client = AymaraSDK(
+client = Aymara(
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
-client = AymaraSDK(
+client = Aymara(
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -173,10 +173,10 @@ Note that requests that time out are [retried twice by default](#retries).
 
 We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
 
-You can enable logging by setting the environment variable `AYMARA_SDK_LOG` to `info`.
+You can enable logging by setting the environment variable `AYMARA_LOG` to `info`.
 
 ```shell
-$ export AYMARA_SDK_LOG=info
+$ export AYMARA_LOG=info
 ```
 
 Or to `debug` for more verbose logging.
@@ -198,9 +198,9 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from aymara_sdk import AymaraSDK
+from aymara import Aymara
 
-client = AymaraSDK()
+client = Aymara()
 response = client.health.with_raw_response.check()
 print(response.headers.get('X-My-Header'))
 
@@ -208,9 +208,9 @@ health = response.parse()  # get the object that `health.check()` would have ret
 print(health)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara_sdk/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara_sdk/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -272,10 +272,10 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from aymara_sdk import AymaraSDK, DefaultHttpxClient
+from aymara import Aymara, DefaultHttpxClient
 
-client = AymaraSDK(
-    # Or use the `AYMARA_SDK_BASE_URL` env var
+client = Aymara(
+    # Or use the `AYMARA_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
         proxy="http://my.test.proxy.example.com",
@@ -295,9 +295,9 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from aymara_sdk import AymaraSDK
+from aymara import Aymara
 
-with AymaraSDK() as client:
+with Aymara() as client:
   # make requests here
   ...
 
@@ -323,8 +323,8 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import aymara_sdk
-print(aymara_sdk.__version__)
+import aymara
+print(aymara.__version__)
 ```
 
 ## Requirements

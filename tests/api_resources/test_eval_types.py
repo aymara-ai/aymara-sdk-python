@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_sdk import AymaraSDK, AsyncAymaraSDK
+from aymara import Aymara, AsyncAymara
 from tests.utils import assert_matches_type
-from aymara_sdk.types import EvalType, EvalTypeListResponse
+from aymara.types import EvalType, EvalTypeListResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,7 +19,7 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve(self, client: AymaraSDK) -> None:
+    def test_method_retrieve(self, client: Aymara) -> None:
         eval_type = client.eval_types.retrieve(
             "eval_type_uuid",
         )
@@ -27,7 +27,7 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_retrieve(self, client: AymaraSDK) -> None:
+    def test_raw_response_retrieve(self, client: Aymara) -> None:
         response = client.eval_types.with_raw_response.retrieve(
             "eval_type_uuid",
         )
@@ -39,7 +39,7 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_retrieve(self, client: AymaraSDK) -> None:
+    def test_streaming_response_retrieve(self, client: Aymara) -> None:
         with client.eval_types.with_streaming_response.retrieve(
             "eval_type_uuid",
         ) as response:
@@ -53,7 +53,7 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_retrieve(self, client: AymaraSDK) -> None:
+    def test_path_params_retrieve(self, client: Aymara) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_type_uuid` but received ''"):
             client.eval_types.with_raw_response.retrieve(
                 "",
@@ -61,13 +61,13 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_list(self, client: AymaraSDK) -> None:
+    def test_method_list(self, client: Aymara) -> None:
         eval_type = client.eval_types.list()
         assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_list(self, client: AymaraSDK) -> None:
+    def test_raw_response_list(self, client: Aymara) -> None:
         response = client.eval_types.with_raw_response.list()
 
         assert response.is_closed is True
@@ -77,7 +77,7 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_list(self, client: AymaraSDK) -> None:
+    def test_streaming_response_list(self, client: Aymara) -> None:
         with client.eval_types.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -93,7 +93,7 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_retrieve(self, async_client: AsyncAymara) -> None:
         eval_type = await async_client.eval_types.retrieve(
             "eval_type_uuid",
         )
@@ -101,7 +101,7 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_retrieve(self, async_client: AsyncAymara) -> None:
         response = await async_client.eval_types.with_raw_response.retrieve(
             "eval_type_uuid",
         )
@@ -113,7 +113,7 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_retrieve(self, async_client: AsyncAymara) -> None:
         async with async_client.eval_types.with_streaming_response.retrieve(
             "eval_type_uuid",
         ) as response:
@@ -127,7 +127,7 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_path_params_retrieve(self, async_client: AsyncAymara) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_type_uuid` but received ''"):
             await async_client.eval_types.with_raw_response.retrieve(
                 "",
@@ -135,13 +135,13 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_list(self, async_client: AsyncAymara) -> None:
         eval_type = await async_client.eval_types.list()
         assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_list(self, async_client: AsyncAymara) -> None:
         response = await async_client.eval_types.with_raw_response.list()
 
         assert response.is_closed is True
@@ -151,7 +151,7 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_list(self, async_client: AsyncAymara) -> None:
         async with async_client.eval_types.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

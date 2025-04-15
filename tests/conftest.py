@@ -7,14 +7,14 @@ from typing import TYPE_CHECKING, Iterator, AsyncIterator
 import pytest
 from pytest_asyncio import is_async_test
 
-from aymara_sdk import AymaraSDK, AsyncAymaraSDK
+from aymara import Aymara, AsyncAymara
 
 if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest
 
 pytest.register_assert_rewrite("tests.utils")
 
-logging.getLogger("aymara_sdk").setLevel(logging.DEBUG)
+logging.getLogger("aymara").setLevel(logging.DEBUG)
 
 
 # automatically add `pytest.mark.asyncio()` to all of our async tests
@@ -31,20 +31,20 @@ api_key = "My API Key"
 
 
 @pytest.fixture(scope="session")
-def client(request: FixtureRequest) -> Iterator[AymaraSDK]:
+def client(request: FixtureRequest) -> Iterator[Aymara]:
     strict = getattr(request, "param", True)
     if not isinstance(strict, bool):
         raise TypeError(f"Unexpected fixture parameter type {type(strict)}, expected {bool}")
 
-    with AymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
+    with Aymara(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
         yield client
 
 
 @pytest.fixture(scope="session")
-async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncAymaraSDK]:
+async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncAymara]:
     strict = getattr(request, "param", True)
     if not isinstance(strict, bool):
         raise TypeError(f"Unexpected fixture parameter type {type(strict)}, expected {bool}")
 
-    async with AsyncAymaraSDK(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
+    async with AsyncAymara(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
         yield client
