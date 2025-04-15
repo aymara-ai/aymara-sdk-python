@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from aymara_ai import AymaraSDK, AsyncAymaraSDK
+from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
 from aymara_ai.types import UsageListResponse
 
@@ -19,13 +19,13 @@ class TestUsage:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_list(self, client: AymaraSDK) -> None:
+    def test_method_list(self, client: AymaraAI) -> None:
         usage = client.usage.list()
         assert_matches_type(UsageListResponse, usage, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_list_with_all_params(self, client: AymaraSDK) -> None:
+    def test_method_list_with_all_params(self, client: AymaraAI) -> None:
         usage = client.usage.list(
             workspace_uuid="workspace_uuid",
         )
@@ -33,7 +33,7 @@ class TestUsage:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_list(self, client: AymaraSDK) -> None:
+    def test_raw_response_list(self, client: AymaraAI) -> None:
         response = client.usage.with_raw_response.list()
 
         assert response.is_closed is True
@@ -43,7 +43,7 @@ class TestUsage:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_list(self, client: AymaraSDK) -> None:
+    def test_streaming_response_list(self, client: AymaraAI) -> None:
         with client.usage.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -59,13 +59,13 @@ class TestAsyncUsage:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_list(self, async_client: AsyncAymaraAI) -> None:
         usage = await async_client.usage.list()
         assert_matches_type(UsageListResponse, usage, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_list_with_all_params(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_method_list_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         usage = await async_client.usage.list(
             workspace_uuid="workspace_uuid",
         )
@@ -73,7 +73,7 @@ class TestAsyncUsage:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_raw_response_list(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.usage.with_raw_response.list()
 
         assert response.is_closed is True
@@ -83,7 +83,7 @@ class TestAsyncUsage:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_list(self, async_client: AsyncAymaraSDK) -> None:
+    async def test_streaming_response_list(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.usage.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
