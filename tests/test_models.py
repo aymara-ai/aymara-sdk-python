@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from aymara_sdk._utils import PropertyInfo
-from aymara_sdk._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
-from aymara_sdk._models import BaseModel, construct_type
+from aymara._utils import PropertyInfo
+from aymara._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
+from aymara._models import BaseModel, construct_type
 
 
 class BasicModel(BaseModel):
