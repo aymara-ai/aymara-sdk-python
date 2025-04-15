@@ -11,10 +11,10 @@ from aymara_sdk import AymaraSDK, AsyncAymaraSDK
 from tests.utils import assert_matches_type
 from aymara_sdk.types import (
     EvalRun,
-    EvalRunListResponse,
     EvalRunRunScoreResponse,
     EvalRunGetResponsesResponse,
 )
+from aymara_sdk.pagination import SyncOffsetPage, AsyncOffsetPage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -163,7 +163,7 @@ class TestEvalRuns:
     @parametrize
     def test_method_list(self, client: AymaraSDK) -> None:
         eval_run = client.eval_runs.list()
-        assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -174,7 +174,7 @@ class TestEvalRuns:
             offset=0,
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -184,7 +184,7 @@ class TestEvalRuns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_run = response.parse()
-        assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -194,7 +194,7 @@ class TestEvalRuns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_run = response.parse()
-            assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+            assert_matches_type(SyncOffsetPage[EvalRun], eval_run, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -533,7 +533,7 @@ class TestAsyncEvalRuns:
     @parametrize
     async def test_method_list(self, async_client: AsyncAymaraSDK) -> None:
         eval_run = await async_client.eval_runs.list()
-        assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -544,7 +544,7 @@ class TestAsyncEvalRuns:
             offset=0,
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -554,7 +554,7 @@ class TestAsyncEvalRuns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_run = await response.parse()
-        assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRun], eval_run, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -564,7 +564,7 @@ class TestAsyncEvalRuns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_run = await response.parse()
-            assert_matches_type(EvalRunListResponse, eval_run, path=["response"])
+            assert_matches_type(AsyncOffsetPage[EvalRun], eval_run, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

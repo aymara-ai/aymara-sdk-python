@@ -26,7 +26,6 @@ from aymara_sdk.types import (
     ExampleType,
     Question,
     TestOut,
-    TestListResponse,
     TestRetrieveQuestionsResponse,
 )
 ```
@@ -35,7 +34,7 @@ Methods:
 
 - <code title="post /v1/tests/">client.tests.<a href="./src/aymara_sdk/resources/tests/tests.py">create</a>(\*\*<a href="src/aymara_sdk/types/test_create_params.py">params</a>) -> <a href="./src/aymara_sdk/types/test_out.py">TestOut</a></code>
 - <code title="get /v1/tests/{test_uuid}">client.tests.<a href="./src/aymara_sdk/resources/tests/tests.py">retrieve</a>(test_uuid, \*\*<a href="src/aymara_sdk/types/test_retrieve_params.py">params</a>) -> <a href="./src/aymara_sdk/types/test_out.py">TestOut</a></code>
-- <code title="get /v1/tests/">client.tests.<a href="./src/aymara_sdk/resources/tests/tests.py">list</a>(\*\*<a href="src/aymara_sdk/types/test_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/test_list_response.py">TestListResponse</a></code>
+- <code title="get /v1/tests/">client.tests.<a href="./src/aymara_sdk/resources/tests/tests.py">list</a>(\*\*<a href="src/aymara_sdk/types/test_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/test_out.py">SyncOffsetPage[TestOut]</a></code>
 - <code title="delete /v1/tests/{test_uuid}">client.tests.<a href="./src/aymara_sdk/resources/tests/tests.py">delete</a>(test_uuid, \*\*<a href="src/aymara_sdk/types/test_delete_params.py">params</a>) -> None</code>
 - <code title="get /v1/tests/{test_uuid}/questions">client.tests.<a href="./src/aymara_sdk/resources/tests/tests.py">retrieve_questions</a>(test_uuid, \*\*<a href="src/aymara_sdk/types/test_retrieve_questions_params.py">params</a>) -> <a href="./src/aymara_sdk/types/test_retrieve_questions_response.py">TestRetrieveQuestionsResponse</a></code>
 
@@ -145,28 +144,21 @@ from aymara_sdk.types import PolicyListResponse
 
 Methods:
 
-- <code title="get /v1/policies/">client.policies.<a href="./src/aymara_sdk/resources/policies.py">list</a>(\*\*<a href="src/aymara_sdk/types/policy_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/policy_list_response.py">PolicyListResponse</a></code>
+- <code title="get /v1/policies/">client.policies.<a href="./src/aymara_sdk/resources/policies.py">list</a>(\*\*<a href="src/aymara_sdk/types/policy_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/policy_list_response.py">SyncOffsetPage[PolicyListResponse]</a></code>
 
 # Evals
 
 Types:
 
 ```python
-from aymara_sdk.types import (
-    EvalOut,
-    EvalPrompt,
-    PromptExampleIn,
-    Status,
-    EvalListResponse,
-    EvalGetPromptsResponse,
-)
+from aymara_sdk.types import EvalOut, EvalPrompt, PromptExampleIn, Status, EvalGetPromptsResponse
 ```
 
 Methods:
 
 - <code title="post /v2/evals/">client.evals.<a href="./src/aymara_sdk/resources/evals.py">create</a>(\*\*<a href="src/aymara_sdk/types/eval_create_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_out.py">EvalOut</a></code>
 - <code title="get /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_sdk/resources/evals.py">retrieve</a>(eval_uuid, \*\*<a href="src/aymara_sdk/types/eval_retrieve_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_out.py">EvalOut</a></code>
-- <code title="get /v2/evals/">client.evals.<a href="./src/aymara_sdk/resources/evals.py">list</a>(\*\*<a href="src/aymara_sdk/types/eval_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_list_response.py">EvalListResponse</a></code>
+- <code title="get /v2/evals/">client.evals.<a href="./src/aymara_sdk/resources/evals.py">list</a>(\*\*<a href="src/aymara_sdk/types/eval_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_out.py">SyncOffsetPage[EvalOut]</a></code>
 - <code title="delete /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_sdk/resources/evals.py">delete</a>(eval_uuid, \*\*<a href="src/aymara_sdk/types/eval_delete_params.py">params</a>) -> None</code>
 - <code title="get /v2/evals/{eval_uuid}/prompts">client.evals.<a href="./src/aymara_sdk/resources/evals.py">get_prompts</a>(eval_uuid, \*\*<a href="src/aymara_sdk/types/eval_get_prompts_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_get_prompts_response.py">EvalGetPromptsResponse</a></code>
 
@@ -192,7 +184,6 @@ from aymara_sdk.types import (
     EvalResponse,
     EvalRun,
     EvalRunInput,
-    EvalRunListResponse,
     EvalRunGetResponsesResponse,
     EvalRunRunScoreResponse,
 )
@@ -202,7 +193,7 @@ Methods:
 
 - <code title="post /v2/eval-runs/">client.eval_runs.<a href="./src/aymara_sdk/resources/eval_runs/eval_runs.py">create</a>(\*\*<a href="src/aymara_sdk/types/eval_run_create_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_run.py">EvalRun</a></code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}">client.eval_runs.<a href="./src/aymara_sdk/resources/eval_runs/eval_runs.py">retrieve</a>(eval_run_uuid, \*\*<a href="src/aymara_sdk/types/eval_run_retrieve_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_run.py">EvalRun</a></code>
-- <code title="get /v2/eval-runs/">client.eval_runs.<a href="./src/aymara_sdk/resources/eval_runs/eval_runs.py">list</a>(\*\*<a href="src/aymara_sdk/types/eval_run_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_run_list_response.py">EvalRunListResponse</a></code>
+- <code title="get /v2/eval-runs/">client.eval_runs.<a href="./src/aymara_sdk/resources/eval_runs/eval_runs.py">list</a>(\*\*<a href="src/aymara_sdk/types/eval_run_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_run.py">SyncOffsetPage[EvalRun]</a></code>
 - <code title="delete /v2/eval-runs/{eval_run_uuid}">client.eval_runs.<a href="./src/aymara_sdk/resources/eval_runs/eval_runs.py">delete</a>(eval_run_uuid, \*\*<a href="src/aymara_sdk/types/eval_run_delete_params.py">params</a>) -> None</code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.eval_runs.<a href="./src/aymara_sdk/resources/eval_runs/eval_runs.py">get_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_sdk/types/eval_run_get_responses_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_run_get_responses_response.py">EvalRunGetResponsesResponse</a></code>
 - <code title="post /v2/eval-runs/-/score-responses">client.eval_runs.<a href="./src/aymara_sdk/resources/eval_runs/eval_runs.py">run_score</a>(\*\*<a href="src/aymara_sdk/types/eval_run_run_score_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_run_run_score_response.py">EvalRunRunScoreResponse</a></code>
@@ -224,14 +215,14 @@ Methods:
 Types:
 
 ```python
-from aymara_sdk.types.eval_runs import EvalRunSuiteSummary, SummaryListResponse
+from aymara_sdk.types.eval_runs import EvalRunSuiteSummary
 ```
 
 Methods:
 
 - <code title="post /v2/eval-runs/summary/">client.eval_runs.summary.<a href="./src/aymara_sdk/resources/eval_runs/summary.py">create</a>(\*\*<a href="src/aymara_sdk/types/eval_runs/summary_create_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_runs/eval_run_suite_summary.py">EvalRunSuiteSummary</a></code>
 - <code title="get /v2/eval-runs/summary/{summary_uuid}">client.eval_runs.summary.<a href="./src/aymara_sdk/resources/eval_runs/summary.py">retrieve</a>(summary_uuid, \*\*<a href="src/aymara_sdk/types/eval_runs/summary_retrieve_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_runs/eval_run_suite_summary.py">EvalRunSuiteSummary</a></code>
-- <code title="get /v2/eval-runs/summary/">client.eval_runs.summary.<a href="./src/aymara_sdk/resources/eval_runs/summary.py">list</a>(\*\*<a href="src/aymara_sdk/types/eval_runs/summary_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_runs/summary_list_response.py">SummaryListResponse</a></code>
+- <code title="get /v2/eval-runs/summary/">client.eval_runs.summary.<a href="./src/aymara_sdk/resources/eval_runs/summary.py">list</a>(\*\*<a href="src/aymara_sdk/types/eval_runs/summary_list_params.py">params</a>) -> <a href="./src/aymara_sdk/types/eval_runs/eval_run_suite_summary.py">SyncOffsetPage[EvalRunSuiteSummary]</a></code>
 - <code title="delete /v2/eval-runs/summary/{summary_uuid}">client.eval_runs.summary.<a href="./src/aymara_sdk/resources/eval_runs/summary.py">delete</a>(summary_uuid, \*\*<a href="src/aymara_sdk/types/eval_runs/summary_delete_params.py">params</a>) -> None</code>
 
 # Files
