@@ -340,7 +340,7 @@ class TestAymaraSDK:
         assert request.headers.get("x-api-key") == api_key
 
         with pytest.raises(AymaraSDKError):
-            with update_env(**{"AYMARA_SDK_API_KEY": Omit()}):
+            with update_env(**{"AYMARA_API_KEY": Omit()}):
                 client2 = AymaraSDK(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
@@ -1102,7 +1102,7 @@ class TestAsyncAymaraSDK:
         assert request.headers.get("x-api-key") == api_key
 
         with pytest.raises(AymaraSDKError):
-            with update_env(**{"AYMARA_SDK_API_KEY": Omit()}):
+            with update_env(**{"AYMARA_API_KEY": Omit()}):
                 client2 = AsyncAymaraSDK(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
