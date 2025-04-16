@@ -4,9 +4,59 @@ import asyncio
 from typing import Any, Union, Callable, Optional, Awaitable
 
 
-class WaitTimeoutError(Exception):
-    """Raised when wait_for_predicate times out before predicate is satisfied."""
-    pass
+def wait_until_complete(
+    get_fn: Callable[[str], Any],
+    resource_id: str,
+    status_path: str = "status",
+    success_status: str = "finished",
+    failure_status: Optional[str] = "failed",
+    timeout: int = 300,
+    interval: int = 2,
+    backoff: bool = False,
+) -> Any:
+    """
+    Generic polling helper for long-running resources.
+
+    Args:
+        get_fn: A function that takes resource_id and returns resource dict.
+        resource_id: The ID of the resource to poll.
+        status_path: Dot-path to status field (e.g. "status" or "metadata.status").
+        success_status: Status value that indicates completion.
+        failure_status: Status value that indicates failure (optional).
+        timeout: Max time to wait, in seconds.
+        interval: Poll interval in seconds.
+        backoff: If True, exponentially increase interval (max 30s).
+
+    Returns:
+        The completed resource dict.
+
+    Raises:
+        TimeoutError or RuntimeError on failure.
+    """
+    def get_status(resource: dict) -> str:
+        keys = status_path.split(".")
+        for k in keys:
+            resource = resource.get(k, {})
+        return resource if isinstance(resource, str) else ""
+
+    start_time = time.time()
+    current_interval = interval
+
+    while time.time() - start_time < timeout:
+        resource = get_fn(resource_id)
+        status = get_status(resource.to_dict() if hasattr(resource, "to_dict") else resource)
+
+
+        if status == success_status:
+            return resource
+        if failure_status and status == failure_status:
+            raise RuntimeError(f"Resource {resource_id} failed with status '{status}'")
+
+        time.sleep(current_interval)
+        if backoff:
+            current_interval = min(current_interval * 2, 30)
+
+    raise TimeoutError(f"Resource {resource_id} did not complete in time.")
 
 
 def wait_until(
