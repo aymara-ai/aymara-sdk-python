@@ -41,12 +41,9 @@ from .._base_client import AsyncPaginator, make_request_options
 from ..types.status import Status
 from ..types.eval_prompt import EvalPrompt
 from ..types.content_type import ContentType
+from ..types.eval_run_result import EvalRunResult
 from ..types.eval_response_param import EvalResponseParam
 from ..types.prompt_example_param import PromptExampleParam
-from ..types.eval_get_run_response import EvalGetRunResponse
-from ..types.eval_list_runs_response import EvalListRunsResponse
-from ..types.eval_create_run_response import EvalCreateRunResponse
-from ..types.eval_continue_run_response import EvalContinueRunResponse
 from ..types.eval_list_responses_response import EvalListResponsesResponse
 
 __all__ = ["EvalsResource", "AsyncEvalsResource"]
@@ -258,7 +255,7 @@ class EvalsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalContinueRunResponse:
+    ) -> EvalRunResult:
         """Run the eval with the provided responses.
 
         This function is used to submit AI
@@ -302,7 +299,7 @@ class EvalsResource(SyncAPIResource):
                     eval_continue_run_params.EvalContinueRunParams,
                 ),
             ),
-            cast_to=EvalContinueRunResponse,
+            cast_to=EvalRunResult,
         )
 
     def create_run(
@@ -323,7 +320,7 @@ class EvalsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalCreateRunResponse:
+    ) -> EvalRunResult:
         """
         Create a new eval run for an eval.
 
@@ -366,7 +363,7 @@ class EvalsResource(SyncAPIResource):
                     eval_create_run_params.EvalCreateRunParams,
                 ),
             ),
-            cast_to=EvalCreateRunResponse,
+            cast_to=EvalRunResult,
         )
 
     def delete_run(
@@ -464,7 +461,7 @@ class EvalsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalGetRunResponse:
+    ) -> EvalRunResult:
         """
         Get a specific eval run by UUID.
 
@@ -490,7 +487,7 @@ class EvalsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform({"workspace_uuid": workspace_uuid}, eval_get_run_params.EvalGetRunParams),
             ),
-            cast_to=EvalGetRunResponse,
+            cast_to=EvalRunResult,
         )
 
     def list_prompts(
@@ -609,7 +606,7 @@ class EvalsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncOffsetPage[EvalListRunsResponse]:
+    ) -> SyncOffsetPage[EvalRunResult]:
         """
         List all eval runs, with optional filtering.
 
@@ -626,7 +623,7 @@ class EvalsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v2/eval-runs",
-            page=SyncOffsetPage[EvalListRunsResponse],
+            page=SyncOffsetPage[EvalRunResult],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -642,7 +639,7 @@ class EvalsResource(SyncAPIResource):
                     eval_list_runs_params.EvalListRunsParams,
                 ),
             ),
-            model=EvalListRunsResponse,
+            model=EvalRunResult,
         )
 
 
@@ -854,7 +851,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalContinueRunResponse:
+    ) -> EvalRunResult:
         """Run the eval with the provided responses.
 
         This function is used to submit AI
@@ -898,7 +895,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     eval_continue_run_params.EvalContinueRunParams,
                 ),
             ),
-            cast_to=EvalContinueRunResponse,
+            cast_to=EvalRunResult,
         )
 
     async def create_run(
@@ -919,7 +916,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalCreateRunResponse:
+    ) -> EvalRunResult:
         """
         Create a new eval run for an eval.
 
@@ -962,7 +959,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     eval_create_run_params.EvalCreateRunParams,
                 ),
             ),
-            cast_to=EvalCreateRunResponse,
+            cast_to=EvalRunResult,
         )
 
     async def delete_run(
@@ -1062,7 +1059,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalGetRunResponse:
+    ) -> EvalRunResult:
         """
         Get a specific eval run by UUID.
 
@@ -1090,7 +1087,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     {"workspace_uuid": workspace_uuid}, eval_get_run_params.EvalGetRunParams
                 ),
             ),
-            cast_to=EvalGetRunResponse,
+            cast_to=EvalRunResult,
         )
 
     def list_prompts(
@@ -1209,7 +1206,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[EvalListRunsResponse, AsyncOffsetPage[EvalListRunsResponse]]:
+    ) -> AsyncPaginator[EvalRunResult, AsyncOffsetPage[EvalRunResult]]:
         """
         List all eval runs, with optional filtering.
 
@@ -1226,7 +1223,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v2/eval-runs",
-            page=AsyncOffsetPage[EvalListRunsResponse],
+            page=AsyncOffsetPage[EvalRunResult],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -1242,7 +1239,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     eval_list_runs_params.EvalListRunsParams,
                 ),
             ),
-            model=EvalListRunsResponse,
+            model=EvalRunResult,
         )
 
 
