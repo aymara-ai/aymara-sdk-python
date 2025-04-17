@@ -54,6 +54,9 @@ dev-dependencies = [
     "importlib-metadata>=6.7.0",
     "rich>=13.7.1",
     "nest_asyncio==1.6.0",
+    "ipykernel>=6.29.5",
+    "dotenv>=0.9.9",
+    "openai>=1.75.0",
 ]
 
 [tool.rye.scripts]
