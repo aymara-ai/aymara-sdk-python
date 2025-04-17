@@ -12,10 +12,7 @@ from tests.utils import assert_matches_type
 from aymara_ai.types import (
     Eval,
     EvalPrompt,
-    EvalGetRunResponse,
-    EvalListRunsResponse,
-    EvalCreateRunResponse,
-    EvalContinueRunResponse,
+    EvalRunResult,
     EvalListResponsesResponse,
 )
 from aymara_ai._utils import parse_datetime
@@ -202,7 +199,7 @@ class TestEvals:
                 }
             ],
         )
-        assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -238,7 +235,7 @@ class TestEvals:
             generate_prompts=True,
             name="name",
         )
-        assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -257,7 +254,7 @@ class TestEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = response.parse()
-        assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -276,7 +273,7 @@ class TestEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = response.parse()
-            assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+            assert_matches_type(EvalRunResult, eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -307,7 +304,7 @@ class TestEvals:
                 }
             ],
         )
-        assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -342,7 +339,7 @@ class TestEvals:
             generate_prompts=True,
             name="name",
         )
-        assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -360,7 +357,7 @@ class TestEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = response.parse()
-        assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -378,7 +375,7 @@ class TestEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = response.parse()
-            assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+            assert_matches_type(EvalRunResult, eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -490,7 +487,7 @@ class TestEvals:
         eval = client.evals.get_run(
             eval_run_uuid="eval_run_uuid",
         )
-        assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -499,7 +496,7 @@ class TestEvals:
             eval_run_uuid="eval_run_uuid",
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -511,7 +508,7 @@ class TestEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = response.parse()
-        assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -523,7 +520,7 @@ class TestEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = response.parse()
-            assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+            assert_matches_type(EvalRunResult, eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -645,7 +642,7 @@ class TestEvals:
     @parametrize
     def test_method_list_runs(self, client: AymaraAI) -> None:
         eval = client.evals.list_runs()
-        assert_matches_type(SyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRunResult], eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -656,7 +653,7 @@ class TestEvals:
             offset=0,
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(SyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRunResult], eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -666,7 +663,7 @@ class TestEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = response.parse()
-        assert_matches_type(SyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalRunResult], eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -676,7 +673,7 @@ class TestEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = response.parse()
-            assert_matches_type(SyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+            assert_matches_type(SyncOffsetPage[EvalRunResult], eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -859,7 +856,7 @@ class TestAsyncEvals:
                 }
             ],
         )
-        assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -895,7 +892,7 @@ class TestAsyncEvals:
             generate_prompts=True,
             name="name",
         )
-        assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -914,7 +911,7 @@ class TestAsyncEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = await response.parse()
-        assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -933,7 +930,7 @@ class TestAsyncEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = await response.parse()
-            assert_matches_type(EvalContinueRunResponse, eval, path=["response"])
+            assert_matches_type(EvalRunResult, eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -964,7 +961,7 @@ class TestAsyncEvals:
                 }
             ],
         )
-        assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -999,7 +996,7 @@ class TestAsyncEvals:
             generate_prompts=True,
             name="name",
         )
-        assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1017,7 +1014,7 @@ class TestAsyncEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = await response.parse()
-        assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1035,7 +1032,7 @@ class TestAsyncEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = await response.parse()
-            assert_matches_type(EvalCreateRunResponse, eval, path=["response"])
+            assert_matches_type(EvalRunResult, eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -1147,7 +1144,7 @@ class TestAsyncEvals:
         eval = await async_client.evals.get_run(
             eval_run_uuid="eval_run_uuid",
         )
-        assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1156,7 +1153,7 @@ class TestAsyncEvals:
             eval_run_uuid="eval_run_uuid",
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1168,7 +1165,7 @@ class TestAsyncEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = await response.parse()
-        assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+        assert_matches_type(EvalRunResult, eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1180,7 +1177,7 @@ class TestAsyncEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = await response.parse()
-            assert_matches_type(EvalGetRunResponse, eval, path=["response"])
+            assert_matches_type(EvalRunResult, eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -1302,7 +1299,7 @@ class TestAsyncEvals:
     @parametrize
     async def test_method_list_runs(self, async_client: AsyncAymaraAI) -> None:
         eval = await async_client.evals.list_runs()
-        assert_matches_type(AsyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRunResult], eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1313,7 +1310,7 @@ class TestAsyncEvals:
             offset=0,
             workspace_uuid="workspace_uuid",
         )
-        assert_matches_type(AsyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRunResult], eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1323,7 +1320,7 @@ class TestAsyncEvals:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval = await response.parse()
-        assert_matches_type(AsyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalRunResult], eval, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -1333,6 +1330,6 @@ class TestAsyncEvals:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval = await response.parse()
-            assert_matches_type(AsyncOffsetPage[EvalListRunsResponse], eval, path=["response"])
+            assert_matches_type(AsyncOffsetPage[EvalRunResult], eval, path=["response"])
 
         assert cast(Any, response.is_closed) is True
