@@ -21,8 +21,21 @@ class TestFiles:
     @parametrize
     def test_method_upload(self, client: AymaraAI) -> None:
         file = client.files.upload(
-            answers=[{"question_uuid": "question_uuid"}],
-            test_uuid="test_uuid",
+            files=[{"file_uuid": "file_uuid"}],
+        )
+        assert_matches_type(FileUploadResponse, file, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_upload_with_all_params(self, client: AymaraAI) -> None:
+        file = client.files.upload(
+            files=[
+                {
+                    "file_uuid": "file_uuid",
+                    "file_path": "file_path",
+                }
+            ],
+            workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileUploadResponse, file, path=["response"])
 
@@ -30,8 +43,7 @@ class TestFiles:
     @parametrize
     def test_raw_response_upload(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.upload(
-            answers=[{"question_uuid": "question_uuid"}],
-            test_uuid="test_uuid",
+            files=[{"file_uuid": "file_uuid"}],
         )
 
         assert response.is_closed is True
@@ -43,8 +55,7 @@ class TestFiles:
     @parametrize
     def test_streaming_response_upload(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.upload(
-            answers=[{"question_uuid": "question_uuid"}],
-            test_uuid="test_uuid",
+            files=[{"file_uuid": "file_uuid"}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -62,8 +73,21 @@ class TestAsyncFiles:
     @parametrize
     async def test_method_upload(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.upload(
-            answers=[{"question_uuid": "question_uuid"}],
-            test_uuid="test_uuid",
+            files=[{"file_uuid": "file_uuid"}],
+        )
+        assert_matches_type(FileUploadResponse, file, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_upload_with_all_params(self, async_client: AsyncAymaraAI) -> None:
+        file = await async_client.files.upload(
+            files=[
+                {
+                    "file_uuid": "file_uuid",
+                    "file_path": "file_path",
+                }
+            ],
+            workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileUploadResponse, file, path=["response"])
 
@@ -71,8 +95,7 @@ class TestAsyncFiles:
     @parametrize
     async def test_raw_response_upload(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.upload(
-            answers=[{"question_uuid": "question_uuid"}],
-            test_uuid="test_uuid",
+            files=[{"file_uuid": "file_uuid"}],
         )
 
         assert response.is_closed is True
@@ -84,8 +107,7 @@ class TestAsyncFiles:
     @parametrize
     async def test_streaming_response_upload(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.upload(
-            answers=[{"question_uuid": "question_uuid"}],
-            test_uuid="test_uuid",
+            files=[{"file_uuid": "file_uuid"}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

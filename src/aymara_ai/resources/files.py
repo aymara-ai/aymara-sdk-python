@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Iterable, Optional
 
 import httpx
 
@@ -21,7 +21,6 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.answer_in_param import AnswerInParam
 from ..types.file_upload_response import FileUploadResponse
 
 __all__ = ["FilesResource", "AsyncFilesResource"]
@@ -50,8 +49,8 @@ class FilesResource(SyncAPIResource):
     def upload(
         self,
         *,
-        answers: Iterable[AnswerInParam],
-        test_uuid: str,
+        files: Iterable[file_upload_params.File],
+        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -78,8 +77,8 @@ class FilesResource(SyncAPIResource):
             "/v2/files/",
             body=maybe_transform(
                 {
-                    "answers": answers,
-                    "test_uuid": test_uuid,
+                    "files": files,
+                    "workspace_uuid": workspace_uuid,
                 },
                 file_upload_params.FileUploadParams,
             ),
@@ -113,8 +112,8 @@ class AsyncFilesResource(AsyncAPIResource):
     async def upload(
         self,
         *,
-        answers: Iterable[AnswerInParam],
-        test_uuid: str,
+        files: Iterable[file_upload_params.File],
+        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -141,8 +140,8 @@ class AsyncFilesResource(AsyncAPIResource):
             "/v2/files/",
             body=await async_maybe_transform(
                 {
-                    "answers": answers,
-                    "test_uuid": test_uuid,
+                    "files": files,
+                    "workspace_uuid": workspace_uuid,
                 },
                 file_upload_params.FileUploadParams,
             ),
