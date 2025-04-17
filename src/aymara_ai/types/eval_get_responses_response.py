@@ -3,43 +3,18 @@
 from typing import List, Optional
 
 from .._models import BaseModel
+from .eval_prompt import EvalPrompt
 from .content_type import ContentType
 
-__all__ = ["EvalGetResponsesResponse", "Item", "ItemPrompt", "ItemNextPrompt"]
-
-
-class ItemPrompt(BaseModel):
-    content: str
-
-    prompt_uuid: str
-
-    category: Optional[str] = None
-
-    thread_uuid: Optional[str] = None
-
-    turn_number: Optional[int] = None
-
-
-class ItemNextPrompt(BaseModel):
-    content: str
-
-    prompt_uuid: str
-
-    category: Optional[str] = None
-
-    thread_uuid: Optional[str] = None
-
-    turn_number: Optional[int] = None
+__all__ = ["EvalGetResponsesResponse", "Item"]
 
 
 class Item(BaseModel):
     content: str
 
-    prompt: ItemPrompt
+    prompt: EvalPrompt
 
     prompt_uuid: str
-
-    response_uuid: str
 
     ai_refused: Optional[bool] = None
 
@@ -48,15 +23,17 @@ class Item(BaseModel):
     content_type: Optional[ContentType] = None
     """Content type for AI interactions."""
 
+    continue_thread: Optional[bool] = None
+
     exclude_from_scoring: Optional[bool] = None
 
     explanation: Optional[str] = None
 
-    generate_prompt: Optional[bool] = None
-
     is_passed: Optional[bool] = None
 
-    next_prompt: Optional[ItemNextPrompt] = None
+    next_prompt: Optional[EvalPrompt] = None
+
+    response_uuid: Optional[str] = None
 
     thread_uuid: Optional[str] = None
 
