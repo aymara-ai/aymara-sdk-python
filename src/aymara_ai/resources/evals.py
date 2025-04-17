@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Union, Iterable, Optional
 from datetime import datetime
+from typing_extensions import Literal
 
 import httpx
 
 from ..types import (
     Status,
-    ContentType,
     eval_get_params,
     eval_list_params,
     eval_create_params,
@@ -40,7 +40,6 @@ from ..types.eval import Eval
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.status import Status
 from ..types.eval_prompt import EvalPrompt
-from ..types.content_type import ContentType
 from ..types.eval_run_result import EvalRunResult
 from ..types.eval_response_param import EvalResponseParam
 from ..types.prompt_example_param import PromptExampleParam
@@ -82,7 +81,7 @@ class EvalsResource(SyncAPIResource):
         is_jailbreak: bool | NotGiven = NOT_GIVEN,
         is_sandbox: bool | NotGiven = NOT_GIVEN,
         language: str | NotGiven = NOT_GIVEN,
-        modality: ContentType | NotGiven = NOT_GIVEN,
+        modality: Literal["text", "image", "audio", "video"] | NotGiven = NOT_GIVEN,
         num_prompts: int | NotGiven = NOT_GIVEN,
         prompt_examples: Optional[Iterable[PromptExampleParam]] | NotGiven = NOT_GIVEN,
         status: Optional[Status] | NotGiven = NOT_GIVEN,
@@ -672,7 +671,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         is_jailbreak: bool | NotGiven = NOT_GIVEN,
         is_sandbox: bool | NotGiven = NOT_GIVEN,
         language: str | NotGiven = NOT_GIVEN,
-        modality: ContentType | NotGiven = NOT_GIVEN,
+        modality: Literal["text", "image", "audio", "video"] | NotGiven = NOT_GIVEN,
         num_prompts: int | NotGiven = NOT_GIVEN,
         prompt_examples: Optional[Iterable[PromptExampleParam]] | NotGiven = NOT_GIVEN,
         status: Optional[Status] | NotGiven = NOT_GIVEN,
