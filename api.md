@@ -151,79 +151,38 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import EvalOut, EvalPrompt, PromptExampleIn, Status, EvalGetPromptsResponse
+from aymara_ai.types import (
+    Status,
+    EvalRetrieveResponse,
+    EvalGetPromptsResponse,
+    EvalGetResponsesResponse,
+    EvalGetRunResponse,
+    EvalScoreRunResponse,
+)
 ```
 
 Methods:
 
-- <code title="post /v2/evals/">client.evals.<a href="./src/aymara_ai/resources/evals.py">create</a>(\*\*<a href="src/aymara_ai/types/eval_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_out.py">EvalOut</a></code>
-- <code title="get /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">retrieve</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_retrieve_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_out.py">EvalOut</a></code>
-- <code title="get /v2/evals/">client.evals.<a href="./src/aymara_ai/resources/evals.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_out.py">SyncOffsetPage[EvalOut]</a></code>
+- <code title="get /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">retrieve</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_retrieve_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_retrieve_response.py">EvalRetrieveResponse</a></code>
 - <code title="delete /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">delete</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_delete_params.py">params</a>) -> None</code>
+- <code title="delete /v2/eval-runs/{eval_run_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">delete_run</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_delete_run_params.py">params</a>) -> None</code>
 - <code title="get /v2/evals/{eval_uuid}/prompts">client.evals.<a href="./src/aymara_ai/resources/evals.py">get_prompts</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_get_prompts_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_get_prompts_response.py">EvalGetPromptsResponse</a></code>
+- <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.evals.<a href="./src/aymara_ai/resources/evals.py">get_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_get_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_get_responses_response.py">EvalGetResponsesResponse</a></code>
+- <code title="get /v2/eval-runs/{eval_run_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">get_run</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_get_run_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_get_run_response.py">EvalGetRunResponse</a></code>
+- <code title="post /v2/eval-runs/-/score-responses">client.evals.<a href="./src/aymara_ai/resources/evals.py">score_run</a>(\*\*<a href="src/aymara_ai/types/eval_score_run_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_score_run_response.py">EvalScoreRunResponse</a></code>
 
 # EvalTypes
 
 Types:
 
 ```python
-from aymara_ai.types import EvalType, EvalTypeListResponse
+from aymara_ai.types import EvalTypeRetrieveResponse, EvalTypeListResponse
 ```
 
 Methods:
 
-- <code title="get /v2/eval-types/{eval_type_uuid}">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">retrieve</a>(eval_type_uuid) -> <a href="./src/aymara_ai/types/eval_type.py">EvalType</a></code>
+- <code title="get /v2/eval-types/{eval_type_uuid}">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">retrieve</a>(eval_type_uuid) -> <a href="./src/aymara_ai/types/eval_type_retrieve_response.py">EvalTypeRetrieveResponse</a></code>
 - <code title="get /v2/eval-types/">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list</a>() -> <a href="./src/aymara_ai/types/eval_type_list_response.py">EvalTypeListResponse</a></code>
-
-# EvalRuns
-
-Types:
-
-```python
-from aymara_ai.types import (
-    EvalResponse,
-    EvalRun,
-    EvalRunInput,
-    EvalRunGetResponsesResponse,
-    EvalRunRunScoreResponse,
-)
-```
-
-Methods:
-
-- <code title="post /v2/eval-runs/">client.eval_runs.<a href="./src/aymara_ai/resources/eval_runs/eval_runs.py">create</a>(\*\*<a href="src/aymara_ai/types/eval_run_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_run.py">EvalRun</a></code>
-- <code title="get /v2/eval-runs/{eval_run_uuid}">client.eval_runs.<a href="./src/aymara_ai/resources/eval_runs/eval_runs.py">retrieve</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_run_retrieve_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_run.py">EvalRun</a></code>
-- <code title="get /v2/eval-runs/">client.eval_runs.<a href="./src/aymara_ai/resources/eval_runs/eval_runs.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_run_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_run.py">SyncOffsetPage[EvalRun]</a></code>
-- <code title="delete /v2/eval-runs/{eval_run_uuid}">client.eval_runs.<a href="./src/aymara_ai/resources/eval_runs/eval_runs.py">delete</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_run_delete_params.py">params</a>) -> None</code>
-- <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.eval_runs.<a href="./src/aymara_ai/resources/eval_runs/eval_runs.py">get_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_run_get_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_run_get_responses_response.py">EvalRunGetResponsesResponse</a></code>
-- <code title="post /v2/eval-runs/-/score-responses">client.eval_runs.<a href="./src/aymara_ai/resources/eval_runs/eval_runs.py">run_score</a>(\*\*<a href="src/aymara_ai/types/eval_run_run_score_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_run_run_score_response.py">EvalRunRunScoreResponse</a></code>
-
-## Image
-
-Types:
-
-```python
-from aymara_ai.types.eval_runs import ImageGetPresignedURLsResponse
-```
-
-Methods:
-
-- <code title="post /v2/eval-runs/image/get-presigned-urls">client.eval_runs.image.<a href="./src/aymara_ai/resources/eval_runs/image.py">get_presigned_urls</a>(\*\*<a href="src/aymara_ai/types/eval_runs/image_get_presigned_urls_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_runs/image_get_presigned_urls_response.py">ImageGetPresignedURLsResponse</a></code>
-
-## Summary
-
-Types:
-
-```python
-from aymara_ai.types.eval_runs import EvalRunSuiteSummary
-```
-
-Methods:
-
-- <code title="post /v2/eval-runs/summary/">client.eval_runs.summary.<a href="./src/aymara_ai/resources/eval_runs/summary.py">create</a>(\*\*<a href="src/aymara_ai/types/eval_runs/summary_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_runs/eval_run_suite_summary.py">EvalRunSuiteSummary</a></code>
-- <code title="get /v2/eval-runs/summary/{summary_uuid}">client.eval_runs.summary.<a href="./src/aymara_ai/resources/eval_runs/summary.py">retrieve</a>(summary_uuid, \*\*<a href="src/aymara_ai/types/eval_runs/summary_retrieve_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_runs/eval_run_suite_summary.py">EvalRunSuiteSummary</a></code>
-- <code title="get /v2/eval-runs/summary/">client.eval_runs.summary.<a href="./src/aymara_ai/resources/eval_runs/summary.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_runs/summary_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_runs/eval_run_suite_summary.py">SyncOffsetPage[EvalRunSuiteSummary]</a></code>
-- <code title="delete /v2/eval-runs/summary/{summary_uuid}">client.eval_runs.summary.<a href="./src/aymara_ai/resources/eval_runs/summary.py">delete</a>(summary_uuid, \*\*<a href="src/aymara_ai/types/eval_runs/summary_delete_params.py">params</a>) -> None</code>
 
 # Files
 

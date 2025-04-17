@@ -72,14 +72,6 @@ from .webhooks import (
     WebhooksResourceWithStreamingResponse,
     AsyncWebhooksResourceWithStreamingResponse,
 )
-from .eval_runs import (
-    EvalRunsResource,
-    AsyncEvalRunsResource,
-    EvalRunsResourceWithRawResponse,
-    AsyncEvalRunsResourceWithRawResponse,
-    EvalRunsResourceWithStreamingResponse,
-    AsyncEvalRunsResourceWithStreamingResponse,
-)
 from .eval_types import (
     EvalTypesResource,
     AsyncEvalTypesResource,
@@ -172,12 +164,6 @@ __all__ = [
     "AsyncEvalTypesResourceWithRawResponse",
     "EvalTypesResourceWithStreamingResponse",
     "AsyncEvalTypesResourceWithStreamingResponse",
-    "EvalRunsResource",
-    "AsyncEvalRunsResource",
-    "EvalRunsResourceWithRawResponse",
-    "AsyncEvalRunsResourceWithRawResponse",
-    "EvalRunsResourceWithStreamingResponse",
-    "AsyncEvalRunsResourceWithStreamingResponse",
     "FilesResource",
     "AsyncFilesResource",
     "FilesResourceWithRawResponse",

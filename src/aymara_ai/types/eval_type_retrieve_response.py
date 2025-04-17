@@ -4,10 +4,10 @@ from typing import List, Optional
 
 from .._models import BaseModel
 
-__all__ = ["EvalType"]
+__all__ = ["EvalTypeRetrieveResponse"]
 
 
-class EvalType(BaseModel):
+class EvalTypeRetrieveResponse(BaseModel):
     description: str
 
     eval_type_uuid: str
