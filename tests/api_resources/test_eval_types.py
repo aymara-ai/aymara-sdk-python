@@ -9,7 +9,7 @@ import pytest
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
-from aymara_ai.types import EvalType, EvalTypeListResponse
+from aymara_ai.types import EvalTypeListResponse, EvalTypeRetrieveResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -23,7 +23,7 @@ class TestEvalTypes:
         eval_type = client.eval_types.retrieve(
             "eval_type_uuid",
         )
-        assert_matches_type(EvalType, eval_type, path=["response"])
+        assert_matches_type(EvalTypeRetrieveResponse, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -35,7 +35,7 @@ class TestEvalTypes:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_type = response.parse()
-        assert_matches_type(EvalType, eval_type, path=["response"])
+        assert_matches_type(EvalTypeRetrieveResponse, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -47,7 +47,7 @@ class TestEvalTypes:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_type = response.parse()
-            assert_matches_type(EvalType, eval_type, path=["response"])
+            assert_matches_type(EvalTypeRetrieveResponse, eval_type, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -97,7 +97,7 @@ class TestAsyncEvalTypes:
         eval_type = await async_client.eval_types.retrieve(
             "eval_type_uuid",
         )
-        assert_matches_type(EvalType, eval_type, path=["response"])
+        assert_matches_type(EvalTypeRetrieveResponse, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -109,7 +109,7 @@ class TestAsyncEvalTypes:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_type = await response.parse()
-        assert_matches_type(EvalType, eval_type, path=["response"])
+        assert_matches_type(EvalTypeRetrieveResponse, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -121,7 +121,7 @@ class TestAsyncEvalTypes:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_type = await response.parse()
-            assert_matches_type(EvalType, eval_type, path=["response"])
+            assert_matches_type(EvalTypeRetrieveResponse, eval_type, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

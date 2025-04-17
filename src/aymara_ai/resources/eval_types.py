@@ -14,8 +14,8 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.eval_type import EvalType
 from ..types.eval_type_list_response import EvalTypeListResponse
+from ..types.eval_type_retrieve_response import EvalTypeRetrieveResponse
 
 __all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]
 
@@ -50,7 +50,7 @@ class EvalTypesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalType:
+    ) -> EvalTypeRetrieveResponse:
         """
         Get a specific eval type by UUID.
 
@@ -70,7 +70,7 @@ class EvalTypesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EvalType,
+            cast_to=EvalTypeRetrieveResponse,
         )
 
     def list(
@@ -123,7 +123,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalType:
+    ) -> EvalTypeRetrieveResponse:
         """
         Get a specific eval type by UUID.
 
@@ -143,7 +143,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EvalType,
+            cast_to=EvalTypeRetrieveResponse,
         )
 
     async def list(

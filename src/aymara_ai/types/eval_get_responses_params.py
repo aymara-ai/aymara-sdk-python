@@ -4,8 +4,12 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["EvalRunRetrieveParams"]
+__all__ = ["EvalGetResponsesParams"]
 
 
-class EvalRunRetrieveParams(TypedDict, total=False):
+class EvalGetResponsesParams(TypedDict, total=False):
+    limit: int
+
+    offset: int
+
     workspace_uuid: str
