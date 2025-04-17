@@ -2,10 +2,10 @@
 
 from typing import List, Optional
 from datetime import datetime
+from typing_extensions import Literal
 
 from .status import Status
 from .._models import BaseModel
-from .content_type import ContentType
 from .prompt_example import PromptExample
 
 __all__ = ["Eval"]
@@ -32,7 +32,7 @@ class Eval(BaseModel):
 
     language: Optional[str] = None
 
-    modality: Optional[ContentType] = None
+    modality: Optional[Literal["text", "image", "audio", "video"]] = None
     """Content type for AI interactions."""
 
     num_prompts: Optional[int] = None

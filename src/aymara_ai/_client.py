@@ -24,19 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import (
-    evals,
-    files,
-    usage,
-    health,
-    reports,
-    accounts,
-    policies,
-    webhooks,
-    eval_types,
-    workspaces,
-    integration_test,
-)
+from .resources import evals, files, health, reports, eval_types
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import AymaraAIError, APIStatusError
 from ._base_client import (
@@ -44,8 +32,6 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
-from .resources.tests import tests
-from .resources.scores import scores
 
 __all__ = [
     "ENVIRONMENTS",
@@ -68,14 +54,6 @@ ENVIRONMENTS: Dict[str, str] = {
 
 class AymaraAI(SyncAPIClient):
     health: health.HealthResource
-    integration_test: integration_test.IntegrationTestResource
-    tests: tests.TestsResource
-    scores: scores.ScoresResource
-    workspaces: workspaces.WorkspacesResource
-    webhooks: webhooks.WebhooksResource
-    accounts: accounts.AccountsResource
-    usage: usage.UsageResource
-    policies: policies.PoliciesResource
     evals: evals.EvalsResource
     eval_types: eval_types.EvalTypesResource
     reports: reports.ReportsResource
@@ -170,14 +148,6 @@ class AymaraAI(SyncAPIClient):
         )
 
         self.health = health.HealthResource(self)
-        self.integration_test = integration_test.IntegrationTestResource(self)
-        self.tests = tests.TestsResource(self)
-        self.scores = scores.ScoresResource(self)
-        self.workspaces = workspaces.WorkspacesResource(self)
-        self.webhooks = webhooks.WebhooksResource(self)
-        self.accounts = accounts.AccountsResource(self)
-        self.usage = usage.UsageResource(self)
-        self.policies = policies.PoliciesResource(self)
         self.evals = evals.EvalsResource(self)
         self.eval_types = eval_types.EvalTypesResource(self)
         self.reports = reports.ReportsResource(self)
@@ -307,14 +277,6 @@ class AymaraAI(SyncAPIClient):
 
 class AsyncAymaraAI(AsyncAPIClient):
     health: health.AsyncHealthResource
-    integration_test: integration_test.AsyncIntegrationTestResource
-    tests: tests.AsyncTestsResource
-    scores: scores.AsyncScoresResource
-    workspaces: workspaces.AsyncWorkspacesResource
-    webhooks: webhooks.AsyncWebhooksResource
-    accounts: accounts.AsyncAccountsResource
-    usage: usage.AsyncUsageResource
-    policies: policies.AsyncPoliciesResource
     evals: evals.AsyncEvalsResource
     eval_types: eval_types.AsyncEvalTypesResource
     reports: reports.AsyncReportsResource
@@ -409,14 +371,6 @@ class AsyncAymaraAI(AsyncAPIClient):
         )
 
         self.health = health.AsyncHealthResource(self)
-        self.integration_test = integration_test.AsyncIntegrationTestResource(self)
-        self.tests = tests.AsyncTestsResource(self)
-        self.scores = scores.AsyncScoresResource(self)
-        self.workspaces = workspaces.AsyncWorkspacesResource(self)
-        self.webhooks = webhooks.AsyncWebhooksResource(self)
-        self.accounts = accounts.AsyncAccountsResource(self)
-        self.usage = usage.AsyncUsageResource(self)
-        self.policies = policies.AsyncPoliciesResource(self)
         self.evals = evals.AsyncEvalsResource(self)
         self.eval_types = eval_types.AsyncEvalTypesResource(self)
         self.reports = reports.AsyncReportsResource(self)
@@ -547,14 +501,6 @@ class AsyncAymaraAI(AsyncAPIClient):
 class AymaraAIWithRawResponse:
     def __init__(self, client: AymaraAI) -> None:
         self.health = health.HealthResourceWithRawResponse(client.health)
-        self.integration_test = integration_test.IntegrationTestResourceWithRawResponse(client.integration_test)
-        self.tests = tests.TestsResourceWithRawResponse(client.tests)
-        self.scores = scores.ScoresResourceWithRawResponse(client.scores)
-        self.workspaces = workspaces.WorkspacesResourceWithRawResponse(client.workspaces)
-        self.webhooks = webhooks.WebhooksResourceWithRawResponse(client.webhooks)
-        self.accounts = accounts.AccountsResourceWithRawResponse(client.accounts)
-        self.usage = usage.UsageResourceWithRawResponse(client.usage)
-        self.policies = policies.PoliciesResourceWithRawResponse(client.policies)
         self.evals = evals.EvalsResourceWithRawResponse(client.evals)
         self.eval_types = eval_types.EvalTypesResourceWithRawResponse(client.eval_types)
         self.reports = reports.ReportsResourceWithRawResponse(client.reports)
@@ -564,14 +510,6 @@ class AymaraAIWithRawResponse:
 class AsyncAymaraAIWithRawResponse:
     def __init__(self, client: AsyncAymaraAI) -> None:
         self.health = health.AsyncHealthResourceWithRawResponse(client.health)
-        self.integration_test = integration_test.AsyncIntegrationTestResourceWithRawResponse(client.integration_test)
-        self.tests = tests.AsyncTestsResourceWithRawResponse(client.tests)
-        self.scores = scores.AsyncScoresResourceWithRawResponse(client.scores)
-        self.workspaces = workspaces.AsyncWorkspacesResourceWithRawResponse(client.workspaces)
-        self.webhooks = webhooks.AsyncWebhooksResourceWithRawResponse(client.webhooks)
-        self.accounts = accounts.AsyncAccountsResourceWithRawResponse(client.accounts)
-        self.usage = usage.AsyncUsageResourceWithRawResponse(client.usage)
-        self.policies = policies.AsyncPoliciesResourceWithRawResponse(client.policies)
         self.evals = evals.AsyncEvalsResourceWithRawResponse(client.evals)
         self.eval_types = eval_types.AsyncEvalTypesResourceWithRawResponse(client.eval_types)
         self.reports = reports.AsyncReportsResourceWithRawResponse(client.reports)
@@ -581,14 +519,6 @@ class AsyncAymaraAIWithRawResponse:
 class AymaraAIWithStreamedResponse:
     def __init__(self, client: AymaraAI) -> None:
         self.health = health.HealthResourceWithStreamingResponse(client.health)
-        self.integration_test = integration_test.IntegrationTestResourceWithStreamingResponse(client.integration_test)
-        self.tests = tests.TestsResourceWithStreamingResponse(client.tests)
-        self.scores = scores.ScoresResourceWithStreamingResponse(client.scores)
-        self.workspaces = workspaces.WorkspacesResourceWithStreamingResponse(client.workspaces)
-        self.webhooks = webhooks.WebhooksResourceWithStreamingResponse(client.webhooks)
-        self.accounts = accounts.AccountsResourceWithStreamingResponse(client.accounts)
-        self.usage = usage.UsageResourceWithStreamingResponse(client.usage)
-        self.policies = policies.PoliciesResourceWithStreamingResponse(client.policies)
         self.evals = evals.EvalsResourceWithStreamingResponse(client.evals)
         self.eval_types = eval_types.EvalTypesResourceWithStreamingResponse(client.eval_types)
         self.reports = reports.ReportsResourceWithStreamingResponse(client.reports)
@@ -598,16 +528,6 @@ class AymaraAIWithStreamedResponse:
 class AsyncAymaraAIWithStreamedResponse:
     def __init__(self, client: AsyncAymaraAI) -> None:
         self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
-        self.integration_test = integration_test.AsyncIntegrationTestResourceWithStreamingResponse(
-            client.integration_test
-        )
-        self.tests = tests.AsyncTestsResourceWithStreamingResponse(client.tests)
-        self.scores = scores.AsyncScoresResourceWithStreamingResponse(client.scores)
-        self.workspaces = workspaces.AsyncWorkspacesResourceWithStreamingResponse(client.workspaces)
-        self.webhooks = webhooks.AsyncWebhooksResourceWithStreamingResponse(client.webhooks)
-        self.accounts = accounts.AsyncAccountsResourceWithStreamingResponse(client.accounts)
-        self.usage = usage.AsyncUsageResourceWithStreamingResponse(client.usage)
-        self.policies = policies.AsyncPoliciesResourceWithStreamingResponse(client.policies)
         self.evals = evals.AsyncEvalsResourceWithStreamingResponse(client.evals)
         self.eval_types = eval_types.AsyncEvalTypesResourceWithStreamingResponse(client.eval_types)
         self.reports = reports.AsyncReportsResourceWithStreamingResponse(client.reports)
