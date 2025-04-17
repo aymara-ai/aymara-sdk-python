@@ -6,12 +6,7 @@ from typing import List, Optional
 
 import httpx
 
-from ..types import (
-    report_list_params,
-    report_create_params,
-    report_delete_params,
-    report_retrieve_params,
-)
+from ..types import report_get_params, report_list_params, report_create_params, report_delete_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
 from .._utils import (
     maybe_transform,
@@ -96,46 +91,6 @@ class ReportsResource(SyncAPIResource):
                     },
                     report_create_params.ReportCreateParams,
                 ),
-            ),
-            cast_to=EvalSuiteReport,
-        )
-
-    def retrieve(
-        self,
-        report_uuid: str,
-        *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalSuiteReport:
-        """
-        Get a specific eval run suite summary by UUID.
-
-        This function delegates to the get_score_run_suite_summary function.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not report_uuid:
-            raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
-        return self._get(
-            f"/v2/eval-reports/{report_uuid}",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform({"workspace_uuid": workspace_uuid}, report_retrieve_params.ReportRetrieveParams),
             ),
             cast_to=EvalSuiteReport,
         )
@@ -228,6 +183,46 @@ class ReportsResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
+    def get(
+        self,
+        report_uuid: str,
+        *,
+        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalSuiteReport:
+        """
+        Get a specific eval run suite summary by UUID.
+
+        This function delegates to the get_score_run_suite_summary function.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not report_uuid:
+            raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
+        return self._get(
+            f"/v2/eval-reports/{report_uuid}",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"workspace_uuid": workspace_uuid}, report_get_params.ReportGetParams),
+            ),
+            cast_to=EvalSuiteReport,
+        )
+
 
 class AsyncReportsResource(AsyncAPIResource):
     @cached_property
@@ -294,48 +289,6 @@ class AsyncReportsResource(AsyncAPIResource):
                         "workspace_uuid": workspace_uuid,
                     },
                     report_create_params.ReportCreateParams,
-                ),
-            ),
-            cast_to=EvalSuiteReport,
-        )
-
-    async def retrieve(
-        self,
-        report_uuid: str,
-        *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalSuiteReport:
-        """
-        Get a specific eval run suite summary by UUID.
-
-        This function delegates to the get_score_run_suite_summary function.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not report_uuid:
-            raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
-        return await self._get(
-            f"/v2/eval-reports/{report_uuid}",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {"workspace_uuid": workspace_uuid}, report_retrieve_params.ReportRetrieveParams
                 ),
             ),
             cast_to=EvalSuiteReport,
@@ -431,6 +384,48 @@ class AsyncReportsResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
+    async def get(
+        self,
+        report_uuid: str,
+        *,
+        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalSuiteReport:
+        """
+        Get a specific eval run suite summary by UUID.
+
+        This function delegates to the get_score_run_suite_summary function.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not report_uuid:
+            raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
+        return await self._get(
+            f"/v2/eval-reports/{report_uuid}",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"workspace_uuid": workspace_uuid}, report_get_params.ReportGetParams
+                ),
+            ),
+            cast_to=EvalSuiteReport,
+        )
+
 
 class ReportsResourceWithRawResponse:
     def __init__(self, reports: ReportsResource) -> None:
@@ -439,14 +434,14 @@ class ReportsResourceWithRawResponse:
         self.create = to_raw_response_wrapper(
             reports.create,
         )
-        self.retrieve = to_raw_response_wrapper(
-            reports.retrieve,
-        )
         self.list = to_raw_response_wrapper(
             reports.list,
         )
         self.delete = to_raw_response_wrapper(
             reports.delete,
+        )
+        self.get = to_raw_response_wrapper(
+            reports.get,
         )
 
 
@@ -457,14 +452,14 @@ class AsyncReportsResourceWithRawResponse:
         self.create = async_to_raw_response_wrapper(
             reports.create,
         )
-        self.retrieve = async_to_raw_response_wrapper(
-            reports.retrieve,
-        )
         self.list = async_to_raw_response_wrapper(
             reports.list,
         )
         self.delete = async_to_raw_response_wrapper(
             reports.delete,
+        )
+        self.get = async_to_raw_response_wrapper(
+            reports.get,
         )
 
 
@@ -475,14 +470,14 @@ class ReportsResourceWithStreamingResponse:
         self.create = to_streamed_response_wrapper(
             reports.create,
         )
-        self.retrieve = to_streamed_response_wrapper(
-            reports.retrieve,
-        )
         self.list = to_streamed_response_wrapper(
             reports.list,
         )
         self.delete = to_streamed_response_wrapper(
             reports.delete,
+        )
+        self.get = to_streamed_response_wrapper(
+            reports.get,
         )
 
 
@@ -493,12 +488,12 @@ class AsyncReportsResourceWithStreamingResponse:
         self.create = async_to_streamed_response_wrapper(
             reports.create,
         )
-        self.retrieve = async_to_streamed_response_wrapper(
-            reports.retrieve,
-        )
         self.list = async_to_streamed_response_wrapper(
             reports.list,
         )
         self.delete = async_to_streamed_response_wrapper(
             reports.delete,
+        )
+        self.get = async_to_streamed_response_wrapper(
+            reports.get,
         )

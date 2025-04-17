@@ -3,20 +3,18 @@
 from __future__ import annotations
 
 from typing import Optional
-from typing_extensions import Literal, Required, TypedDict
+from typing_extensions import Required, TypedDict
+
+from .example_type import ExampleType
 
 __all__ = ["PromptExampleParam"]
 
 
 class PromptExampleParam(TypedDict, total=False):
     content: Required[str]
-    """Content of the example prompt."""
 
     example_uuid: Optional[str]
-    """Unique identifier for the example, if any."""
 
     explanation: Optional[str]
-    """Explanation for the example, if any."""
 
-    type: Literal["good", "bad"]
-    """Type of the example (e.g., GOOD, BAD)."""
+    type: ExampleType

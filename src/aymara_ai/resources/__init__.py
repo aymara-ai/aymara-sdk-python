@@ -8,6 +8,14 @@ from .evals import (
     EvalsResourceWithStreamingResponse,
     AsyncEvalsResourceWithStreamingResponse,
 )
+from .files import (
+    FilesResource,
+    AsyncFilesResource,
+    FilesResourceWithRawResponse,
+    AsyncFilesResourceWithRawResponse,
+    FilesResourceWithStreamingResponse,
+    AsyncFilesResourceWithStreamingResponse,
+)
 from .tests import (
     TestsResource,
     AsyncTestsResource,
@@ -170,4 +178,10 @@ __all__ = [
     "AsyncReportsResourceWithRawResponse",
     "ReportsResourceWithStreamingResponse",
     "AsyncReportsResourceWithStreamingResponse",
+    "FilesResource",
+    "AsyncFilesResource",
+    "FilesResourceWithRawResponse",
+    "AsyncFilesResourceWithRawResponse",
+    "FilesResourceWithStreamingResponse",
+    "AsyncFilesResourceWithStreamingResponse",
 ]

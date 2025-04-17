@@ -6,7 +6,7 @@ from datetime import datetime
 from .status import Status
 from .._models import BaseModel
 from .content_type import ContentType
-from .prompt_example_in import PromptExampleIn
+from .prompt_example import PromptExample
 
 __all__ = ["Eval"]
 
@@ -37,7 +37,7 @@ class Eval(BaseModel):
 
     num_prompts: Optional[int] = None
 
-    prompt_examples: Optional[List[PromptExampleIn]] = None
+    prompt_examples: Optional[List[PromptExample]] = None
 
     status: Optional[Status] = None
     """Resource status."""

@@ -10,21 +10,11 @@ __all__ = ["FileCreateParams", "File"]
 
 class FileCreateParams(TypedDict, total=False):
     files: Required[Iterable[File]]
-    """List of files to upload."""
 
     workspace_uuid: Optional[str]
-    """UUID of the workspace to associate with the upload, if any."""
 
 
 class File(TypedDict, total=False):
-    content_type: Optional[str]
-    """MIME type of the file (e.g., 'video/mp4').
+    file_uuid: Required[str]
 
-    If not provided, will be inferred from file extension.
-    """
-
-    local_file_path: Optional[str]
-    """Local file path of the uploaded file, if available."""
-
-    remote_uri: Optional[str]
-    """Remote URI to fetch the file from, if available."""
+    file_path: Optional[str]

@@ -19,16 +19,16 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve(self, client: AymaraAI) -> None:
-        eval_type = client.eval_types.retrieve(
+    def test_method_get(self, client: AymaraAI) -> None:
+        eval_type = client.eval_types.get(
             "eval_type_uuid",
         )
         assert_matches_type(EvalType, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_retrieve(self, client: AymaraAI) -> None:
-        response = client.eval_types.with_raw_response.retrieve(
+    def test_raw_response_get(self, client: AymaraAI) -> None:
+        response = client.eval_types.with_raw_response.get(
             "eval_type_uuid",
         )
 
@@ -39,8 +39,8 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_retrieve(self, client: AymaraAI) -> None:
-        with client.eval_types.with_streaming_response.retrieve(
+    def test_streaming_response_get(self, client: AymaraAI) -> None:
+        with client.eval_types.with_streaming_response.get(
             "eval_type_uuid",
         ) as response:
             assert not response.is_closed
@@ -53,9 +53,9 @@ class TestEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_retrieve(self, client: AymaraAI) -> None:
+    def test_path_params_get(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_type_uuid` but received ''"):
-            client.eval_types.with_raw_response.retrieve(
+            client.eval_types.with_raw_response.get(
                 "",
             )
 
@@ -65,16 +65,16 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve(self, async_client: AsyncAymaraAI) -> None:
-        eval_type = await async_client.eval_types.retrieve(
+    async def test_method_get(self, async_client: AsyncAymaraAI) -> None:
+        eval_type = await async_client.eval_types.get(
             "eval_type_uuid",
         )
         assert_matches_type(EvalType, eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncAymaraAI) -> None:
-        response = await async_client.eval_types.with_raw_response.retrieve(
+    async def test_raw_response_get(self, async_client: AsyncAymaraAI) -> None:
+        response = await async_client.eval_types.with_raw_response.get(
             "eval_type_uuid",
         )
 
@@ -85,8 +85,8 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncAymaraAI) -> None:
-        async with async_client.eval_types.with_streaming_response.retrieve(
+    async def test_streaming_response_get(self, async_client: AsyncAymaraAI) -> None:
+        async with async_client.eval_types.with_streaming_response.get(
             "eval_type_uuid",
         ) as response:
             assert not response.is_closed
@@ -99,8 +99,8 @@ class TestAsyncEvalTypes:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncAymaraAI) -> None:
+    async def test_path_params_get(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_type_uuid` but received ''"):
-            await async_client.eval_types.with_raw_response.retrieve(
+            await async_client.eval_types.with_raw_response.get(
                 "",
             )
