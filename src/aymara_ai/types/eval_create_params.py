@@ -19,8 +19,6 @@ class EvalCreateParams(TypedDict, total=False):
 
     eval_type: Required[str]
 
-    eval_uuid: Required[str]
-
     name: Required[str]
 
     ai_instructions: Optional[str]
@@ -28,6 +26,8 @@ class EvalCreateParams(TypedDict, total=False):
     created_at: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
 
     eval_instructions: Optional[str]
+
+    eval_uuid: Optional[str]
 
     is_jailbreak: bool
 

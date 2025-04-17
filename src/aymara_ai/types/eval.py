@@ -16,8 +16,6 @@ class Eval(BaseModel):
 
     eval_type: str
 
-    eval_uuid: str
-
     name: str
 
     ai_instructions: Optional[str] = None
@@ -25,6 +23,8 @@ class Eval(BaseModel):
     created_at: Optional[datetime] = None
 
     eval_instructions: Optional[str] = None
+
+    eval_uuid: Optional[str] = None
 
     is_jailbreak: Optional[bool] = None
 

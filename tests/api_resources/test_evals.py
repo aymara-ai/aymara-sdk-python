@@ -30,7 +30,6 @@ class TestEvals:
         eval = client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
         )
         assert_matches_type(Eval, eval, path=["response"])
@@ -41,11 +40,11 @@ class TestEvals:
         eval = client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
             ai_instructions="ai_instructions",
             created_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             eval_instructions="eval_instructions",
+            eval_uuid="eval_uuid",
             is_jailbreak=True,
             is_sandbox=True,
             language="language",
@@ -71,7 +70,6 @@ class TestEvals:
         response = client.evals.with_raw_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
         )
 
@@ -86,7 +84,6 @@ class TestEvals:
         with client.evals.with_streaming_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
         ) as response:
             assert not response.is_closed
@@ -687,7 +684,6 @@ class TestAsyncEvals:
         eval = await async_client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
         )
         assert_matches_type(Eval, eval, path=["response"])
@@ -698,11 +694,11 @@ class TestAsyncEvals:
         eval = await async_client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
             ai_instructions="ai_instructions",
             created_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             eval_instructions="eval_instructions",
+            eval_uuid="eval_uuid",
             is_jailbreak=True,
             is_sandbox=True,
             language="language",
@@ -728,7 +724,6 @@ class TestAsyncEvals:
         response = await async_client.evals.with_raw_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
         )
 
@@ -743,7 +738,6 @@ class TestAsyncEvals:
         async with async_client.evals.with_streaming_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            eval_uuid="eval_uuid",
             name="name",
         ) as response:
             assert not response.is_closed
