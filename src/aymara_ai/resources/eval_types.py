@@ -15,6 +15,7 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.eval_type import EvalType
+from ..types.eval_type_list_response import EvalTypeListResponse
 
 __all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]
 
@@ -38,6 +39,25 @@ class EvalTypesResource(SyncAPIResource):
         For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
         return EvalTypesResourceWithStreamingResponse(self)
+
+    def list(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalTypeListResponse:
+        """List all available eval types."""
+        return self._get(
+            "/v2/eval-types",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=EvalTypeListResponse,
+        )
 
     def get(
         self,
@@ -93,6 +113,25 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         """
         return AsyncEvalTypesResourceWithStreamingResponse(self)
 
+    async def list(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalTypeListResponse:
+        """List all available eval types."""
+        return await self._get(
+            "/v2/eval-types",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=EvalTypeListResponse,
+        )
+
     async def get(
         self,
         eval_type_uuid: str,
@@ -131,6 +170,9 @@ class EvalTypesResourceWithRawResponse:
     def __init__(self, eval_types: EvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.list = to_raw_response_wrapper(
+            eval_types.list,
+        )
         self.get = to_raw_response_wrapper(
             eval_types.get,
         )
@@ -140,6 +182,9 @@ class AsyncEvalTypesResourceWithRawResponse:
     def __init__(self, eval_types: AsyncEvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.list = async_to_raw_response_wrapper(
+            eval_types.list,
+        )
         self.get = async_to_raw_response_wrapper(
             eval_types.get,
         )
@@ -149,6 +194,9 @@ class EvalTypesResourceWithStreamingResponse:
     def __init__(self, eval_types: EvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.list = to_streamed_response_wrapper(
+            eval_types.list,
+        )
         self.get = to_streamed_response_wrapper(
             eval_types.get,
         )
@@ -158,6 +206,9 @@ class AsyncEvalTypesResourceWithStreamingResponse:
     def __init__(self, eval_types: AsyncEvalTypesResource) -> None:
         self._eval_types = eval_types
 
+        self.list = async_to_streamed_response_wrapper(
+            eval_types.list,
+        )
         self.get = async_to_streamed_response_wrapper(
             eval_types.get,
         )
