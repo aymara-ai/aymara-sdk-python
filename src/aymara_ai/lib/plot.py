@@ -42,8 +42,8 @@ def eval_pass_stats(
 
 
 def _plot_pass_stats(
-    names: pd.Series[str],
-    pass_stats: pd.Series[float],
+    names: pd.Series,
+    pass_stats: pd.Series,
     title: Optional[str],
     xlabel: Optional[str],
     ylabel: Optional[str],
