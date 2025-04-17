@@ -7,15 +7,15 @@ from typing_extensions import Literal, Required, TypedDict
 
 from .content_type import ContentType
 
-__all__ = ["EvalRunCreateParams", "Response", "EvalRunExample"]
+__all__ = ["EvalScoreRunParams", "Response", "EvalRunExample"]
 
 
-class EvalRunCreateParams(TypedDict, total=False):
+class EvalScoreRunParams(TypedDict, total=False):
     eval_uuid: Required[str]
 
     responses: Required[Iterable[Response]]
 
-    is_sandbox: Optional[bool]
+    is_sandbox: bool
 
     workspace_uuid: str
 
