@@ -1,23 +1,10 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List
 from typing_extensions import TypeAlias
 
-from .._models import BaseModel
+from .eval_type import EvalType
 
-__all__ = ["EvalTypeListResponse", "EvalTypeListResponseItem"]
+__all__ = ["EvalTypeListResponse"]
 
-
-class EvalTypeListResponseItem(BaseModel):
-    description: str
-
-    eval_type_uuid: str
-
-    name: str
-
-    slug: str
-
-    supported_modalities: Optional[List[str]] = None
-
-
-EvalTypeListResponse: TypeAlias = List[EvalTypeListResponseItem]
+EvalTypeListResponse: TypeAlias = List[EvalType]

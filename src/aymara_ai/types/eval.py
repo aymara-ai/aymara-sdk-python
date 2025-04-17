@@ -6,23 +6,13 @@ from datetime import datetime
 from .status import Status
 from .._models import BaseModel
 from .content_type import ContentType
-from .example_type import ExampleType
+from .prompt_example_in import PromptExampleIn
 
-__all__ = ["EvalRetrieveResponse", "PromptExample"]
-
-
-class PromptExample(BaseModel):
-    content: str
-
-    explanation: Optional[str] = None
-
-    type: Optional[ExampleType] = None
+__all__ = ["Eval"]
 
 
-class EvalRetrieveResponse(BaseModel):
+class Eval(BaseModel):
     ai_description: str
-
-    created_at: datetime
 
     eval_type: str
 
@@ -30,12 +20,9 @@ class EvalRetrieveResponse(BaseModel):
 
     name: str
 
-    status: Status
-    """Resource status."""
-
-    updated_at: datetime
-
     ai_instructions: Optional[str] = None
+
+    created_at: Optional[datetime] = None
 
     eval_instructions: Optional[str] = None
 
@@ -50,6 +37,11 @@ class EvalRetrieveResponse(BaseModel):
 
     num_prompts: Optional[int] = None
 
-    prompt_examples: Optional[List[PromptExample]] = None
+    prompt_examples: Optional[List[PromptExampleIn]] = None
+
+    status: Optional[Status] = None
+    """Resource status."""
+
+    updated_at: Optional[datetime] = None
 
     workspace_uuid: Optional[str] = None
