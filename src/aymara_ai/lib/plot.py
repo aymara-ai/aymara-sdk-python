@@ -1,8 +1,11 @@
+# type: ignore
 import math
 from typing import Dict, List, Union, Optional
 
 import pandas as pd
 from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from matplotlib.ticker import FuncFormatter
 
 from aymara_ai.types.eval_run_result import EvalRunResult
@@ -52,6 +55,8 @@ def _plot_pass_stats(
     **kwargs,
 ) -> None:
     """Helper function to plot pass statistics."""
+    fig: Figure
+    ax: Axes
     fig, ax = plt.subplots()
     ax.bar(names, pass_stats, **kwargs)
 
