@@ -8,14 +8,6 @@ from .evals import (
     EvalsResourceWithStreamingResponse,
     AsyncEvalsResourceWithStreamingResponse,
 )
-from .files import (
-    FilesResource,
-    AsyncFilesResource,
-    FilesResourceWithRawResponse,
-    AsyncFilesResourceWithRawResponse,
-    FilesResourceWithStreamingResponse,
-    AsyncFilesResourceWithStreamingResponse,
-)
 from .tests import (
     TestsResource,
     AsyncTestsResource,
@@ -47,6 +39,14 @@ from .scores import (
     AsyncScoresResourceWithRawResponse,
     ScoresResourceWithStreamingResponse,
     AsyncScoresResourceWithStreamingResponse,
+)
+from .reports import (
+    ReportsResource,
+    AsyncReportsResource,
+    ReportsResourceWithRawResponse,
+    AsyncReportsResourceWithRawResponse,
+    ReportsResourceWithStreamingResponse,
+    AsyncReportsResourceWithStreamingResponse,
 )
 from .accounts import (
     AccountsResource,
@@ -164,10 +164,10 @@ __all__ = [
     "AsyncEvalTypesResourceWithRawResponse",
     "EvalTypesResourceWithStreamingResponse",
     "AsyncEvalTypesResourceWithStreamingResponse",
-    "FilesResource",
-    "AsyncFilesResource",
-    "FilesResourceWithRawResponse",
-    "AsyncFilesResourceWithRawResponse",
-    "FilesResourceWithStreamingResponse",
-    "AsyncFilesResourceWithStreamingResponse",
+    "ReportsResource",
+    "AsyncReportsResource",
+    "ReportsResourceWithRawResponse",
+    "AsyncReportsResourceWithRawResponse",
+    "ReportsResourceWithStreamingResponse",
+    "AsyncReportsResourceWithStreamingResponse",
 ]
