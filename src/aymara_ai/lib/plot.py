@@ -1,5 +1,6 @@
+
 import math
-from typing import List, Union, Optional
+from typing import Dict, List, Optional, Tuple, Union
 
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -39,13 +40,13 @@ def eval_pass_stats(
 
 
 def _plot_pass_stats(
-    names: pd.Series,
-    pass_stats: pd.Series,
+    names: pd.Series[str],
+    pass_stats: pd.Series[float],
     title: Optional[str],
     xlabel: Optional[str],
     ylabel: Optional[str],
     xtick_rot: Optional[float],
-    xtick_labels_dict: Optional[dict],
+    xtick_labels_dict: Optional[Dict[str, str]],
     yaxis_is_percent: bool,
     ylim_min: Optional[float],
     ylim_max: Optional[float],
@@ -95,7 +96,7 @@ def graph_eval_stats(
     xaxis_is_eval_run_uuids: Optional[bool] = False,
     xlabel: Optional[str] = None,
     xtick_rot: Optional[float] = 30.0,
-    xtick_labels_dict: Optional[dict] = None,
+    xtick_labels_dict: Optional[Dict[str, str]] = None,
     **kwargs,
 ) -> None:
     """
