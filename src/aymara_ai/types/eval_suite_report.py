@@ -7,14 +7,14 @@ from .status import Status
 from .._models import BaseModel
 from .eval_run_result import EvalRunResult
 
-__all__ = ["EvalSuiteReport", "EvalRunSummary"]
+__all__ = ["EvalSuiteReport", "EvalRunReport"]
 
 
-class EvalRunSummary(BaseModel):
+class EvalRunReport(BaseModel):
     eval_run: EvalRunResult
     """Schema for returning eval run data."""
 
-    eval_run_summary_uuid: str
+    eval_run_report_uuid: str
 
     eval_run_uuid: str
 
@@ -28,9 +28,9 @@ class EvalRunSummary(BaseModel):
 class EvalSuiteReport(BaseModel):
     created_at: datetime
 
-    eval_run_suite_summary_uuid: str
+    eval_run_reports: List[EvalRunReport]
 
-    eval_run_summaries: List[EvalRunSummary]
+    eval_suite_report_uuid: str
 
     status: Status
     """Resource status."""
@@ -43,4 +43,4 @@ class EvalSuiteReport(BaseModel):
 
     overall_passing_responses_summary: Optional[str] = None
 
-    remaining_summaries: Optional[int] = None
+    remaining_reports: Optional[int] = None

@@ -238,7 +238,7 @@ class EvalsResource(SyncAPIResource):
 
     def continue_run(
         self,
-        path_eval_run_uuid: str,
+        eval_run_uuid: str,
         *,
         eval_uuid: str,
         responses: Iterable[EvalResponseParam],
@@ -246,7 +246,6 @@ class EvalsResource(SyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         eval_run_examples: Optional[Iterable[eval_continue_run_params.EvalRunExample]] | NotGiven = NOT_GIVEN,
-        body_eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -270,17 +269,16 @@ class EvalsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_eval_run_uuid:
-            raise ValueError(f"Expected a non-empty value for `path_eval_run_uuid` but received {path_eval_run_uuid!r}")
+        if not eval_run_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return self._post(
-            f"/v2/eval-runs/{path_eval_run_uuid}/continue",
+            f"/v2/eval-runs/{eval_run_uuid}/continue",
             body=maybe_transform(
                 {
                     "eval_uuid": eval_uuid,
                     "responses": responses,
                     "ai_description": ai_description,
                     "eval_run_examples": eval_run_examples,
-                    "body_eval_run_uuid": body_eval_run_uuid,
                     "generate_prompts": generate_prompts,
                     "name": name,
                 },
@@ -311,7 +309,6 @@ class EvalsResource(SyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         eval_run_examples: Optional[Iterable[eval_create_run_params.EvalRunExample]] | NotGiven = NOT_GIVEN,
-        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -344,7 +341,6 @@ class EvalsResource(SyncAPIResource):
                     "responses": responses,
                     "ai_description": ai_description,
                     "eval_run_examples": eval_run_examples,
-                    "eval_run_uuid": eval_run_uuid,
                     "generate_prompts": generate_prompts,
                     "name": name,
                 },
@@ -834,7 +830,7 @@ class AsyncEvalsResource(AsyncAPIResource):
 
     async def continue_run(
         self,
-        path_eval_run_uuid: str,
+        eval_run_uuid: str,
         *,
         eval_uuid: str,
         responses: Iterable[EvalResponseParam],
@@ -842,7 +838,6 @@ class AsyncEvalsResource(AsyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         eval_run_examples: Optional[Iterable[eval_continue_run_params.EvalRunExample]] | NotGiven = NOT_GIVEN,
-        body_eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -866,17 +861,16 @@ class AsyncEvalsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_eval_run_uuid:
-            raise ValueError(f"Expected a non-empty value for `path_eval_run_uuid` but received {path_eval_run_uuid!r}")
+        if not eval_run_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return await self._post(
-            f"/v2/eval-runs/{path_eval_run_uuid}/continue",
+            f"/v2/eval-runs/{eval_run_uuid}/continue",
             body=await async_maybe_transform(
                 {
                     "eval_uuid": eval_uuid,
                     "responses": responses,
                     "ai_description": ai_description,
                     "eval_run_examples": eval_run_examples,
-                    "body_eval_run_uuid": body_eval_run_uuid,
                     "generate_prompts": generate_prompts,
                     "name": name,
                 },
@@ -907,7 +901,6 @@ class AsyncEvalsResource(AsyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         eval_run_examples: Optional[Iterable[eval_create_run_params.EvalRunExample]] | NotGiven = NOT_GIVEN,
-        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -940,7 +933,6 @@ class AsyncEvalsResource(AsyncAPIResource):
                     "responses": responses,
                     "ai_description": ai_description,
                     "eval_run_examples": eval_run_examples,
-                    "eval_run_uuid": eval_run_uuid,
                     "generate_prompts": generate_prompts,
                     "name": name,
                 },

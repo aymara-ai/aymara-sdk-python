@@ -187,7 +187,7 @@ class TestEvals:
     @parametrize
     def test_method_continue_run(self, client: AymaraAI) -> None:
         eval = client.evals.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -202,7 +202,7 @@ class TestEvals:
     @parametrize
     def test_method_continue_run_with_all_params(self, client: AymaraAI) -> None:
         eval = client.evals.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -228,7 +228,6 @@ class TestEvals:
                     "explanation": "explanation",
                 }
             ],
-            body_eval_run_uuid="eval_run_uuid",
             generate_prompts=True,
             name="name",
         )
@@ -238,7 +237,7 @@ class TestEvals:
     @parametrize
     def test_raw_response_continue_run(self, client: AymaraAI) -> None:
         response = client.evals.with_raw_response.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -257,7 +256,7 @@ class TestEvals:
     @parametrize
     def test_streaming_response_continue_run(self, client: AymaraAI) -> None:
         with client.evals.with_streaming_response.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -277,9 +276,9 @@ class TestEvals:
     @pytest.mark.skip()
     @parametrize
     def test_path_params_continue_run(self, client: AymaraAI) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_eval_run_uuid` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             client.evals.with_raw_response.continue_run(
-                path_eval_run_uuid="",
+                eval_run_uuid="",
                 eval_uuid="eval_uuid",
                 responses=[
                     {
@@ -332,7 +331,6 @@ class TestEvals:
                     "explanation": "explanation",
                 }
             ],
-            eval_run_uuid="eval_run_uuid",
             generate_prompts=True,
             name="name",
         )
@@ -841,7 +839,7 @@ class TestAsyncEvals:
     @parametrize
     async def test_method_continue_run(self, async_client: AsyncAymaraAI) -> None:
         eval = await async_client.evals.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -856,7 +854,7 @@ class TestAsyncEvals:
     @parametrize
     async def test_method_continue_run_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         eval = await async_client.evals.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -882,7 +880,6 @@ class TestAsyncEvals:
                     "explanation": "explanation",
                 }
             ],
-            body_eval_run_uuid="eval_run_uuid",
             generate_prompts=True,
             name="name",
         )
@@ -892,7 +889,7 @@ class TestAsyncEvals:
     @parametrize
     async def test_raw_response_continue_run(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.evals.with_raw_response.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -911,7 +908,7 @@ class TestAsyncEvals:
     @parametrize
     async def test_streaming_response_continue_run(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.evals.with_streaming_response.continue_run(
-            path_eval_run_uuid="eval_run_uuid",
+            eval_run_uuid="eval_run_uuid",
             eval_uuid="eval_uuid",
             responses=[
                 {
@@ -931,9 +928,9 @@ class TestAsyncEvals:
     @pytest.mark.skip()
     @parametrize
     async def test_path_params_continue_run(self, async_client: AsyncAymaraAI) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_eval_run_uuid` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
             await async_client.evals.with_raw_response.continue_run(
-                path_eval_run_uuid="",
+                eval_run_uuid="",
                 eval_uuid="eval_uuid",
                 responses=[
                     {
@@ -986,7 +983,6 @@ class TestAsyncEvals:
                     "explanation": "explanation",
                 }
             ],
-            eval_run_uuid="eval_run_uuid",
             generate_prompts=True,
             name="name",
         )
