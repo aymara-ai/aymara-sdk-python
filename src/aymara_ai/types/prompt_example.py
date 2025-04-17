@@ -1,9 +1,9 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
+from typing_extensions import Literal
 
 from .._models import BaseModel
-from .example_type import ExampleType
 
 __all__ = ["PromptExample"]
 
@@ -15,4 +15,4 @@ class PromptExample(BaseModel):
 
     explanation: Optional[str] = None
 
-    type: Optional[ExampleType] = None
+    type: Optional[Literal["good", "bad"]] = None

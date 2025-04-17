@@ -4,11 +4,10 @@ from __future__ import annotations
 
 from typing import Union, Iterable, Optional
 from datetime import datetime
-from typing_extensions import Required, Annotated, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from .status import Status
 from .._utils import PropertyInfo
-from .content_type import ContentType
 from .prompt_example_param import PromptExampleParam
 
 __all__ = ["EvalCreateParams"]
@@ -35,7 +34,7 @@ class EvalCreateParams(TypedDict, total=False):
 
     language: str
 
-    modality: ContentType
+    modality: Literal["text", "image", "audio", "video"]
     """Content type for AI interactions."""
 
     num_prompts: int
