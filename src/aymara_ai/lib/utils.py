@@ -1,11 +1,12 @@
 import os
 import time
 import asyncio
-from typing import Any, Union, Callable, Optional, Awaitable
+from typing import Any, Union, TypeVar, Callable, Optional, Awaitable
 
+T = TypeVar("T")
 
 def wait_until_complete(
-    get_fn: Callable[[str], Any],
+    get_fn: Callable[[str], T],
     resource_id: str,
     status_path: str = "status",
     success_status: str = "finished",
@@ -13,7 +14,7 @@ def wait_until_complete(
     timeout: int = 300,
     interval: int = 2,
     backoff: bool = False,
-) -> Any:
+) -> T:
     """
     Generic polling helper for long-running resources.
 
