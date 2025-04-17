@@ -23,8 +23,6 @@ class EvalCreateRunParams(TypedDict, total=False):
 
     eval_run_examples: Optional[Iterable[EvalRunExample]]
 
-    eval_run_uuid: Optional[str]
-
     generate_prompts: Optional[bool]
 
     name: Optional[str]
