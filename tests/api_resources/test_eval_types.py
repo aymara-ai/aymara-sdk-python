@@ -9,7 +9,7 @@ import pytest
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
-from aymara_ai.types import EvalType, EvalTypeListResponse
+from aymara_ai.types import EvalType
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -59,34 +59,6 @@ class TestEvalTypes:
                 "",
             )
 
-    @pytest.mark.skip()
-    @parametrize
-    def test_method_list(self, client: AymaraAI) -> None:
-        eval_type = client.eval_types.list()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_raw_response_list(self, client: AymaraAI) -> None:
-        response = client.eval_types.with_raw_response.list()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        eval_type = response.parse()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_streaming_response_list(self, client: AymaraAI) -> None:
-        with client.eval_types.with_streaming_response.list() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            eval_type = response.parse()
-            assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
 
 class TestAsyncEvalTypes:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
@@ -132,31 +104,3 @@ class TestAsyncEvalTypes:
             await async_client.eval_types.with_raw_response.retrieve(
                 "",
             )
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_method_list(self, async_client: AsyncAymaraAI) -> None:
-        eval_type = await async_client.eval_types.list()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_raw_response_list(self, async_client: AsyncAymaraAI) -> None:
-        response = await async_client.eval_types.with_raw_response.list()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        eval_type = await response.parse()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_streaming_response_list(self, async_client: AsyncAymaraAI) -> None:
-        async with async_client.eval_types.with_streaming_response.list() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            eval_type = await response.parse()
-            assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
-
-        assert cast(Any, response.is_closed) is True

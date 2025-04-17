@@ -9,10 +9,10 @@ from .._models import BaseModel
 from .eval_prompt import EvalPrompt
 from .content_type import ContentType
 
-__all__ = ["EvalSuiteReport", "EvalRunSummary", "EvalRunSummaryEvalRun", "EvalRunSummaryEvalRunResponse"]
+__all__ = ["EvalCreateRunResponse", "Response"]
 
 
-class EvalRunSummaryEvalRunResponse(BaseModel):
+class Response(BaseModel):
     content: str
 
     prompt: EvalPrompt
@@ -43,7 +43,7 @@ class EvalRunSummaryEvalRunResponse(BaseModel):
     turn_number: Optional[int] = None
 
 
-class EvalRunSummaryEvalRun(BaseModel):
+class EvalCreateRunResponse(BaseModel):
     created_at: datetime
 
     eval_run_uuid: str
@@ -64,42 +64,6 @@ class EvalRunSummaryEvalRun(BaseModel):
 
     pass_rate: Optional[float] = None
 
-    responses: Optional[List[EvalRunSummaryEvalRunResponse]] = None
+    responses: Optional[List[Response]] = None
 
     workspace_uuid: Optional[str] = None
-
-
-class EvalRunSummary(BaseModel):
-    eval_run: EvalRunSummaryEvalRun
-    """Schema for returning eval run data."""
-
-    eval_run_summary_uuid: str
-
-    eval_run_uuid: str
-
-    failing_responses_summary: str
-
-    improvement_advice: str
-
-    passing_responses_summary: str
-
-
-class EvalSuiteReport(BaseModel):
-    created_at: datetime
-
-    eval_run_suite_summary_uuid: str
-
-    eval_run_summaries: List[EvalRunSummary]
-
-    status: Status
-    """Resource status."""
-
-    updated_at: datetime
-
-    overall_failing_responses_summary: Optional[str] = None
-
-    overall_improvement_advice: Optional[str] = None
-
-    overall_passing_responses_summary: Optional[str] = None
-
-    remaining_summaries: Optional[int] = None

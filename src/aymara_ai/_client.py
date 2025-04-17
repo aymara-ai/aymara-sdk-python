@@ -26,9 +26,9 @@ from ._utils import (
 from ._version import __version__
 from .resources import (
     evals,
-    files,
     usage,
     health,
+    reports,
     accounts,
     policies,
     webhooks,
@@ -77,7 +77,7 @@ class AymaraAI(SyncAPIClient):
     policies: policies.PoliciesResource
     evals: evals.EvalsResource
     eval_types: eval_types.EvalTypesResource
-    files: files.FilesResource
+    reports: reports.ReportsResource
     with_raw_response: AymaraAIWithRawResponse
     with_streaming_response: AymaraAIWithStreamedResponse
 
@@ -178,7 +178,7 @@ class AymaraAI(SyncAPIClient):
         self.policies = policies.PoliciesResource(self)
         self.evals = evals.EvalsResource(self)
         self.eval_types = eval_types.EvalTypesResource(self)
-        self.files = files.FilesResource(self)
+        self.reports = reports.ReportsResource(self)
         self.with_raw_response = AymaraAIWithRawResponse(self)
         self.with_streaming_response = AymaraAIWithStreamedResponse(self)
 
@@ -314,7 +314,7 @@ class AsyncAymaraAI(AsyncAPIClient):
     policies: policies.AsyncPoliciesResource
     evals: evals.AsyncEvalsResource
     eval_types: eval_types.AsyncEvalTypesResource
-    files: files.AsyncFilesResource
+    reports: reports.AsyncReportsResource
     with_raw_response: AsyncAymaraAIWithRawResponse
     with_streaming_response: AsyncAymaraAIWithStreamedResponse
 
@@ -415,7 +415,7 @@ class AsyncAymaraAI(AsyncAPIClient):
         self.policies = policies.AsyncPoliciesResource(self)
         self.evals = evals.AsyncEvalsResource(self)
         self.eval_types = eval_types.AsyncEvalTypesResource(self)
-        self.files = files.AsyncFilesResource(self)
+        self.reports = reports.AsyncReportsResource(self)
         self.with_raw_response = AsyncAymaraAIWithRawResponse(self)
         self.with_streaming_response = AsyncAymaraAIWithStreamedResponse(self)
 
@@ -552,7 +552,7 @@ class AymaraAIWithRawResponse:
         self.policies = policies.PoliciesResourceWithRawResponse(client.policies)
         self.evals = evals.EvalsResourceWithRawResponse(client.evals)
         self.eval_types = eval_types.EvalTypesResourceWithRawResponse(client.eval_types)
-        self.files = files.FilesResourceWithRawResponse(client.files)
+        self.reports = reports.ReportsResourceWithRawResponse(client.reports)
 
 
 class AsyncAymaraAIWithRawResponse:
@@ -568,7 +568,7 @@ class AsyncAymaraAIWithRawResponse:
         self.policies = policies.AsyncPoliciesResourceWithRawResponse(client.policies)
         self.evals = evals.AsyncEvalsResourceWithRawResponse(client.evals)
         self.eval_types = eval_types.AsyncEvalTypesResourceWithRawResponse(client.eval_types)
-        self.files = files.AsyncFilesResourceWithRawResponse(client.files)
+        self.reports = reports.AsyncReportsResourceWithRawResponse(client.reports)
 
 
 class AymaraAIWithStreamedResponse:
@@ -584,7 +584,7 @@ class AymaraAIWithStreamedResponse:
         self.policies = policies.PoliciesResourceWithStreamingResponse(client.policies)
         self.evals = evals.EvalsResourceWithStreamingResponse(client.evals)
         self.eval_types = eval_types.EvalTypesResourceWithStreamingResponse(client.eval_types)
-        self.files = files.FilesResourceWithStreamingResponse(client.files)
+        self.reports = reports.ReportsResourceWithStreamingResponse(client.reports)
 
 
 class AsyncAymaraAIWithStreamedResponse:
@@ -602,7 +602,7 @@ class AsyncAymaraAIWithStreamedResponse:
         self.policies = policies.AsyncPoliciesResourceWithStreamingResponse(client.policies)
         self.evals = evals.AsyncEvalsResourceWithStreamingResponse(client.evals)
         self.eval_types = eval_types.AsyncEvalTypesResourceWithStreamingResponse(client.eval_types)
-        self.files = files.AsyncFilesResourceWithStreamingResponse(client.files)
+        self.reports = reports.AsyncReportsResourceWithStreamingResponse(client.reports)
 
 
 Client = AymaraAI
