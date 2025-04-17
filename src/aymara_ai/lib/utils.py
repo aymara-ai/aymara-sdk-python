@@ -1,7 +1,7 @@
 import os
 import time
 import asyncio
-from typing import Any, Dict, Union, TypeVar, Callable, Optional, Awaitable
+from typing import Any, Union, TypeVar, Callable, Optional, Awaitable
 
 T = TypeVar("T")
 
@@ -36,10 +36,10 @@ def wait_until_complete(
         TimeoutError or RuntimeError on failure.
     """
 
-    def get_status(resource: Dict[str, Any]) -> str:
+    def get_status(resource: Any) -> str:
         keys = status_path.split(".")
         for k in keys:
-            resource = resource.get(k, {})
+            resource = resource.get(k, {}) if isinstance(resource, dict) else getattr(resource, k, {})  # type: ignore
         return resource if isinstance(resource, str) else ""
 
     start_time = time.time()
