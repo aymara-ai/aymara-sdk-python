@@ -36,7 +36,16 @@ client = AymaraAI(
     environment="staging",
 )
 
-client.health.check()
+eval_run_result = client.evals.create_run(
+    eval_uuid="eval_uuid",
+    responses=[
+        {
+            "content": "content",
+            "prompt_uuid": "prompt_uuid",
+        }
+    ],
+)
+print(eval_run_result.eval_run_uuid)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -61,7 +70,16 @@ client = AsyncAymaraAI(
 
 
 async def main() -> None:
-    await client.health.check()
+    eval_run_result = await client.evals.create_run(
+        eval_uuid="eval_uuid",
+        responses=[
+            {
+                "content": "content",
+                "prompt_uuid": "prompt_uuid",
+            }
+        ],
+    )
+    print(eval_run_result.eval_run_uuid)
 
 
 asyncio.run(main())
@@ -94,7 +112,11 @@ from aymara_ai import AymaraAI
 client = AymaraAI()
 
 try:
-    client.health.check()
+    client.evals.create(
+        ai_description="ai_description",
+        eval_type="eval_type",
+        name="name",
+    )
 except aymara_ai.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -137,7 +159,11 @@ client = AymaraAI(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).health.check()
+client.with_options(max_retries=5).evals.create(
+    ai_description="ai_description",
+    eval_type="eval_type",
+    name="name",
+)
 ```
 
 ### Timeouts
@@ -160,7 +186,11 @@ client = AymaraAI(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).health.check()
+client.with_options(timeout=5.0).evals.create(
+    ai_description="ai_description",
+    eval_type="eval_type",
+    name="name",
+)
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -201,11 +231,15 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from aymara_ai import AymaraAI
 
 client = AymaraAI()
-response = client.health.with_raw_response.check()
+response = client.evals.with_raw_response.create(
+    ai_description="ai_description",
+    eval_type="eval_type",
+    name="name",
+)
 print(response.headers.get('X-My-Header'))
 
-health = response.parse()  # get the object that `health.check()` would have returned
-print(health)
+eval = response.parse()  # get the object that `evals.create()` would have returned
+print(eval.eval_uuid)
 ```
 
 These methods return an [`APIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara_ai/_response.py) object.
@@ -219,7 +253,11 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.health.with_streaming_response.check() as response:
+with client.evals.with_streaming_response.create(
+    ai_description="ai_description",
+    eval_type="eval_type",
+    name="name",
+) as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():

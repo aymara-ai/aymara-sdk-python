@@ -23,6 +23,7 @@ from pydantic import ValidationError
 
 from aymara_ai import AymaraAI, AsyncAymaraAI, APIResponseValidationError
 from aymara_ai._types import Omit
+from aymara_ai._utils import maybe_transform
 from aymara_ai._models import BaseModel, FinalRequestOptions
 from aymara_ai._constants import RAW_RESPONSE_HEADER
 from aymara_ai._exceptions import AymaraAIError, APIStatusError, APITimeoutError, APIResponseValidationError
@@ -32,6 +33,7 @@ from aymara_ai._base_client import (
     BaseClient,
     make_request_options,
 )
+from aymara_ai.types.eval_create_params import EvalCreateParams
 
 from .utils import update_env
 
@@ -722,20 +724,40 @@ class TestAymaraAI:
     @mock.patch("aymara_ai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/health/").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/v2/evals").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            self.client.get("/health/", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}})
+            self.client.post(
+                "/v2/evals",
+                body=cast(
+                    object,
+                    maybe_transform(
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
+                    ),
+                ),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
+            )
 
         assert _get_open_connections(self.client) == 0
 
     @mock.patch("aymara_ai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/health/").mock(return_value=httpx.Response(500))
+        respx_mock.post("/v2/evals").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            self.client.get("/health/", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}})
+            self.client.post(
+                "/v2/evals",
+                body=cast(
+                    object,
+                    maybe_transform(
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
+                    ),
+                ),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
+            )
 
         assert _get_open_connections(self.client) == 0
 
@@ -763,9 +785,11 @@ class TestAymaraAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/health/").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = client.health.with_raw_response.check()
+        response = client.evals.with_raw_response.create(
+            ai_description="ai_description", eval_type="eval_type", name="name"
+        )
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -787,9 +811,14 @@ class TestAymaraAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/health/").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = client.health.with_raw_response.check(extra_headers={"x-stainless-retry-count": Omit()})
+        response = client.evals.with_raw_response.create(
+            ai_description="ai_description",
+            eval_type="eval_type",
+            name="name",
+            extra_headers={"x-stainless-retry-count": Omit()},
+        )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -810,9 +839,14 @@ class TestAymaraAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/health/").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = client.health.with_raw_response.check(extra_headers={"x-stainless-retry-count": "42"})
+        response = client.evals.with_raw_response.create(
+            ai_description="ai_description",
+            eval_type="eval_type",
+            name="name",
+            extra_headers={"x-stainless-retry-count": "42"},
+        )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
@@ -1498,11 +1532,19 @@ class TestAsyncAymaraAI:
     @mock.patch("aymara_ai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/health/").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/v2/evals").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await self.client.get(
-                "/health/", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}}
+            await self.client.post(
+                "/v2/evals",
+                body=cast(
+                    object,
+                    maybe_transform(
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
+                    ),
+                ),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
 
         assert _get_open_connections(self.client) == 0
@@ -1510,11 +1552,19 @@ class TestAsyncAymaraAI:
     @mock.patch("aymara_ai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/health/").mock(return_value=httpx.Response(500))
+        respx_mock.post("/v2/evals").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await self.client.get(
-                "/health/", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}}
+            await self.client.post(
+                "/v2/evals",
+                body=cast(
+                    object,
+                    maybe_transform(
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
+                    ),
+                ),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
 
         assert _get_open_connections(self.client) == 0
@@ -1544,9 +1594,11 @@ class TestAsyncAymaraAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/health/").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = await client.health.with_raw_response.check()
+        response = await client.evals.with_raw_response.create(
+            ai_description="ai_description", eval_type="eval_type", name="name"
+        )
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1569,9 +1621,14 @@ class TestAsyncAymaraAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/health/").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = await client.health.with_raw_response.check(extra_headers={"x-stainless-retry-count": Omit()})
+        response = await client.evals.with_raw_response.create(
+            ai_description="ai_description",
+            eval_type="eval_type",
+            name="name",
+            extra_headers={"x-stainless-retry-count": Omit()},
+        )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -1593,9 +1650,14 @@ class TestAsyncAymaraAI:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/health/").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = await client.health.with_raw_response.check(extra_headers={"x-stainless-retry-count": "42"})
+        response = await client.evals.with_raw_response.create(
+            ai_description="ai_description",
+            eval_type="eval_type",
+            name="name",
+            extra_headers={"x-stainless-retry-count": "42"},
+        )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
