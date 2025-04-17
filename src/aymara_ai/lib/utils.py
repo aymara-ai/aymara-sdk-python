@@ -47,7 +47,7 @@ def wait_until_complete(
 
     while time.time() - start_time < timeout:
         resource = get_fn(resource_id)
-        status = get_status(resource.to_dict() if hasattr(resource, "to_dict") else resource) # type: ignore
+        status = get_status(resource.to_dict() if hasattr(resource, "to_dict") else resource)  # type: ignore
 
         if status == success_status:
             return resource

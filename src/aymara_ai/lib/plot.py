@@ -1,6 +1,5 @@
-
 import math
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Union, Optional
 
 import pandas as pd
 from matplotlib import pyplot as plt
