@@ -152,37 +152,45 @@ Types:
 
 ```python
 from aymara_ai.types import (
+    Eval,
+    EvalPrompt,
+    PromptExampleIn,
     Status,
-    EvalRetrieveResponse,
     EvalGetPromptsResponse,
     EvalGetResponsesResponse,
     EvalGetRunResponse,
-    EvalScoreRunResponse,
 )
 ```
 
 Methods:
 
-- <code title="get /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">retrieve</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_retrieve_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_retrieve_response.py">EvalRetrieveResponse</a></code>
+- <code title="get /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">retrieve</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_retrieve_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">Eval</a></code>
 - <code title="delete /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">delete</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_delete_params.py">params</a>) -> None</code>
 - <code title="delete /v2/eval-runs/{eval_run_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">delete_run</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_delete_run_params.py">params</a>) -> None</code>
 - <code title="get /v2/evals/{eval_uuid}/prompts">client.evals.<a href="./src/aymara_ai/resources/evals.py">get_prompts</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_get_prompts_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_get_prompts_response.py">EvalGetPromptsResponse</a></code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.evals.<a href="./src/aymara_ai/resources/evals.py">get_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_get_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_get_responses_response.py">EvalGetResponsesResponse</a></code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals.py">get_run</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/eval_get_run_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_get_run_response.py">EvalGetRunResponse</a></code>
-- <code title="post /v2/eval-runs/-/score-responses">client.evals.<a href="./src/aymara_ai/resources/evals.py">score_run</a>(\*\*<a href="src/aymara_ai/types/eval_score_run_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_score_run_response.py">EvalScoreRunResponse</a></code>
 
 # EvalTypes
 
 Types:
 
 ```python
-from aymara_ai.types import EvalTypeRetrieveResponse, EvalTypeListResponse
+from aymara_ai.types import EvalType, EvalTypeListResponse
 ```
 
 Methods:
 
-- <code title="get /v2/eval-types/{eval_type_uuid}">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">retrieve</a>(eval_type_uuid) -> <a href="./src/aymara_ai/types/eval_type_retrieve_response.py">EvalTypeRetrieveResponse</a></code>
+- <code title="get /v2/eval-types/{eval_type_uuid}">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">retrieve</a>(eval_type_uuid) -> <a href="./src/aymara_ai/types/eval_type.py">EvalType</a></code>
 - <code title="get /v2/eval-types/">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list</a>() -> <a href="./src/aymara_ai/types/eval_type_list_response.py">EvalTypeListResponse</a></code>
+
+# Reports
+
+Types:
+
+```python
+from aymara_ai.types import EvalSuiteReport
+```
 
 # Files
 
