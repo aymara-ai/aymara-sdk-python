@@ -7,11 +7,11 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-from aymara_ai.types.eval_run import EvalRun
+from aymara_ai.types.eval_run_result import EvalRunResult
 
 
 def eval_pass_stats(
-    eval_runs: Union[EvalRun, List[EvalRun]],
+    eval_runs: Union[EvalRunResult, List[EvalRunResult]],
 ) -> pd.DataFrame:
     """
     Create a DataFrame of pass rates and pass totals from one or more score runs.
@@ -88,7 +88,7 @@ def _plot_pass_stats(
     
 
 def graph_eval_stats(
-    eval_runs: Union[List[EvalRun], EvalRun],
+    eval_runs: Union[List[EvalRunResult], EvalRunResult],
     title: Optional[str] = None,
     ylim_min: Optional[float] = None,
     ylim_max: Optional[float] = None,
@@ -104,7 +104,7 @@ def graph_eval_stats(
     Draw a bar graph of pass rates from one or more score runs.
 
     :param eval_runs: One or a list of eval runs to graph.
-    :type eval_runs: Union[List[EvalRun], EvalRun]
+    :type eval_runs: Union[List[EvalRunResult], EvalRunResult]
     :param title: Graph title.
     :type title: str, optional
     :param ylim_min: y-axis lower limit, defaults to rounding down to the nearest ten.
