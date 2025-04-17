@@ -9,7 +9,7 @@ from .._models import BaseModel
 from .eval_prompt import EvalPrompt
 from .content_type import ContentType
 
-__all__ = ["EvalContinueRunResponse", "Response"]
+__all__ = ["EvalRunResult", "Response"]
 
 
 class Response(BaseModel):
@@ -43,7 +43,7 @@ class Response(BaseModel):
     turn_number: Optional[int] = None
 
 
-class EvalContinueRunResponse(BaseModel):
+class EvalRunResult(BaseModel):
     created_at: datetime
 
     eval_run_uuid: str
