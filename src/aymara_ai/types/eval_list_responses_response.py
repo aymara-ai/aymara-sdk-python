@@ -1,15 +1,15 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Optional
 
 from .._models import BaseModel
 from .eval_prompt import EvalPrompt
 from .content_type import ContentType
 
-__all__ = ["EvalGetResponsesResponse", "Item"]
+__all__ = ["EvalListResponsesResponse"]
 
 
-class Item(BaseModel):
+class EvalListResponsesResponse(BaseModel):
     content: str
 
     prompt: EvalPrompt
@@ -38,9 +38,3 @@ class Item(BaseModel):
     thread_uuid: Optional[str] = None
 
     turn_number: Optional[int] = None
-
-
-class EvalGetResponsesResponse(BaseModel):
-    count: int
-
-    items: List[Item]

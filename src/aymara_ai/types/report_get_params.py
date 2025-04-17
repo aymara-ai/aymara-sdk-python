@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["EvalRetrieveParams"]
+__all__ = ["ReportGetParams"]
 
 
-class EvalRetrieveParams(TypedDict, total=False):
+class ReportGetParams(TypedDict, total=False):
     workspace_uuid: str

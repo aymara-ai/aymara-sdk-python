@@ -9,7 +9,7 @@ from typing_extensions import Required, Annotated, TypedDict
 from .status import Status
 from .._utils import PropertyInfo
 from .content_type import ContentType
-from .prompt_example_in_param import PromptExampleInParam
+from .prompt_example_param import PromptExampleParam
 
 __all__ = ["EvalCreateParams"]
 
@@ -40,7 +40,7 @@ class EvalCreateParams(TypedDict, total=False):
 
     num_prompts: int
 
-    prompt_examples: Optional[Iterable[PromptExampleInParam]]
+    prompt_examples: Optional[Iterable[PromptExampleParam]]
 
     status: Optional[Status]
     """Resource status."""

@@ -2,9 +2,16 @@
 
 from __future__ import annotations
 
+from typing import Iterable, Optional
+
 import httpx
 
+from ..types import file_create_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from .._utils import (
+    maybe_transform,
+    async_maybe_transform,
+)
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -14,44 +21,48 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.eval_type import EvalType
+from ..types.file_create_response import FileCreateResponse
 
-__all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]
+__all__ = ["FilesResource", "AsyncFilesResource"]
 
 
-class EvalTypesResource(SyncAPIResource):
+class FilesResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> EvalTypesResourceWithRawResponse:
+    def with_raw_response(self) -> FilesResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
-        return EvalTypesResourceWithRawResponse(self)
+        return FilesResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> EvalTypesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> FilesResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
-        return EvalTypesResourceWithStreamingResponse(self)
+        return FilesResourceWithStreamingResponse(self)
 
-    def get(
+    def create(
         self,
-        eval_type_uuid: str,
         *,
+        files: Iterable[file_create_params.File],
+        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalType:
+    ) -> FileCreateResponse:
         """
-        Get a specific eval type by UUID.
+        Upload a file and get a file UUID.
+
+        This function delegates to the get_image_presigned_urls function to get
+        presigned URLs for file uploads.
 
         Args:
           extra_headers: Send extra headers
@@ -62,50 +73,59 @@ class EvalTypesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not eval_type_uuid:
-            raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
-        return self._get(
-            f"/v2/eval-types/{eval_type_uuid}",
+        return self._post(
+            "/v2/files",
+            body=maybe_transform(
+                {
+                    "files": files,
+                    "workspace_uuid": workspace_uuid,
+                },
+                file_create_params.FileCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EvalType,
+            cast_to=FileCreateResponse,
         )
 
 
-class AsyncEvalTypesResource(AsyncAPIResource):
+class AsyncFilesResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncEvalTypesResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncFilesResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncEvalTypesResourceWithRawResponse(self)
+        return AsyncFilesResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncEvalTypesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncFilesResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
         """
-        return AsyncEvalTypesResourceWithStreamingResponse(self)
+        return AsyncFilesResourceWithStreamingResponse(self)
 
-    async def get(
+    async def create(
         self,
-        eval_type_uuid: str,
         *,
+        files: Iterable[file_create_params.File],
+        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalType:
+    ) -> FileCreateResponse:
         """
-        Get a specific eval type by UUID.
+        Upload a file and get a file UUID.
+
+        This function delegates to the get_image_presigned_urls function to get
+        presigned URLs for file uploads.
 
         Args:
           extra_headers: Send extra headers
@@ -116,48 +136,53 @@ class AsyncEvalTypesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not eval_type_uuid:
-            raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
-        return await self._get(
-            f"/v2/eval-types/{eval_type_uuid}",
+        return await self._post(
+            "/v2/files",
+            body=await async_maybe_transform(
+                {
+                    "files": files,
+                    "workspace_uuid": workspace_uuid,
+                },
+                file_create_params.FileCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EvalType,
+            cast_to=FileCreateResponse,
         )
 
 
-class EvalTypesResourceWithRawResponse:
-    def __init__(self, eval_types: EvalTypesResource) -> None:
-        self._eval_types = eval_types
+class FilesResourceWithRawResponse:
+    def __init__(self, files: FilesResource) -> None:
+        self._files = files
 
-        self.get = to_raw_response_wrapper(
-            eval_types.get,
+        self.create = to_raw_response_wrapper(
+            files.create,
         )
 
 
-class AsyncEvalTypesResourceWithRawResponse:
-    def __init__(self, eval_types: AsyncEvalTypesResource) -> None:
-        self._eval_types = eval_types
+class AsyncFilesResourceWithRawResponse:
+    def __init__(self, files: AsyncFilesResource) -> None:
+        self._files = files
 
-        self.get = async_to_raw_response_wrapper(
-            eval_types.get,
+        self.create = async_to_raw_response_wrapper(
+            files.create,
         )
 
 
-class EvalTypesResourceWithStreamingResponse:
-    def __init__(self, eval_types: EvalTypesResource) -> None:
-        self._eval_types = eval_types
+class FilesResourceWithStreamingResponse:
+    def __init__(self, files: FilesResource) -> None:
+        self._files = files
 
-        self.get = to_streamed_response_wrapper(
-            eval_types.get,
+        self.create = to_streamed_response_wrapper(
+            files.create,
         )
 
 
-class AsyncEvalTypesResourceWithStreamingResponse:
-    def __init__(self, eval_types: AsyncEvalTypesResource) -> None:
-        self._eval_types = eval_types
+class AsyncFilesResourceWithStreamingResponse:
+    def __init__(self, files: AsyncFilesResource) -> None:
+        self._files = files
 
-        self.get = async_to_streamed_response_wrapper(
-            eval_types.get,
+        self.create = async_to_streamed_response_wrapper(
+            files.create,
         )

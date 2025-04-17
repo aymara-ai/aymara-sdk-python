@@ -66,57 +66,6 @@ class TestReports:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve(self, client: AymaraAI) -> None:
-        report = client.reports.retrieve(
-            report_uuid="report_uuid",
-        )
-        assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_method_retrieve_with_all_params(self, client: AymaraAI) -> None:
-        report = client.reports.retrieve(
-            report_uuid="report_uuid",
-            workspace_uuid="workspace_uuid",
-        )
-        assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_raw_response_retrieve(self, client: AymaraAI) -> None:
-        response = client.reports.with_raw_response.retrieve(
-            report_uuid="report_uuid",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        report = response.parse()
-        assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_streaming_response_retrieve(self, client: AymaraAI) -> None:
-        with client.reports.with_streaming_response.retrieve(
-            report_uuid="report_uuid",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            report = response.parse()
-            assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_path_params_retrieve(self, client: AymaraAI) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
-            client.reports.with_raw_response.retrieve(
-                report_uuid="",
-            )
-
-    @pytest.mark.skip()
-    @parametrize
     def test_method_list(self, client: AymaraAI) -> None:
         report = client.reports.list()
         assert_matches_type(SyncOffsetPage[EvalSuiteReport], report, path=["response"])
@@ -204,6 +153,57 @@ class TestReports:
                 report_uuid="",
             )
 
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_get(self, client: AymaraAI) -> None:
+        report = client.reports.get(
+            report_uuid="report_uuid",
+        )
+        assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_get_with_all_params(self, client: AymaraAI) -> None:
+        report = client.reports.get(
+            report_uuid="report_uuid",
+            workspace_uuid="workspace_uuid",
+        )
+        assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_raw_response_get(self, client: AymaraAI) -> None:
+        response = client.reports.with_raw_response.get(
+            report_uuid="report_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        report = response.parse()
+        assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_streaming_response_get(self, client: AymaraAI) -> None:
+        with client.reports.with_streaming_response.get(
+            report_uuid="report_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            report = response.parse()
+            assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_path_params_get(self, client: AymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
+            client.reports.with_raw_response.get(
+                report_uuid="",
+            )
+
 
 class TestAsyncReports:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
@@ -251,57 +251,6 @@ class TestAsyncReports:
             assert_matches_type(EvalSuiteReport, report, path=["response"])
 
         assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_method_retrieve(self, async_client: AsyncAymaraAI) -> None:
-        report = await async_client.reports.retrieve(
-            report_uuid="report_uuid",
-        )
-        assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_method_retrieve_with_all_params(self, async_client: AsyncAymaraAI) -> None:
-        report = await async_client.reports.retrieve(
-            report_uuid="report_uuid",
-            workspace_uuid="workspace_uuid",
-        )
-        assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncAymaraAI) -> None:
-        response = await async_client.reports.with_raw_response.retrieve(
-            report_uuid="report_uuid",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        report = await response.parse()
-        assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncAymaraAI) -> None:
-        async with async_client.reports.with_streaming_response.retrieve(
-            report_uuid="report_uuid",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            report = await response.parse()
-            assert_matches_type(EvalSuiteReport, report, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncAymaraAI) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
-            await async_client.reports.with_raw_response.retrieve(
-                report_uuid="",
-            )
 
     @pytest.mark.skip()
     @parametrize
@@ -389,5 +338,56 @@ class TestAsyncReports:
     async def test_path_params_delete(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
             await async_client.reports.with_raw_response.delete(
+                report_uuid="",
+            )
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_get(self, async_client: AsyncAymaraAI) -> None:
+        report = await async_client.reports.get(
+            report_uuid="report_uuid",
+        )
+        assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_get_with_all_params(self, async_client: AsyncAymaraAI) -> None:
+        report = await async_client.reports.get(
+            report_uuid="report_uuid",
+            workspace_uuid="workspace_uuid",
+        )
+        assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_raw_response_get(self, async_client: AsyncAymaraAI) -> None:
+        response = await async_client.reports.with_raw_response.get(
+            report_uuid="report_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        report = await response.parse()
+        assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_streaming_response_get(self, async_client: AsyncAymaraAI) -> None:
+        async with async_client.reports.with_streaming_response.get(
+            report_uuid="report_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            report = await response.parse()
+            assert_matches_type(EvalSuiteReport, report, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_path_params_get(self, async_client: AsyncAymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
+            await async_client.reports.with_raw_response.get(
                 report_uuid="",
             )

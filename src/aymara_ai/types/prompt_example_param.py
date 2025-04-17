@@ -7,10 +7,10 @@ from typing_extensions import Required, TypedDict
 
 from .example_type import ExampleType
 
-__all__ = ["PromptExampleInParam"]
+__all__ = ["PromptExampleParam"]
 
 
-class PromptExampleInParam(TypedDict, total=False):
+class PromptExampleParam(TypedDict, total=False):
     content: Required[str]
 
     example_uuid: Optional[str]
