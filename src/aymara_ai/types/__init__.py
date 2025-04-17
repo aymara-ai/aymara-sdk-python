@@ -45,6 +45,7 @@ from .eval_list_runs_params import EvalListRunsParams as EvalListRunsParams
 from .score_retrieve_params import ScoreRetrieveParams as ScoreRetrieveParams
 from .eval_create_run_params import EvalCreateRunParams as EvalCreateRunParams
 from .eval_delete_run_params import EvalDeleteRunParams as EvalDeleteRunParams
+from .eval_type_list_response import EvalTypeListResponse as EvalTypeListResponse
 from .workspace_update_params import WorkspaceUpdateParams as WorkspaceUpdateParams
 from .eval_continue_run_params import EvalContinueRunParams as EvalContinueRunParams
 from .eval_list_prompts_params import EvalListPromptsParams as EvalListPromptsParams
