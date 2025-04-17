@@ -1,5 +1,3 @@
-    
-
 import math
 from typing import List, Union, Optional
 
@@ -38,6 +36,7 @@ def eval_pass_stats(
         columns=["eval_name", "pass_rate", "pass_total"],
         index=pd.Index([run.eval_run_uuid for run in eval_runs], name="eval_run_uuid"),
     )
+
 
 def _plot_pass_stats(
     names: pd.Series,
@@ -85,7 +84,6 @@ def _plot_pass_stats(
     plt.tight_layout()
     plt.show()
 
-    
 
 def graph_eval_stats(
     eval_runs: Union[List[EvalRunResult], EvalRunResult],
@@ -151,5 +149,3 @@ def graph_eval_stats(
         ylim_max=ylim_max,
         **kwargs,
     )
-
-    

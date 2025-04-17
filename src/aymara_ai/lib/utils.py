@@ -5,6 +5,7 @@ from typing import Any, Union, TypeVar, Callable, Optional, Awaitable
 
 T = TypeVar("T")
 
+
 def wait_until_complete(
     get_fn: Callable[[str], T],
     resource_id: str,
@@ -34,6 +35,7 @@ def wait_until_complete(
     Raises:
         TimeoutError or RuntimeError on failure.
     """
+
     def get_status(resource: dict) -> str:
         keys = status_path.split(".")
         for k in keys:
@@ -46,7 +48,6 @@ def wait_until_complete(
     while time.time() - start_time < timeout:
         resource = get_fn(resource_id)
         status = get_status(resource.to_dict() if hasattr(resource, "to_dict") else resource)
-
 
         if status == success_status:
             return resource
@@ -66,7 +67,7 @@ async def async_wait_until(
     interval: Optional[float] = 1.0,
     timeout: Optional[int] = 30,
     *args: Any,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> Any:
     """
     Asynchronously calls `operation` with provided args/kwargs until `predicate` returns True for the result,
@@ -98,7 +99,5 @@ async def async_wait_until(
         if pred_result:
             return result
         if (asyncio.get_event_loop().time() - start_time) >= max_timeout:
-            raise TimeoutError(
-                f"Timeout after {max_timeout} seconds waiting for predicate to be satisfied."
-            )
+            raise TimeoutError(f"Timeout after {max_timeout} seconds waiting for predicate to be satisfied.")
         await asyncio.sleep(poll_interval)
