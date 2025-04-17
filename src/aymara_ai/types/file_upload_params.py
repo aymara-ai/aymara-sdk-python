@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Iterable, Optional
 from typing_extensions import Required, TypedDict
 
-from .answer_in_param import AnswerInParam
-
-__all__ = ["FileUploadParams"]
+__all__ = ["FileUploadParams", "File"]
 
 
 class FileUploadParams(TypedDict, total=False):
-    answers: Required[Iterable[AnswerInParam]]
+    files: Required[Iterable[File]]
 
-    test_uuid: Required[str]
+    workspace_uuid: Optional[str]
+
+
+class File(TypedDict, total=False):
+    file_uuid: Required[str]
+
+    file_path: Optional[str]
