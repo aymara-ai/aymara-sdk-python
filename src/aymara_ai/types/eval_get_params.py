@@ -4,12 +4,8 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["EvalGetPromptsParams"]
+__all__ = ["EvalGetParams"]
 
 
-class EvalGetPromptsParams(TypedDict, total=False):
-    limit: int
-
-    offset: int
-
+class EvalGetParams(TypedDict, total=False):
     workspace_uuid: str

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["EvalGetResponsesParams"]
+__all__ = ["EvalListResponsesParams"]
 
 
-class EvalGetResponsesParams(TypedDict, total=False):
+class EvalListResponsesParams(TypedDict, total=False):
     limit: int
 
     offset: int

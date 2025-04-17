@@ -3,19 +3,20 @@
 from __future__ import annotations
 
 from typing import Iterable, Optional
-from typing_extensions import Literal, Required, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypedDict
 
+from .._utils import PropertyInfo
 from .eval_response_param import EvalResponseParam
 
-__all__ = ["EvalCreateRunParams", "EvalRunExample"]
+__all__ = ["EvalContinueRunParams", "EvalRunExample"]
 
 
-class EvalCreateRunParams(TypedDict, total=False):
+class EvalContinueRunParams(TypedDict, total=False):
     eval_uuid: Required[str]
 
     responses: Required[Iterable[EvalResponseParam]]
 
-    is_sandbox: Optional[bool]
+    is_sandbox: bool
 
     workspace_uuid: str
 
@@ -23,7 +24,7 @@ class EvalCreateRunParams(TypedDict, total=False):
 
     eval_run_examples: Optional[Iterable[EvalRunExample]]
 
-    eval_run_uuid: Optional[str]
+    body_eval_run_uuid: Annotated[Optional[str], PropertyInfo(alias="eval_run_uuid")]
 
     generate_prompts: Optional[bool]
 

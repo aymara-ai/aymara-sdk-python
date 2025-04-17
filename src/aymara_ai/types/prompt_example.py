@@ -5,10 +5,10 @@ from typing import Optional
 from .._models import BaseModel
 from .example_type import ExampleType
 
-__all__ = ["PromptExampleIn"]
+__all__ = ["PromptExample"]
 
 
-class PromptExampleIn(BaseModel):
+class PromptExample(BaseModel):
     content: str
 
     example_uuid: Optional[str] = None
