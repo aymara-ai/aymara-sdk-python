@@ -3,10 +3,10 @@
 from typing import List, Optional
 from datetime import datetime
 
+from ..eval import Eval
 from ..._models import BaseModel
-from ..shared.eval import Eval
+from ..eval_prompt import EvalPrompt
 from ..shared.status import Status
-from ..shared.eval_prompt import EvalPrompt
 from ..shared.content_type import ContentType
 
 __all__ = ["EvalRunResult", "Response"]

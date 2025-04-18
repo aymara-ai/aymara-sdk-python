@@ -1,10 +1,5 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .eval import Eval as Eval
 from .status import Status as Status
 from .eval_type import EvalType as EvalType
-from .eval_prompt import EvalPrompt as EvalPrompt
 from .content_type import ContentType as ContentType
-from .eval_response import EvalResponse as EvalResponse
-from .prompt_example import PromptExample as PromptExample
-from .eval_run_example import EvalRunExample as EvalRunExample

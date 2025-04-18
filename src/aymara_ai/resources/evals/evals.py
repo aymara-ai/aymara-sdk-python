@@ -36,12 +36,12 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ...pagination import SyncOffsetPage, AsyncOffsetPage
+from ...types.eval import Eval
 from ..._base_client import AsyncPaginator, make_request_options
-from ...types.shared.eval import Eval
+from ...types.eval_prompt import EvalPrompt
 from ...types.shared.status import Status
-from ...types.shared.eval_prompt import EvalPrompt
 from ...types.shared.content_type import ContentType
-from ...types.shared_params.prompt_example import PromptExample
+from ...types.prompt_example_param import PromptExampleParam
 
 __all__ = ["EvalsResource", "AsyncEvalsResource"]
 
@@ -85,7 +85,7 @@ class EvalsResource(SyncAPIResource):
         language: str | NotGiven = NOT_GIVEN,
         modality: ContentType | NotGiven = NOT_GIVEN,
         num_prompts: int | NotGiven = NOT_GIVEN,
-        prompt_examples: Optional[Iterable[PromptExample]] | NotGiven = NOT_GIVEN,
+        prompt_examples: Optional[Iterable[PromptExampleParam]] | NotGiven = NOT_GIVEN,
         status: Optional[Status] | NotGiven = NOT_GIVEN,
         updated_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
         workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
@@ -373,7 +373,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         language: str | NotGiven = NOT_GIVEN,
         modality: ContentType | NotGiven = NOT_GIVEN,
         num_prompts: int | NotGiven = NOT_GIVEN,
-        prompt_examples: Optional[Iterable[PromptExample]] | NotGiven = NOT_GIVEN,
+        prompt_examples: Optional[Iterable[PromptExampleParam]] | NotGiven = NOT_GIVEN,
         status: Optional[Status] | NotGiven = NOT_GIVEN,
         updated_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
         workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,

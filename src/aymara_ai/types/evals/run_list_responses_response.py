@@ -3,7 +3,7 @@
 from typing import Optional
 
 from ..._models import BaseModel
-from ..shared.eval_prompt import EvalPrompt
+from ..eval_prompt import EvalPrompt
 from ..shared.content_type import ContentType
 
 __all__ = ["RunListResponsesResponse"]

@@ -29,9 +29,9 @@ from ...types.evals import (
     run_list_responses_params,
 )
 from ..._base_client import AsyncPaginator, make_request_options
+from ...types.eval_response_param import EvalResponseParam
 from ...types.evals.eval_run_result import EvalRunResult
-from ...types.shared_params.eval_response import EvalResponse
-from ...types.shared_params.eval_run_example import EvalRunExample
+from ...types.eval_run_example_param import EvalRunExampleParam
 from ...types.evals.run_list_responses_response import RunListResponsesResponse
 
 __all__ = ["RunsResource", "AsyncRunsResource"]
@@ -61,11 +61,11 @@ class RunsResource(SyncAPIResource):
         self,
         *,
         eval_uuid: str,
-        responses: Iterable[EvalResponse],
+        responses: Iterable[EvalResponseParam],
         is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExample]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -214,11 +214,11 @@ class RunsResource(SyncAPIResource):
         eval_run_uuid: str,
         *,
         eval_uuid: str,
-        responses: Iterable[EvalResponse],
+        responses: Iterable[EvalResponseParam],
         is_sandbox: bool | NotGiven = NOT_GIVEN,
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExample]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -388,11 +388,11 @@ class AsyncRunsResource(AsyncAPIResource):
         self,
         *,
         eval_uuid: str,
-        responses: Iterable[EvalResponse],
+        responses: Iterable[EvalResponseParam],
         is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExample]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -543,11 +543,11 @@ class AsyncRunsResource(AsyncAPIResource):
         eval_run_uuid: str,
         *,
         eval_uuid: str,
-        responses: Iterable[EvalResponse],
+        responses: Iterable[EvalResponseParam],
         is_sandbox: bool | NotGiven = NOT_GIVEN,
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExample]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.

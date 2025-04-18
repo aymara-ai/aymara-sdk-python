@@ -3,10 +3,10 @@
 from typing import List, Optional
 from datetime import datetime
 
-from .status import Status
-from ..._models import BaseModel
-from .content_type import ContentType
+from .._models import BaseModel
+from .shared.status import Status
 from .prompt_example import PromptExample
+from .shared.content_type import ContentType
 
 __all__ = ["Eval"]
 
