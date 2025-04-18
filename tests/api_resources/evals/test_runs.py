@@ -55,6 +55,7 @@ class TestRuns:
             is_sandbox=True,
             workspace_uuid="workspace_uuid",
             ai_description="ai_description",
+            continue_thread=True,
             eval_run_examples=[
                 {
                     "prompt": "prompt",
@@ -65,7 +66,6 @@ class TestRuns:
                 }
             ],
             eval_run_uuid="eval_run_uuid",
-            generate_prompts=True,
             name="name",
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
@@ -336,6 +336,7 @@ class TestRuns:
             is_sandbox=True,
             workspace_uuid="workspace_uuid",
             ai_description="ai_description",
+            continue_thread=True,
             eval_run_examples=[
                 {
                     "prompt": "prompt",
@@ -346,7 +347,6 @@ class TestRuns:
                 }
             ],
             eval_run_uuid="eval_run_uuid",
-            generate_prompts=True,
             name="name",
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
@@ -427,6 +427,7 @@ class TestAsyncRuns:
             is_sandbox=True,
             workspace_uuid="workspace_uuid",
             ai_description="ai_description",
+            continue_thread=True,
             eval_run_examples=[
                 {
                     "prompt": "prompt",
@@ -437,7 +438,6 @@ class TestAsyncRuns:
                 }
             ],
             eval_run_uuid="eval_run_uuid",
-            generate_prompts=True,
             name="name",
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
@@ -708,6 +708,7 @@ class TestAsyncRuns:
             is_sandbox=True,
             workspace_uuid="workspace_uuid",
             ai_description="ai_description",
+            continue_thread=True,
             eval_run_examples=[
                 {
                     "prompt": "prompt",
@@ -718,7 +719,6 @@ class TestAsyncRuns:
                 }
             ],
             eval_run_uuid="eval_run_uuid",
-            generate_prompts=True,
             name="name",
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
