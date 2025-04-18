@@ -15,8 +15,6 @@ __all__ = ["EvalRunResult", "Response"]
 class Response(BaseModel):
     content: str
 
-    prompt: EvalPrompt
-
     prompt_uuid: str
 
     ai_refused: Optional[bool] = None
