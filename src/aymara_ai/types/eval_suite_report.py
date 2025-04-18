@@ -3,9 +3,9 @@
 from typing import List, Optional
 from datetime import datetime
 
-from .status import Status
 from .._models import BaseModel
-from .eval_run_result import EvalRunResult
+from .shared.status import Status
+from .evals.eval_run_result import EvalRunResult
 
 __all__ = ["EvalSuiteReport", "EvalRunReport"]
 

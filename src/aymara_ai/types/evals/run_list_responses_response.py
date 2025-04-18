@@ -1,15 +1,15 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
-from typing_extensions import Literal
 
-from .._models import BaseModel
-from .eval_prompt import EvalPrompt
+from ..._models import BaseModel
+from ..shared.eval_prompt import EvalPrompt
+from ..shared.content_type import ContentType
 
-__all__ = ["EvalListResponsesResponse"]
+__all__ = ["RunListResponsesResponse"]
 
 
-class EvalListResponsesResponse(BaseModel):
+class RunListResponsesResponse(BaseModel):
     content: str
 
     prompt: EvalPrompt
@@ -20,7 +20,7 @@ class EvalListResponsesResponse(BaseModel):
 
     confidence: Optional[float] = None
 
-    content_type: Optional[Literal["text", "image", "audio", "video"]] = None
+    content_type: Optional[ContentType] = None
     """Content type for AI interactions."""
 
     continue_thread: Optional[bool] = None

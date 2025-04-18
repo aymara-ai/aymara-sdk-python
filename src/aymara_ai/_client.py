@@ -22,9 +22,10 @@ from ._types import (
 from ._utils import (
     is_given,
     get_async_library,
+    maybe_coerce_boolean,
 )
 from ._version import __version__
-from .resources import evals, files, health, reports, eval_types
+from .resources import files, health, reports, eval_types
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import AymaraAIError, APIStatusError
 from ._base_client import (
@@ -32,6 +33,7 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
+from .resources.evals import evals
 
 __all__ = [
     "ENVIRONMENTS",
@@ -64,6 +66,7 @@ class AymaraAI(SyncAPIClient):
     # client options
     api_key: str
     bearer_token: str | None
+    use_sandbox: bool | None
 
     _environment: Literal["production", "staging", "development"] | NotGiven
 
@@ -72,6 +75,7 @@ class AymaraAI(SyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
+        use_sandbox: bool | None = None,
         environment: Literal["production", "staging", "development"] | NotGiven = NOT_GIVEN,
         base_url: str | httpx.URL | None | NotGiven = NOT_GIVEN,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
@@ -97,6 +101,7 @@ class AymaraAI(SyncAPIClient):
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `AYMARA_AI_API_KEY`
         - `bearer_token` from `AYMARA_AI_BEARER_TOKEN`
+        - `use_sandbox` from `AYMARA_AI_USE_SANDBOX`
         """
         if api_key is None:
             api_key = os.environ.get("AYMARA_AI_API_KEY")
@@ -109,6 +114,10 @@ class AymaraAI(SyncAPIClient):
         if bearer_token is None:
             bearer_token = os.environ.get("AYMARA_AI_BEARER_TOKEN")
         self.bearer_token = bearer_token
+
+        if use_sandbox is None:
+            use_sandbox = maybe_coerce_boolean(os.environ.get("AYMARA_AI_USE_SANDBOX")) or False
+        self.use_sandbox = use_sandbox
 
         self._environment = environment
 
@@ -183,6 +192,7 @@ class AymaraAI(SyncAPIClient):
         return {
             **super().default_headers,
             "X-Stainless-Async": "false",
+            "X-Use-Sandbox": str(self.use_sandbox) if self.use_sandbox is not None else Omit(),
             **self._custom_headers,
         }
 
@@ -191,6 +201,7 @@ class AymaraAI(SyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
+        use_sandbox: bool | None = None,
         environment: Literal["production", "staging", "development"] | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
@@ -227,6 +238,7 @@ class AymaraAI(SyncAPIClient):
         return self.__class__(
             api_key=api_key or self.api_key,
             bearer_token=bearer_token or self.bearer_token,
+            use_sandbox=use_sandbox or self.use_sandbox,
             base_url=base_url or self.base_url,
             environment=environment or self._environment,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
@@ -287,6 +299,7 @@ class AsyncAymaraAI(AsyncAPIClient):
     # client options
     api_key: str
     bearer_token: str | None
+    use_sandbox: bool | None
 
     _environment: Literal["production", "staging", "development"] | NotGiven
 
@@ -295,6 +308,7 @@ class AsyncAymaraAI(AsyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
+        use_sandbox: bool | None = None,
         environment: Literal["production", "staging", "development"] | NotGiven = NOT_GIVEN,
         base_url: str | httpx.URL | None | NotGiven = NOT_GIVEN,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
@@ -320,6 +334,7 @@ class AsyncAymaraAI(AsyncAPIClient):
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `AYMARA_AI_API_KEY`
         - `bearer_token` from `AYMARA_AI_BEARER_TOKEN`
+        - `use_sandbox` from `AYMARA_AI_USE_SANDBOX`
         """
         if api_key is None:
             api_key = os.environ.get("AYMARA_AI_API_KEY")
@@ -332,6 +347,10 @@ class AsyncAymaraAI(AsyncAPIClient):
         if bearer_token is None:
             bearer_token = os.environ.get("AYMARA_AI_BEARER_TOKEN")
         self.bearer_token = bearer_token
+
+        if use_sandbox is None:
+            use_sandbox = maybe_coerce_boolean(os.environ.get("AYMARA_AI_USE_SANDBOX")) or False
+        self.use_sandbox = use_sandbox
 
         self._environment = environment
 
@@ -406,6 +425,7 @@ class AsyncAymaraAI(AsyncAPIClient):
         return {
             **super().default_headers,
             "X-Stainless-Async": f"async:{get_async_library()}",
+            "X-Use-Sandbox": str(self.use_sandbox) if self.use_sandbox is not None else Omit(),
             **self._custom_headers,
         }
 
@@ -414,6 +434,7 @@ class AsyncAymaraAI(AsyncAPIClient):
         *,
         api_key: str | None = None,
         bearer_token: str | None = None,
+        use_sandbox: bool | None = None,
         environment: Literal["production", "staging", "development"] | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
@@ -450,6 +471,7 @@ class AsyncAymaraAI(AsyncAPIClient):
         return self.__class__(
             api_key=api_key or self.api_key,
             bearer_token=bearer_token or self.bearer_token,
+            use_sandbox=use_sandbox or self.use_sandbox,
             base_url=base_url or self.base_url,
             environment=environment or self._environment,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,

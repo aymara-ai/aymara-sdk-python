@@ -8,15 +8,15 @@ from typing_extensions import Required, TypedDict
 from ..shared_params.eval_response import EvalResponse
 from ..shared_params.eval_run_example import EvalRunExample
 
-__all__ = ["RunCreateParams"]
+__all__ = ["RunContinueRunParams"]
 
 
-class RunCreateParams(TypedDict, total=False):
+class RunContinueRunParams(TypedDict, total=False):
     eval_uuid: Required[str]
 
     responses: Required[Iterable[EvalResponse]]
 
-    is_sandbox: Optional[bool]
+    is_sandbox: bool
 
     workspace_uuid: str
 

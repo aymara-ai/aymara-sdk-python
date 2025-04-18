@@ -3,59 +3,67 @@
 from typing import List, Optional
 from datetime import datetime
 
-from ..eval import Eval
 from ..._models import BaseModel
+from ..shared.eval import Eval
 from ..shared.status import Status
-from .scored_response import ScoredResponse
-from .eval_run_example import EvalRunExample
+from ..shared.eval_prompt import EvalPrompt
+from ..shared.content_type import ContentType
 
-__all__ = ["EvalRunResult"]
+__all__ = ["EvalRunResult", "Response"]
+
+
+class Response(BaseModel):
+    content: str
+
+    prompt: EvalPrompt
+
+    prompt_uuid: str
+
+    ai_refused: Optional[bool] = None
+
+    confidence: Optional[float] = None
+
+    content_type: Optional[ContentType] = None
+    """Content type for AI interactions."""
+
+    continue_thread: Optional[bool] = None
+
+    exclude_from_scoring: Optional[bool] = None
+
+    explanation: Optional[str] = None
+
+    is_passed: Optional[bool] = None
+
+    next_prompt: Optional[EvalPrompt] = None
+
+    response_uuid: Optional[str] = None
+
+    thread_uuid: Optional[str] = None
+
+    turn_number: Optional[int] = None
 
 
 class EvalRunResult(BaseModel):
-    """Schema for returning eval run data."""
-
     created_at: datetime
-    """Timestamp when the eval run was created."""
 
     eval_run_uuid: str
-    """Unique identifier for the eval run."""
-
-    eval_uuid: str
-    """Unique identifier for the eval."""
 
     status: Status
-    """Status of the eval run."""
+    """Resource status."""
 
     updated_at: datetime
-    """Timestamp when the eval run was last updated."""
 
     ai_description: Optional[str] = None
-    """Description of the AI for this run, if any."""
-
-    eval_run_examples: Optional[List[EvalRunExample]] = None
-    """Examples that were included with the eval run, if any."""
 
     evaluation: Optional[Eval] = None
     """Schema for configuring an Eval based on a eval_type."""
 
-    is_sandbox: Optional[bool] = None
-    """Indicates if the eval run is sandboxed (default: False)."""
-
-    name: Optional[str] = None
-    """Name of the eval run, if any (defaults to the eval name + timestamp)."""
-
     num_prompts: Optional[int] = None
-    """Number of prompts in the eval run, if any."""
 
     num_responses_scored: Optional[int] = None
-    """Number of responses scored in the eval run, if any."""
 
     pass_rate: Optional[float] = None
-    """Pass rate for the eval run, if any."""
 
-    responses: Optional[List[ScoredResponse]] = None
-    """List of scored responses for the eval run, if any."""
+    responses: Optional[List[Response]] = None
 
     workspace_uuid: Optional[str] = None
-    """UUID of the associated workspace, if any."""

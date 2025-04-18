@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from typing import Union, Iterable, Optional
 from datetime import datetime
-from typing_extensions import Literal, Required, Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
-from .status import Status
 from .._utils import PropertyInfo
-from .prompt_example_param import PromptExampleParam
+from .shared.status import Status
+from .shared.content_type import ContentType
+from .shared_params.prompt_example import PromptExample
 
 __all__ = ["EvalCreateParams"]
 
@@ -34,12 +35,12 @@ class EvalCreateParams(TypedDict, total=False):
 
     language: str
 
-    modality: Literal["text", "image", "audio", "video"]
+    modality: ContentType
     """Content type for AI interactions."""
 
     num_prompts: int
 
-    prompt_examples: Optional[Iterable[PromptExampleParam]]
+    prompt_examples: Optional[Iterable[PromptExample]]
 
     status: Optional[Status]
     """Resource status."""

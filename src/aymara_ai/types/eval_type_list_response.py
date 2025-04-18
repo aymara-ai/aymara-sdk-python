@@ -3,7 +3,7 @@
 from typing import List
 from typing_extensions import TypeAlias
 
-from .eval_type import EvalType
+from .shared.eval_type import EvalType
 
 __all__ = ["EvalTypeListResponse"]
 

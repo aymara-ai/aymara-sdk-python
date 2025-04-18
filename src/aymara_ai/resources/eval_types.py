@@ -14,7 +14,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.eval_type import EvalType
+from ..types.shared.eval_type import EvalType
 from ..types.eval_type_list_response import EvalTypeListResponse
 
 __all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]
