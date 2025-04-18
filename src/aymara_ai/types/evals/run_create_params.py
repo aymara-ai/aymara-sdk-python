@@ -24,6 +24,8 @@ class RunCreateParams(TypedDict, total=False):
 
     eval_run_examples: Optional[Iterable[EvalRunExampleParam]]
 
+    eval_run_uuid: Optional[str]
+
     generate_prompts: Optional[bool]
 
     name: Optional[str]

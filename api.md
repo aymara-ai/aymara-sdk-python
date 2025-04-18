@@ -39,9 +39,9 @@ Methods:
 - <code title="post /v2/eval-runs">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">create</a>(\*\*<a href="src/aymara_ai/types/evals/run_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
 - <code title="get /v2/eval-runs">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list</a>(\*\*<a href="src/aymara_ai/types/evals/run_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">SyncOffsetPage[EvalRunResult]</a></code>
 - <code title="delete /v2/eval-runs/{eval_run_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">delete</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_delete_params.py">params</a>) -> None</code>
-- <code title="post /v2/eval-runs/{eval_run_uuid}/continue">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">continue_run</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_continue_run_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">get</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_get_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_list_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/run_list_responses_response.py">SyncOffsetPage[RunListResponsesResponse]</a></code>
+- <code title="post /v2/eval-runs/-/score-responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">score_responses</a>(\*\*<a href="src/aymara_ai/types/evals/run_score_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
 
 # EvalTypes
 
