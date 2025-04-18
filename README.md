@@ -36,7 +36,7 @@ client = AymaraAI(
     environment="staging",
 )
 
-eval_run_result = client.evals.create_run(
+eval_run_result = client.evals.runs.create(
     eval_uuid="eval_uuid",
     responses=[
         {
@@ -70,7 +70,7 @@ client = AsyncAymaraAI(
 
 
 async def main() -> None:
-    eval_run_result = await client.evals.create_run(
+    eval_run_result = await client.evals.runs.create(
         eval_uuid="eval_uuid",
         responses=[
             {
