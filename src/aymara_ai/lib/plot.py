@@ -8,7 +8,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.ticker import FuncFormatter
 
-from aymara_ai.types.eval_run_result import EvalRunResult
+from aymara_ai.types.evals import EvalRunResult
 
 
 def eval_pass_stats(
