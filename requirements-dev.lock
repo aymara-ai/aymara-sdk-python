@@ -43,7 +43,6 @@ distlib==0.3.7
 distro==1.8.0
     # via aymara-ai
     # via openai
-dotenv==0.9.9
 exceptiongroup==1.2.2
     # via anyio
     # via ipython
@@ -153,7 +152,6 @@ python-dateutil==2.8.2
     # via pandas
     # via time-machine
 python-dotenv==1.1.0
-    # via dotenv
 pytz==2023.3.post1
     # via dirty-equals
     # via pandas
