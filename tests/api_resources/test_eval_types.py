@@ -9,7 +9,8 @@ import pytest
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
-from aymara_ai.types import EvalType, EvalTypeListResponse
+from aymara_ai.types import EvalTypeListResponse
+from aymara_ai.types.shared import EvalType
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 

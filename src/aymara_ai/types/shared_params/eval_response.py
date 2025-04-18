@@ -3,19 +3,21 @@
 from __future__ import annotations
 
 from typing import Optional
-from typing_extensions import Literal, Required, TypedDict
+from typing_extensions import Required, TypedDict
 
-__all__ = ["EvalResponseParam"]
+from ..shared.content_type import ContentType
+
+__all__ = ["EvalResponse"]
 
 
-class EvalResponseParam(TypedDict, total=False):
+class EvalResponse(TypedDict, total=False):
     content: Required[str]
 
     prompt_uuid: Required[str]
 
     ai_refused: bool
 
-    content_type: Literal["text", "image", "audio", "video"]
+    content_type: ContentType
     """Content type for AI interactions."""
 
     continue_thread: bool

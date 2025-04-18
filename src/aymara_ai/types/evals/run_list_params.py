@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["EvalListResponsesParams"]
+__all__ = ["RunListParams"]
 
 
-class EvalListResponsesParams(TypedDict, total=False):
+class RunListParams(TypedDict, total=False):
+    eval_uuid: str
+
     limit: int
 
     offset: int

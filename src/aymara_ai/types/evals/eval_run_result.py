@@ -2,12 +2,12 @@
 
 from typing import List, Optional
 from datetime import datetime
-from typing_extensions import Literal
 
-from .eval import Eval
-from .status import Status
-from .._models import BaseModel
-from .eval_prompt import EvalPrompt
+from ..._models import BaseModel
+from ..shared.eval import Eval
+from ..shared.status import Status
+from ..shared.eval_prompt import EvalPrompt
+from ..shared.content_type import ContentType
 
 __all__ = ["EvalRunResult", "Response"]
 
@@ -23,7 +23,7 @@ class Response(BaseModel):
 
     confidence: Optional[float] = None
 
-    content_type: Optional[Literal["text", "image", "audio", "video"]] = None
+    content_type: Optional[ContentType] = None
     """Content type for AI interactions."""
 
     continue_thread: Optional[bool] = None

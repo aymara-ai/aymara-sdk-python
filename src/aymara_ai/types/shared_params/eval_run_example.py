@@ -5,14 +5,16 @@ from __future__ import annotations
 from typing import Optional
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["PromptExampleParam"]
+__all__ = ["EvalRunExample"]
 
 
-class PromptExampleParam(TypedDict, total=False):
-    content: Required[str]
+class EvalRunExample(TypedDict, total=False):
+    prompt: Required[str]
+
+    response: Required[str]
+
+    type: Required[Literal["pass", "fail"]]
 
     example_uuid: Optional[str]
 
     explanation: Optional[str]
-
-    type: Literal["good", "bad"]
