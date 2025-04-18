@@ -8,10 +8,10 @@ from typing_extensions import Required, TypedDict
 from ..eval_response_param import EvalResponseParam
 from ..eval_run_example_param import EvalRunExampleParam
 
-__all__ = ["RunContinueRunParams"]
+__all__ = ["RunScoreResponsesParams"]
 
 
-class RunContinueRunParams(TypedDict, total=False):
+class RunScoreResponsesParams(TypedDict, total=False):
     eval_uuid: Required[str]
 
     responses: Required[Iterable[EvalResponseParam]]
@@ -23,6 +23,8 @@ class RunContinueRunParams(TypedDict, total=False):
     ai_description: Optional[str]
 
     eval_run_examples: Optional[Iterable[EvalRunExampleParam]]
+
+    eval_run_uuid: Optional[str]
 
     generate_prompts: Optional[bool]
 

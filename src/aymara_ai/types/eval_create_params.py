@@ -33,12 +33,12 @@ class EvalCreateParams(TypedDict, total=False):
 
     is_sandbox: bool
 
-    language: str
+    language: Optional[str]
 
     modality: ContentType
     """Content type for AI interactions."""
 
-    num_prompts: int
+    num_prompts: Optional[int]
 
     prompt_examples: Optional[Iterable[PromptExampleParam]]
 
