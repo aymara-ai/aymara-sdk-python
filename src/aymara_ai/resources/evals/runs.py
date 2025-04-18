@@ -25,8 +25,8 @@ from ...types.evals import (
     run_list_params,
     run_create_params,
     run_delete_params,
-    run_continue_run_params,
     run_list_responses_params,
+    run_score_responses_params,
 )
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.eval_response_param import EvalResponseParam
@@ -66,6 +66,7 @@ class RunsResource(SyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -98,6 +99,7 @@ class RunsResource(SyncAPIResource):
                     "responses": responses,
                     "ai_description": ai_description,
                     "eval_run_examples": eval_run_examples,
+                    "eval_run_uuid": eval_run_uuid,
                     "generate_prompts": generate_prompts,
                     "name": name,
                 },
@@ -209,70 +211,6 @@ class RunsResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
-    def continue_run(
-        self,
-        eval_run_uuid: str,
-        *,
-        eval_uuid: str,
-        responses: Iterable[EvalResponseParam],
-        is_sandbox: bool | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
-        generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalRunResult:
-        """Run the eval with the provided responses.
-
-        This function is used to submit AI
-        responses to the eval prompts.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not eval_run_uuid:
-            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
-        return self._post(
-            f"/v2/eval-runs/{eval_run_uuid}/continue",
-            body=maybe_transform(
-                {
-                    "eval_uuid": eval_uuid,
-                    "responses": responses,
-                    "ai_description": ai_description,
-                    "eval_run_examples": eval_run_examples,
-                    "generate_prompts": generate_prompts,
-                    "name": name,
-                },
-                run_continue_run_params.RunContinueRunParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "is_sandbox": is_sandbox,
-                        "workspace_uuid": workspace_uuid,
-                    },
-                    run_continue_run_params.RunContinueRunParams,
-                ),
-            ),
-            cast_to=EvalRunResult,
-        )
-
     def get(
         self,
         eval_run_uuid: str,
@@ -363,6 +301,69 @@ class RunsResource(SyncAPIResource):
             model=RunListResponsesResponse,
         )
 
+    def score_responses(
+        self,
+        *,
+        eval_uuid: str,
+        responses: Iterable[EvalResponseParam],
+        is_sandbox: bool | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
+        name: Optional[str] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalRunResult:
+        """Run the eval with the provided responses.
+
+        This function is used to submit AI
+        responses to the eval prompts.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/v2/eval-runs/-/score-responses",
+            body=maybe_transform(
+                {
+                    "eval_uuid": eval_uuid,
+                    "responses": responses,
+                    "ai_description": ai_description,
+                    "eval_run_examples": eval_run_examples,
+                    "eval_run_uuid": eval_run_uuid,
+                    "generate_prompts": generate_prompts,
+                    "name": name,
+                },
+                run_score_responses_params.RunScoreResponsesParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "is_sandbox": is_sandbox,
+                        "workspace_uuid": workspace_uuid,
+                    },
+                    run_score_responses_params.RunScoreResponsesParams,
+                ),
+            ),
+            cast_to=EvalRunResult,
+        )
+
 
 class AsyncRunsResource(AsyncAPIResource):
     @cached_property
@@ -393,6 +394,7 @@ class AsyncRunsResource(AsyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -425,6 +427,7 @@ class AsyncRunsResource(AsyncAPIResource):
                     "responses": responses,
                     "ai_description": ai_description,
                     "eval_run_examples": eval_run_examples,
+                    "eval_run_uuid": eval_run_uuid,
                     "generate_prompts": generate_prompts,
                     "name": name,
                 },
@@ -538,70 +541,6 @@ class AsyncRunsResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
-    async def continue_run(
-        self,
-        eval_run_uuid: str,
-        *,
-        eval_uuid: str,
-        responses: Iterable[EvalResponseParam],
-        is_sandbox: bool | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
-        generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalRunResult:
-        """Run the eval with the provided responses.
-
-        This function is used to submit AI
-        responses to the eval prompts.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not eval_run_uuid:
-            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
-        return await self._post(
-            f"/v2/eval-runs/{eval_run_uuid}/continue",
-            body=await async_maybe_transform(
-                {
-                    "eval_uuid": eval_uuid,
-                    "responses": responses,
-                    "ai_description": ai_description,
-                    "eval_run_examples": eval_run_examples,
-                    "generate_prompts": generate_prompts,
-                    "name": name,
-                },
-                run_continue_run_params.RunContinueRunParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "is_sandbox": is_sandbox,
-                        "workspace_uuid": workspace_uuid,
-                    },
-                    run_continue_run_params.RunContinueRunParams,
-                ),
-            ),
-            cast_to=EvalRunResult,
-        )
-
     async def get(
         self,
         eval_run_uuid: str,
@@ -692,6 +631,69 @@ class AsyncRunsResource(AsyncAPIResource):
             model=RunListResponsesResponse,
         )
 
+    async def score_responses(
+        self,
+        *,
+        eval_uuid: str,
+        responses: Iterable[EvalResponseParam],
+        is_sandbox: bool | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        generate_prompts: Optional[bool] | NotGiven = NOT_GIVEN,
+        name: Optional[str] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> EvalRunResult:
+        """Run the eval with the provided responses.
+
+        This function is used to submit AI
+        responses to the eval prompts.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/v2/eval-runs/-/score-responses",
+            body=await async_maybe_transform(
+                {
+                    "eval_uuid": eval_uuid,
+                    "responses": responses,
+                    "ai_description": ai_description,
+                    "eval_run_examples": eval_run_examples,
+                    "eval_run_uuid": eval_run_uuid,
+                    "generate_prompts": generate_prompts,
+                    "name": name,
+                },
+                run_score_responses_params.RunScoreResponsesParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "is_sandbox": is_sandbox,
+                        "workspace_uuid": workspace_uuid,
+                    },
+                    run_score_responses_params.RunScoreResponsesParams,
+                ),
+            ),
+            cast_to=EvalRunResult,
+        )
+
 
 class RunsResourceWithRawResponse:
     def __init__(self, runs: RunsResource) -> None:
@@ -706,14 +708,14 @@ class RunsResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             runs.delete,
         )
-        self.continue_run = to_raw_response_wrapper(
-            runs.continue_run,
-        )
         self.get = to_raw_response_wrapper(
             runs.get,
         )
         self.list_responses = to_raw_response_wrapper(
             runs.list_responses,
+        )
+        self.score_responses = to_raw_response_wrapper(
+            runs.score_responses,
         )
 
 
@@ -730,14 +732,14 @@ class AsyncRunsResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             runs.delete,
         )
-        self.continue_run = async_to_raw_response_wrapper(
-            runs.continue_run,
-        )
         self.get = async_to_raw_response_wrapper(
             runs.get,
         )
         self.list_responses = async_to_raw_response_wrapper(
             runs.list_responses,
+        )
+        self.score_responses = async_to_raw_response_wrapper(
+            runs.score_responses,
         )
 
 
@@ -754,14 +756,14 @@ class RunsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             runs.delete,
         )
-        self.continue_run = to_streamed_response_wrapper(
-            runs.continue_run,
-        )
         self.get = to_streamed_response_wrapper(
             runs.get,
         )
         self.list_responses = to_streamed_response_wrapper(
             runs.list_responses,
+        )
+        self.score_responses = to_streamed_response_wrapper(
+            runs.score_responses,
         )
 
 
@@ -778,12 +780,12 @@ class AsyncRunsResourceWithStreamingResponse:
         self.delete = async_to_streamed_response_wrapper(
             runs.delete,
         )
-        self.continue_run = async_to_streamed_response_wrapper(
-            runs.continue_run,
-        )
         self.get = async_to_streamed_response_wrapper(
             runs.get,
         )
         self.list_responses = async_to_streamed_response_wrapper(
             runs.list_responses,
+        )
+        self.score_responses = async_to_streamed_response_wrapper(
+            runs.score_responses,
         )
