@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Iterable, Optional
 from typing_extensions import Required, TypedDict
 
-from ..shared_params.eval_response import EvalResponse
-from ..shared_params.eval_run_example import EvalRunExample
+from ..eval_response_param import EvalResponseParam
+from ..eval_run_example_param import EvalRunExampleParam
 
 __all__ = ["RunCreateParams"]
 
@@ -14,7 +14,7 @@ __all__ = ["RunCreateParams"]
 class RunCreateParams(TypedDict, total=False):
     eval_uuid: Required[str]
 
-    responses: Required[Iterable[EvalResponse]]
+    responses: Required[Iterable[EvalResponseParam]]
 
     is_sandbox: Optional[bool]
 
@@ -22,7 +22,7 @@ class RunCreateParams(TypedDict, total=False):
 
     ai_description: Optional[str]
 
-    eval_run_examples: Optional[Iterable[EvalRunExample]]
+    eval_run_examples: Optional[Iterable[EvalRunExampleParam]]
 
     generate_prompts: Optional[bool]
 
