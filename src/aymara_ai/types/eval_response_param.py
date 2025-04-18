@@ -5,12 +5,12 @@ from __future__ import annotations
 from typing import Optional
 from typing_extensions import Required, TypedDict
 
-from ..shared.content_type import ContentType
+from .shared.content_type import ContentType
 
-__all__ = ["EvalResponse"]
+__all__ = ["EvalResponseParam"]
 
 
-class EvalResponse(TypedDict, total=False):
+class EvalResponseParam(TypedDict, total=False):
     content: Required[str]
 
     prompt_uuid: Required[str]
