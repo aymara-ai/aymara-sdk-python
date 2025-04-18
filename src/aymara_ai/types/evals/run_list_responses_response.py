@@ -12,8 +12,6 @@ __all__ = ["RunListResponsesResponse"]
 class RunListResponsesResponse(BaseModel):
     content: str
 
-    prompt: EvalPrompt
-
     prompt_uuid: str
 
     ai_refused: Optional[bool] = None
