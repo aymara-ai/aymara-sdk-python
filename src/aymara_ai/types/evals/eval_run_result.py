@@ -54,6 +54,8 @@ class EvalRunResult(BaseModel):
 
     eval_run_uuid: str
 
+    eval_uuid: str
+
     status: Status
     """Resource status."""
 
@@ -63,6 +65,8 @@ class EvalRunResult(BaseModel):
 
     evaluation: Optional[Eval] = None
     """Schema for configuring an Eval based on a eval_type."""
+
+    name: Optional[str] = None
 
     num_prompts: Optional[int] = None
 
