@@ -28,7 +28,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -42,7 +42,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
                     "content_type": "text",
@@ -77,7 +77,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -95,7 +95,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -309,7 +309,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -323,7 +323,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
                     "content_type": "text",
@@ -358,7 +358,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -376,7 +376,7 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -400,7 +400,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -414,7 +414,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
                     "content_type": "text",
@@ -449,7 +449,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -467,7 +467,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -681,7 +681,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -695,7 +695,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
                     "content_type": "text",
@@ -730,7 +730,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],
@@ -748,7 +748,7 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "content",
+                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                 }
             ],

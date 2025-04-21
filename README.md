@@ -40,7 +40,7 @@ eval_run_result = client.evals.runs.create(
     eval_uuid="eval_uuid",
     responses=[
         {
-            "content": "content",
+            "content": "string",
             "prompt_uuid": "prompt_uuid",
         }
     ],
@@ -74,7 +74,7 @@ async def main() -> None:
         eval_uuid="eval_uuid",
         responses=[
             {
-                "content": "content",
+                "content": "string",
                 "prompt_uuid": "prompt_uuid",
             }
         ],
