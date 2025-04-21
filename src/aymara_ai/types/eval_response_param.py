@@ -2,16 +2,23 @@
 
 from __future__ import annotations
 
-from typing import Optional
-from typing_extensions import Required, TypedDict
+from typing import Union, Optional
+from typing_extensions import Required, TypeAlias, TypedDict
 
 from .shared.content_type import ContentType
 
-__all__ = ["EvalResponseParam"]
+__all__ = ["EvalResponseParam", "Content", "ContentFileReference"]
+
+
+class ContentFileReference(TypedDict, total=False):
+    remote_file_path: Optional[str]
+
+
+Content: TypeAlias = Union[str, ContentFileReference]
 
 
 class EvalResponseParam(TypedDict, total=False):
-    content: Required[str]
+    content: Required[Content]
 
     prompt_uuid: Required[str]
 

@@ -1,7 +1,8 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List, Union, Optional
 from datetime import datetime
+from typing_extensions import TypeAlias
 
 from ..eval import Eval
 from ..._models import BaseModel
@@ -9,11 +10,18 @@ from ..eval_prompt import EvalPrompt
 from ..shared.status import Status
 from ..shared.content_type import ContentType
 
-__all__ = ["EvalRunResult", "Response"]
+__all__ = ["EvalRunResult", "Response", "ResponseContent", "ResponseContentFileReference"]
+
+
+class ResponseContentFileReference(BaseModel):
+    remote_file_path: Optional[str] = None
+
+
+ResponseContent: TypeAlias = Union[str, ResponseContentFileReference]
 
 
 class Response(BaseModel):
-    content: str
+    content: ResponseContent
 
     prompt_uuid: str
 
