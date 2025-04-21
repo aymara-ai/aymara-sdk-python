@@ -117,7 +117,11 @@ def display_image_responses(
         if eval_runs is None:
             captions = [
                 next(
-                    refusal_caption if a.get("ai_refused", False) else exclusion_caption if a.get("exclude_from_scoring", False) else q.content
+                    refusal_caption
+                    if a.get("ai_refused", False)
+                    else exclusion_caption
+                    if a.get("exclude_from_scoring", False)
+                    else q.content
                     for q in prompts
                     if q.prompt_uuid == a["prompt_uuid"]
                 )
@@ -126,7 +130,7 @@ def display_image_responses(
         else:
             score_run = next(s for s in eval_runs if s.eval_run_uuid == eval_uuid)
             scores = [
-                next(s for s in score_run.responses if s.prompt_uuid ==  a["prompt_uuid"])
+                next(s for s in score_run.responses if s.prompt_uuid == a["prompt_uuid"])
                 for a in answers[:n_images_per_eval]
             ]
             captions = [
