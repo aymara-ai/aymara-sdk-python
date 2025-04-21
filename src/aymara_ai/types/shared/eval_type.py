@@ -16,4 +16,6 @@ class EvalType(BaseModel):
 
     slug: str
 
+    supported_generation_inputs: List[str]
+
     supported_modalities: Optional[List[str]] = None
