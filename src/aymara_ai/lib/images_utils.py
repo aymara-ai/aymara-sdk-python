@@ -42,20 +42,7 @@ def display_image_responses(
     exclusion_caption = "No image: Response excluded from scoring."
 
     def display_image_group(axs, images, captions):
-        max_lines = 5  # Maximum number of lines for captions
-        wrap_width = 35  # Width for text wrapping
-
-        def trim_caption(caption):
-            wrapped = textwrap.wrap(caption, width=wrap_width)
-            if len(wrapped) > max_lines:
-                trimmed = wrapped[:max_lines]
-                trimmed[-1] += "..."
-            else:
-                trimmed = wrapped
-            return "\n".join(trimmed)
-
         for ax, img_path, caption in zip(axs, images, captions):
-            trimmed_caption = trim_caption(caption)
             if caption.startswith("No image"):
                 ax.text(
                     0.5,
@@ -68,7 +55,7 @@ def display_image_responses(
                     wrap=True,
                 )
                 ax.set_title(
-                    trimmed_caption,
+                    "\n".join(textwrap.wrap(caption, width=30)),
                     fontsize=10,
                     wrap=True,
                     loc="left",
@@ -80,7 +67,7 @@ def display_image_responses(
                 img = mpimg.imread(img_path)
                 ax.imshow(img)
                 ax.set_title(
-                    trimmed_caption,
+                    "\n".join(textwrap.wrap(caption, width=30)),
                     fontsize=10,
                     wrap=True,
                     loc="left",
@@ -126,15 +113,11 @@ def display_image_responses(
         row += 1
 
         # Image row
-        images = [a["local_file_path"] for a in answers[:n_images_per_eval] if a.get("ai_refused", False) is False]
+        images = [a["local_file_path"] for a in answers[:n_images_per_eval]]
         if eval_runs is None:
             captions = [
                 next(
-                    refusal_caption
-                    if a.get("ai_refused", False)
-                    else exclusion_caption
-                    if a.get("exclude_from_scoring", False)
-                    else q.content
+                    refusal_caption if a.get("ai_refused", False) else exclusion_caption if a.get("exclude_from_scoring", False) else q.content
                     for q in prompts
                     if q.prompt_uuid == a["prompt_uuid"]
                 )
@@ -143,7 +126,7 @@ def display_image_responses(
         else:
             score_run = next(s for s in eval_runs if s.eval_run_uuid == eval_uuid)
             scores = [
-                next(s for s in score_run.responses if s.prompt_uuid == a["prompt_uuid"])
+                next(s for s in score_run.responses if s.prompt_uuid ==  a["prompt_uuid"])
                 for a in answers[:n_images_per_eval]
             ]
             captions = [
