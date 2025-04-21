@@ -38,12 +38,7 @@ client = AymaraAI(
 
 eval_run_result = client.evals.runs.create(
     eval_uuid="eval_uuid",
-    responses=[
-        {
-            "content": "string",
-            "prompt_uuid": "prompt_uuid",
-        }
-    ],
+    responses=[{"prompt_uuid": "prompt_uuid"}],
 )
 print(eval_run_result.eval_run_uuid)
 ```
@@ -72,12 +67,7 @@ client = AsyncAymaraAI(
 async def main() -> None:
     eval_run_result = await client.evals.runs.create(
         eval_uuid="eval_uuid",
-        responses=[
-            {
-                "content": "string",
-                "prompt_uuid": "prompt_uuid",
-            }
-        ],
+        responses=[{"prompt_uuid": "prompt_uuid"}],
     )
     print(eval_run_result.eval_run_uuid)
 

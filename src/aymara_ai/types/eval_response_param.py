@@ -18,11 +18,11 @@ Content: TypeAlias = Union[str, ContentFileReference]
 
 
 class EvalResponseParam(TypedDict, total=False):
-    content: Required[Content]
-
     prompt_uuid: Required[str]
 
     ai_refused: bool
+
+    content: Optional[Content]
 
     content_type: ContentType
     """Content type for AI interactions."""

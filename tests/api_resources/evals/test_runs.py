@@ -26,12 +26,7 @@ class TestRuns:
     def test_method_create(self, client: AymaraAI) -> None:
         run = client.evals.runs.create(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
 
@@ -42,9 +37,9 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
+                    "content": "string",
                     "content_type": "text",
                     "continue_thread": True,
                     "exclude_from_scoring": True,
@@ -75,12 +70,7 @@ class TestRuns:
     def test_raw_response_create(self, client: AymaraAI) -> None:
         response = client.evals.runs.with_raw_response.create(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
 
         assert response.is_closed is True
@@ -93,12 +83,7 @@ class TestRuns:
     def test_streaming_response_create(self, client: AymaraAI) -> None:
         with client.evals.runs.with_streaming_response.create(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -307,12 +292,7 @@ class TestRuns:
     def test_method_score_responses(self, client: AymaraAI) -> None:
         run = client.evals.runs.score_responses(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
 
@@ -323,9 +303,9 @@ class TestRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
+                    "content": "string",
                     "content_type": "text",
                     "continue_thread": True,
                     "exclude_from_scoring": True,
@@ -356,12 +336,7 @@ class TestRuns:
     def test_raw_response_score_responses(self, client: AymaraAI) -> None:
         response = client.evals.runs.with_raw_response.score_responses(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
 
         assert response.is_closed is True
@@ -374,12 +349,7 @@ class TestRuns:
     def test_streaming_response_score_responses(self, client: AymaraAI) -> None:
         with client.evals.runs.with_streaming_response.score_responses(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -398,12 +368,7 @@ class TestAsyncRuns:
     async def test_method_create(self, async_client: AsyncAymaraAI) -> None:
         run = await async_client.evals.runs.create(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
 
@@ -414,9 +379,9 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
+                    "content": "string",
                     "content_type": "text",
                     "continue_thread": True,
                     "exclude_from_scoring": True,
@@ -447,12 +412,7 @@ class TestAsyncRuns:
     async def test_raw_response_create(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.evals.runs.with_raw_response.create(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
 
         assert response.is_closed is True
@@ -465,12 +425,7 @@ class TestAsyncRuns:
     async def test_streaming_response_create(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.evals.runs.with_streaming_response.create(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -679,12 +634,7 @@ class TestAsyncRuns:
     async def test_method_score_responses(self, async_client: AsyncAymaraAI) -> None:
         run = await async_client.evals.runs.score_responses(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
         assert_matches_type(EvalRunResult, run, path=["response"])
 
@@ -695,9 +645,9 @@ class TestAsyncRuns:
             eval_uuid="eval_uuid",
             responses=[
                 {
-                    "content": "string",
                     "prompt_uuid": "prompt_uuid",
                     "ai_refused": True,
+                    "content": "string",
                     "content_type": "text",
                     "continue_thread": True,
                     "exclude_from_scoring": True,
@@ -728,12 +678,7 @@ class TestAsyncRuns:
     async def test_raw_response_score_responses(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.evals.runs.with_raw_response.score_responses(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         )
 
         assert response.is_closed is True
@@ -746,12 +691,7 @@ class TestAsyncRuns:
     async def test_streaming_response_score_responses(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.evals.runs.with_streaming_response.score_responses(
             eval_uuid="eval_uuid",
-            responses=[
-                {
-                    "content": "string",
-                    "prompt_uuid": "prompt_uuid",
-                }
-            ],
+            responses=[{"prompt_uuid": "prompt_uuid"}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
