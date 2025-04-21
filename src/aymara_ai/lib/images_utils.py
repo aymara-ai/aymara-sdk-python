@@ -42,7 +42,20 @@ def display_image_responses(
     exclusion_caption = "No image: Response excluded from scoring."
 
     def display_image_group(axs, images, captions):
+        max_lines = 5  # Maximum number of lines for captions
+        wrap_width = 35  # Width for text wrapping
+
+        def trim_caption(caption):
+            wrapped = textwrap.wrap(caption, width=wrap_width)
+            if len(wrapped) > max_lines:
+                trimmed = wrapped[:max_lines]
+                trimmed[-1] += "..."
+            else:
+                trimmed = wrapped
+            return "\n".join(trimmed)
+
         for ax, img_path, caption in zip(axs, images, captions):
+            trimmed_caption = trim_caption(caption)
             if caption.startswith("No image"):
                 ax.text(
                     0.5,
@@ -55,7 +68,7 @@ def display_image_responses(
                     wrap=True,
                 )
                 ax.set_title(
-                    "\n".join(textwrap.wrap(caption, width=30)),
+                    trimmed_caption,
                     fontsize=10,
                     wrap=True,
                     loc="left",
@@ -67,7 +80,7 @@ def display_image_responses(
                 img = mpimg.imread(img_path)
                 ax.imshow(img)
                 ax.set_title(
-                    "\n".join(textwrap.wrap(caption, width=30)),
+                    trimmed_caption,
                     fontsize=10,
                     wrap=True,
                     loc="left",
