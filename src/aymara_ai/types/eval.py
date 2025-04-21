@@ -1,14 +1,22 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List, Union, Optional
 from datetime import datetime
+from typing_extensions import TypeAlias
 
 from .._models import BaseModel
 from .shared.status import Status
 from .prompt_example import PromptExample
 from .shared.content_type import ContentType
 
-__all__ = ["Eval"]
+__all__ = ["Eval", "GroundTruth", "GroundTruthFileReference"]
+
+
+class GroundTruthFileReference(BaseModel):
+    remote_file_path: Optional[str] = None
+
+
+GroundTruth: TypeAlias = Union[str, GroundTruthFileReference, None]
 
 
 class Eval(BaseModel):
@@ -25,6 +33,8 @@ class Eval(BaseModel):
     eval_instructions: Optional[str] = None
 
     eval_uuid: Optional[str] = None
+
+    ground_truth: Optional[GroundTruth] = None
 
     is_jailbreak: Optional[bool] = None
 
