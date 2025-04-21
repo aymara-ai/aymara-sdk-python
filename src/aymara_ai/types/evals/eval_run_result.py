@@ -17,17 +17,17 @@ class ResponseContentFileReference(BaseModel):
     remote_file_path: Optional[str] = None
 
 
-ResponseContent: TypeAlias = Union[str, ResponseContentFileReference, None]
+ResponseContent: TypeAlias = Union[str, ResponseContentFileReference]
 
 
 class Response(BaseModel):
+    content: ResponseContent
+
     prompt_uuid: str
 
     ai_refused: Optional[bool] = None
 
     confidence: Optional[float] = None
-
-    content: Optional[ResponseContent] = None
 
     content_type: Optional[ContentType] = None
     """Content type for AI interactions."""
@@ -54,8 +54,6 @@ class EvalRunResult(BaseModel):
 
     eval_run_uuid: str
 
-    eval_uuid: str
-
     status: Status
     """Resource status."""
 
@@ -65,8 +63,6 @@ class EvalRunResult(BaseModel):
 
     evaluation: Optional[Eval] = None
     """Schema for configuring an Eval based on a eval_type."""
-
-    name: Optional[str] = None
 
     num_prompts: Optional[int] = None
 

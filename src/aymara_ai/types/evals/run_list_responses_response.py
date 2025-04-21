@@ -14,17 +14,17 @@ class ContentFileReference(BaseModel):
     remote_file_path: Optional[str] = None
 
 
-Content: TypeAlias = Union[str, ContentFileReference, None]
+Content: TypeAlias = Union[str, ContentFileReference]
 
 
 class RunListResponsesResponse(BaseModel):
+    content: Content
+
     prompt_uuid: str
 
     ai_refused: Optional[bool] = None
 
     confidence: Optional[float] = None
-
-    content: Optional[Content] = None
 
     content_type: Optional[ContentType] = None
     """Content type for AI interactions."""
