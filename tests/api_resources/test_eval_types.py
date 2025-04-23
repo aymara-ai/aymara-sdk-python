@@ -9,7 +9,7 @@ import pytest
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
-from aymara_ai.types import EvalTypeListResponse
+from aymara_ai.pagination import SyncOffsetPage, AsyncOffsetPage
 from aymara_ai.types.shared import EvalType
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -22,7 +22,16 @@ class TestEvalTypes:
     @parametrize
     def test_method_list(self, client: AymaraAI) -> None:
         eval_type = client.eval_types.list()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalType], eval_type, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_list_with_all_params(self, client: AymaraAI) -> None:
+        eval_type = client.eval_types.list(
+            limit=1,
+            offset=0,
+        )
+        assert_matches_type(SyncOffsetPage[EvalType], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -32,7 +41,7 @@ class TestEvalTypes:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_type = response.parse()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
+        assert_matches_type(SyncOffsetPage[EvalType], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -42,7 +51,7 @@ class TestEvalTypes:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_type = response.parse()
-            assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
+            assert_matches_type(SyncOffsetPage[EvalType], eval_type, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -96,7 +105,16 @@ class TestAsyncEvalTypes:
     @parametrize
     async def test_method_list(self, async_client: AsyncAymaraAI) -> None:
         eval_type = await async_client.eval_types.list()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalType], eval_type, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_list_with_all_params(self, async_client: AsyncAymaraAI) -> None:
+        eval_type = await async_client.eval_types.list(
+            limit=1,
+            offset=0,
+        )
+        assert_matches_type(AsyncOffsetPage[EvalType], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -106,7 +124,7 @@ class TestAsyncEvalTypes:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_type = await response.parse()
-        assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
+        assert_matches_type(AsyncOffsetPage[EvalType], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -116,7 +134,7 @@ class TestAsyncEvalTypes:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_type = await response.parse()
-            assert_matches_type(EvalTypeListResponse, eval_type, path=["response"])
+            assert_matches_type(AsyncOffsetPage[EvalType], eval_type, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

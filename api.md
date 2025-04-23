@@ -45,15 +45,9 @@ Methods:
 
 # EvalTypes
 
-Types:
-
-```python
-from aymara_ai.types import EvalTypeListResponse
-```
-
 Methods:
 
-- <code title="get /v2/eval-types">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list</a>() -> <a href="./src/aymara_ai/types/eval_type_list_response.py">EvalTypeListResponse</a></code>
+- <code title="get /v2/eval-types">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_type_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/shared/eval_type.py">SyncOffsetPage[EvalType]</a></code>
 - <code title="get /v2/eval-types/{eval_type_uuid}">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">get</a>(eval_type_uuid) -> <a href="./src/aymara_ai/types/shared/eval_type.py">EvalType</a></code>
 
 # Reports
