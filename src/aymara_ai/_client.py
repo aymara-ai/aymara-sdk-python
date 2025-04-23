@@ -19,11 +19,7 @@ from ._types import (
     ProxiesTypes,
     RequestOptions,
 )
-from ._utils import (
-    is_given,
-    get_async_library,
-    maybe_coerce_boolean,
-)
+from ._utils import is_given, get_async_library, maybe_coerce_boolean
 from ._version import __version__
 from .resources import files, health, reports, eval_types
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
