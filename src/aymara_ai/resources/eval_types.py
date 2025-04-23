@@ -57,12 +57,6 @@ class EvalTypesResource(SyncAPIResource):
         """
         List all available eval types.
 
-        Returns: list[EvalTypeSchema]: List of available eval types.
-
-        Raises: AymaraAPIError: If the request is invalid.
-
-        Example: GET /api/eval-types
-
         Args:
           extra_headers: Send extra headers
 
@@ -103,15 +97,7 @@ class EvalTypesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalType:
         """
-        Retrieve a specific eval type by its UUID.
-
-        Args: eval_type_uuid (str): UUID of the eval type to retrieve.
-
-        Returns: EvalTypeSchema: The eval type data.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/{eval_type_uuid}
+        Get a specific eval type by UUID.
 
         Args:
           extra_headers: Send extra headers
@@ -168,12 +154,6 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         """
         List all available eval types.
 
-        Returns: list[EvalTypeSchema]: List of available eval types.
-
-        Raises: AymaraAPIError: If the request is invalid.
-
-        Example: GET /api/eval-types
-
         Args:
           extra_headers: Send extra headers
 
@@ -214,15 +194,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalType:
         """
-        Retrieve a specific eval type by its UUID.
-
-        Args: eval_type_uuid (str): UUID of the eval type to retrieve.
-
-        Returns: EvalTypeSchema: The eval type data.
-
-        Raises: AymaraAPIError: If the eval type is not found.
-
-        Example: GET /api/eval-types/{eval_type_uuid}
+        Get a specific eval type by UUID.
 
         Args:
           extra_headers: Send extra headers
