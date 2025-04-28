@@ -56,10 +56,19 @@ class FilesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FileCreateResponse:
         """
-        Upload a file and get a file UUID.
+        Requests to upload one or more files to be used in an eval run.
 
-        This function delegates to the get_image_presigned_urls function to get
-        presigned URLs for file uploads.
+        Args: upload_request (FileUploadRequest): Contains the files to upload and the
+        workspace UUID.
+
+        Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
+        file.
+
+        Raises: AymaraAPIError: If the organization is missing or file upload fails.
+
+        Example: POST /api/files { "workspace_uuid": "...", "files": [
+        {"local_file_path": "path/to/file1.csv"}, {"local_file_path":
+        "path/to/file2.csv"} ] }
 
         Args:
           extra_headers: Send extra headers
@@ -119,10 +128,19 @@ class AsyncFilesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FileCreateResponse:
         """
-        Upload a file and get a file UUID.
+        Requests to upload one or more files to be used in an eval run.
 
-        This function delegates to the get_image_presigned_urls function to get
-        presigned URLs for file uploads.
+        Args: upload_request (FileUploadRequest): Contains the files to upload and the
+        workspace UUID.
+
+        Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
+        file.
+
+        Raises: AymaraAPIError: If the organization is missing or file upload fails.
+
+        Example: POST /api/files { "workspace_uuid": "...", "files": [
+        {"local_file_path": "path/to/file1.csv"}, {"local_file_path":
+        "path/to/file2.csv"} ] }
 
         Args:
           extra_headers: Send extra headers
