@@ -20,7 +20,7 @@ or products provided by Aymara AI please follow the respective company's securit
 
 ### Aymara AI Terms and Policies
 
-Please contact dev-feedback@aymara.ai for any questions or concerns regarding security of our services.
+Please contact support@aymara.ai for any questions or concerns regarding security of our services.
 
 ---
 
