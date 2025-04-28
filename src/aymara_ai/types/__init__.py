@@ -19,6 +19,6 @@ from .file_create_response import FileCreateResponse as FileCreateResponse
 from .prompt_example_param import PromptExampleParam as PromptExampleParam
 from .report_create_params import ReportCreateParams as ReportCreateParams
 from .report_delete_params import ReportDeleteParams as ReportDeleteParams
+from .eval_type_list_params import EvalTypeListParams as EvalTypeListParams
 from .eval_run_example_param import EvalRunExampleParam as EvalRunExampleParam
-from .eval_type_list_response import EvalTypeListResponse as EvalTypeListResponse
 from .eval_list_prompts_params import EvalListPromptsParams as EvalListPromptsParams
