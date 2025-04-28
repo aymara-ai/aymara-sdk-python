@@ -1,11 +1,11 @@
 [project]
-name = "aymara-ai"
-version = "0.0.1-alpha.0"
+name = "aymara-ai-sdk"
+version = "1.0.0-alpha.1"
 description = "The official Python library for the aymara-ai API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Aymara AI", email = "dev-feedback@aymara.ai" },
+{ name = "Aymara AI", email = "support@aymara.ai" },
 ]
 dependencies = [
     "httpx>=0.23.0, <1",
@@ -36,8 +36,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/stainless-sdks/aymara-sdk-python"
-Repository = "https://github.com/stainless-sdks/aymara-sdk-python"
+Homepage = "https://github.com/aymara-ai/aymara-sdk-python"
+Repository = "https://github.com/aymara-ai/aymara-sdk-python"
 
 
 [tool.rye]
@@ -59,6 +59,9 @@ dev-dependencies = [
     "ipykernel>=6.29.5",
     "openai>=1.75.0",
     "python-dotenv>=1.1.0",
+    "boto3>=1.37.37",
+    "requests>=2.32.3",
+    "pillow>=11.2.1",
 ]
 
 [tool.rye.scripts]
@@ -126,7 +129,7 @@ path = "README.md"
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 # replace relative links with absolute links
 pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
-replacement = '[\1](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/\g<2>)'
+replacement = '[\1](https://github.com/aymara-ai/aymara-sdk-python/tree/main/\g<2>)'
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -15,6 +15,4 @@ class FileCreateParams(TypedDict, total=False):
 
 
 class File(TypedDict, total=False):
-    file_uuid: Required[str]
-
-    file_path: Optional[str]
+    local_file_path: Optional[str]

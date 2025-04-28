@@ -1,6 +1,6 @@
 # Aymara AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/aymara-ai.svg)](https://pypi.org/project/aymara-ai/)
+[![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg)](https://pypi.org/project/aymara-ai-sdk/)
 
 The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -17,6 +17,10 @@ The REST API documentation can be found on [docs.aymara.ai](https://docs.aymara.
 ```sh
 # install from this staging repo
 pip install git+ssh://git@github.com/stainless-sdks/aymara-sdk-python.git
+# install from the production repo
+pip install git+ssh://git@github.com/aymara-ai/aymara-sdk-python.git
+# install from PyPI
+pip install --pre aymara-ai
 ```
 
 > [!NOTE]
@@ -38,12 +42,7 @@ client = AymaraAI(
 
 eval_run_result = client.evals.runs.create(
     eval_uuid="eval_uuid",
-    responses=[
-        {
-            "content": "content",
-            "prompt_uuid": "prompt_uuid",
-        }
-    ],
+    responses=[{"prompt_uuid": "prompt_uuid"}],
 )
 print(eval_run_result.eval_run_uuid)
 ```
@@ -72,12 +71,7 @@ client = AsyncAymaraAI(
 async def main() -> None:
     eval_run_result = await client.evals.runs.create(
         eval_uuid="eval_uuid",
-        responses=[
-            {
-                "content": "content",
-                "prompt_uuid": "prompt_uuid",
-            }
-        ],
+        responses=[{"prompt_uuid": "prompt_uuid"}],
     )
     print(eval_run_result.eval_run_uuid)
 
@@ -242,9 +236,9 @@ eval = response.parse()  # get the object that `evals.create()` would have retur
 print(eval.eval_uuid)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara_ai/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/aymara-ai/aymara-sdk-python/tree/main/src/aymara_ai/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/aymara-sdk-python/tree/main/src/aymara_ai/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/aymara-ai/aymara-sdk-python/tree/main/src/aymara_ai/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -352,7 +346,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/aymara-sdk-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/aymara-ai/aymara-sdk-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

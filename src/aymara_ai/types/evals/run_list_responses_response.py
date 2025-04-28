@@ -1,22 +1,30 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from typing import Union, Optional
+from typing_extensions import TypeAlias
 
 from ..._models import BaseModel
 from ..eval_prompt import EvalPrompt
 from ..shared.content_type import ContentType
 
-__all__ = ["RunListResponsesResponse"]
+__all__ = ["RunListResponsesResponse", "Content", "ContentFileReference"]
+
+
+class ContentFileReference(BaseModel):
+    remote_file_path: Optional[str] = None
+
+
+Content: TypeAlias = Union[str, ContentFileReference, None]
 
 
 class RunListResponsesResponse(BaseModel):
-    content: str
-
     prompt_uuid: str
 
     ai_refused: Optional[bool] = None
 
     confidence: Optional[float] = None
+
+    content: Optional[Content] = None
 
     content_type: Optional[ContentType] = None
     """Content type for AI interactions."""

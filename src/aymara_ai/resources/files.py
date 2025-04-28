@@ -8,10 +8,7 @@ import httpx
 
 from ..types import file_create_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -33,7 +30,7 @@ class FilesResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return FilesResourceWithRawResponse(self)
 
@@ -42,7 +39,7 @@ class FilesResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
         """
         return FilesResourceWithStreamingResponse(self)
 
@@ -59,10 +56,19 @@ class FilesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FileCreateResponse:
         """
-        Upload a file and get a file UUID.
+        Requests to upload one or more files to be used in an eval run.
 
-        This function delegates to the get_image_presigned_urls function to get
-        presigned URLs for file uploads.
+        Args: upload_request (FileUploadRequest): Contains the files to upload and the
+        workspace UUID.
+
+        Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
+        file.
+
+        Raises: AymaraAPIError: If the organization is missing or file upload fails.
+
+        Example: POST /api/files { "workspace_uuid": "...", "files": [
+        {"local_file_path": "path/to/file1.csv"}, {"local_file_path":
+        "path/to/file2.csv"} ] }
 
         Args:
           extra_headers: Send extra headers
@@ -96,7 +102,7 @@ class AsyncFilesResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return AsyncFilesResourceWithRawResponse(self)
 
@@ -105,7 +111,7 @@ class AsyncFilesResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
         """
         return AsyncFilesResourceWithStreamingResponse(self)
 
@@ -122,10 +128,19 @@ class AsyncFilesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FileCreateResponse:
         """
-        Upload a file and get a file UUID.
+        Requests to upload one or more files to be used in an eval run.
 
-        This function delegates to the get_image_presigned_urls function to get
-        presigned URLs for file uploads.
+        Args: upload_request (FileUploadRequest): Contains the files to upload and the
+        workspace UUID.
+
+        Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
+        file.
+
+        Raises: AymaraAPIError: If the organization is missing or file upload fails.
+
+        Example: POST /api/files { "workspace_uuid": "...", "files": [
+        {"local_file_path": "path/to/file1.csv"}, {"local_file_path":
+        "path/to/file2.csv"} ] }
 
         Args:
           extra_headers: Send extra headers

@@ -8,10 +8,7 @@ import httpx
 
 from ..types import report_get_params, report_list_params, report_create_params, report_delete_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -34,7 +31,7 @@ class ReportsResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return ReportsResourceWithRawResponse(self)
 
@@ -43,7 +40,7 @@ class ReportsResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
         """
         return ReportsResourceWithStreamingResponse(self)
 
@@ -62,10 +59,6 @@ class ReportsResource(SyncAPIResource):
     ) -> EvalSuiteReport:
         """
         Create a summary for a suite of eval runs.
-
-        This function converts the EvalRunSuiteSummaryInSchema to
-        ScoreRunSuiteSummaryInSchema and delegates to the create_score_run_suite_summary
-        function.
 
         Args:
           extra_headers: Send extra headers
@@ -111,8 +104,6 @@ class ReportsResource(SyncAPIResource):
         """
         List all eval run suite summaries, with optional filtering.
 
-        This function delegates to the list_score_run_suite_summaries function.
-
         Args:
           extra_headers: Send extra headers
 
@@ -155,9 +146,7 @@ class ReportsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
         """
-        Delete an eval run suite summary.
-
-        This function delegates to the delete_score_run_suite_summary function.
+        Delete an eval run suite report.
 
         Args:
           extra_headers: Send extra headers
@@ -196,9 +185,7 @@ class ReportsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalSuiteReport:
         """
-        Get a specific eval run suite summary by UUID.
-
-        This function delegates to the get_score_run_suite_summary function.
+        Get a specific eval run suite report by UUID.
 
         Args:
           extra_headers: Send extra headers
@@ -231,7 +218,7 @@ class AsyncReportsResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#accessing-raw-response-data-eg-headers
         """
         return AsyncReportsResourceWithRawResponse(self)
 
@@ -240,7 +227,7 @@ class AsyncReportsResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/aymara-sdk-python#with_streaming_response
+        For more information, see https://www.github.com/aymara-ai/aymara-sdk-python#with_streaming_response
         """
         return AsyncReportsResourceWithStreamingResponse(self)
 
@@ -259,10 +246,6 @@ class AsyncReportsResource(AsyncAPIResource):
     ) -> EvalSuiteReport:
         """
         Create a summary for a suite of eval runs.
-
-        This function converts the EvalRunSuiteSummaryInSchema to
-        ScoreRunSuiteSummaryInSchema and delegates to the create_score_run_suite_summary
-        function.
 
         Args:
           extra_headers: Send extra headers
@@ -310,8 +293,6 @@ class AsyncReportsResource(AsyncAPIResource):
         """
         List all eval run suite summaries, with optional filtering.
 
-        This function delegates to the list_score_run_suite_summaries function.
-
         Args:
           extra_headers: Send extra headers
 
@@ -354,9 +335,7 @@ class AsyncReportsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
         """
-        Delete an eval run suite summary.
-
-        This function delegates to the delete_score_run_suite_summary function.
+        Delete an eval run suite report.
 
         Args:
           extra_headers: Send extra headers
@@ -397,9 +376,7 @@ class AsyncReportsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalSuiteReport:
         """
-        Get a specific eval run suite summary by UUID.
-
-        This function delegates to the get_score_run_suite_summary function.
+        Get a specific eval run suite report by UUID.
 
         Args:
           extra_headers: Send extra headers
