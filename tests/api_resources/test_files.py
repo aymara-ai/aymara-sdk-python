@@ -21,7 +21,7 @@ class TestFiles:
     @parametrize
     def test_method_create(self, client: AymaraAI) -> None:
         file = client.files.create(
-            files=[{"file_uuid": "file_uuid"}],
+            files=[{}],
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
@@ -29,12 +29,7 @@ class TestFiles:
     @parametrize
     def test_method_create_with_all_params(self, client: AymaraAI) -> None:
         file = client.files.create(
-            files=[
-                {
-                    "file_uuid": "file_uuid",
-                    "file_path": "file_path",
-                }
-            ],
+            files=[{"local_file_path": "local_file_path"}],
             workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
@@ -43,7 +38,7 @@ class TestFiles:
     @parametrize
     def test_raw_response_create(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.create(
-            files=[{"file_uuid": "file_uuid"}],
+            files=[{}],
         )
 
         assert response.is_closed is True
@@ -55,7 +50,7 @@ class TestFiles:
     @parametrize
     def test_streaming_response_create(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.create(
-            files=[{"file_uuid": "file_uuid"}],
+            files=[{}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -73,7 +68,7 @@ class TestAsyncFiles:
     @parametrize
     async def test_method_create(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.create(
-            files=[{"file_uuid": "file_uuid"}],
+            files=[{}],
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
@@ -81,12 +76,7 @@ class TestAsyncFiles:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.create(
-            files=[
-                {
-                    "file_uuid": "file_uuid",
-                    "file_path": "file_path",
-                }
-            ],
+            files=[{"local_file_path": "local_file_path"}],
             workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
@@ -95,7 +85,7 @@ class TestAsyncFiles:
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.create(
-            files=[{"file_uuid": "file_uuid"}],
+            files=[{}],
         )
 
         assert response.is_closed is True
@@ -107,7 +97,7 @@ class TestAsyncFiles:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.create(
-            files=[{"file_uuid": "file_uuid"}],
+            files=[{}],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

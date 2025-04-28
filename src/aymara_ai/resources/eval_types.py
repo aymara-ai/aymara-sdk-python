@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import httpx
 
+from ..types import eval_type_list_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from .._utils import maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -13,9 +15,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncOffsetPage, AsyncOffsetPage
+from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.eval_type import EvalType
-from ..types.eval_type_list_response import EvalTypeListResponse
 
 __all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]
 
@@ -43,20 +45,50 @@ class EvalTypesResource(SyncAPIResource):
     def list(
         self,
         *,
+        limit: int | NotGiven = NOT_GIVEN,
+        offset: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalTypeListResponse:
-        """List all available eval types."""
-        return self._get(
+    ) -> SyncOffsetPage[EvalType]:
+        """
+        List all available eval types.
+
+        Returns: list[EvalTypeSchema]: List of available eval types.
+
+        Raises: AymaraAPIError: If the request is invalid.
+
+        Example: GET /api/eval-types
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
             "/v2/eval-types",
+            page=SyncOffsetPage[EvalType],
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                    },
+                    eval_type_list_params.EvalTypeListParams,
+                ),
             ),
-            cast_to=EvalTypeListResponse,
+            model=EvalType,
         )
 
     def get(
@@ -71,7 +103,15 @@ class EvalTypesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalType:
         """
-        Get a specific eval type by UUID.
+        Retrieve a specific eval type by its UUID.
+
+        Args: eval_type_uuid (str): UUID of the eval type to retrieve.
+
+        Returns: EvalTypeSchema: The eval type data.
+
+        Raises: AymaraAPIError: If the eval type is not found.
+
+        Example: GET /api/eval-types/{eval_type_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -113,23 +153,53 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         """
         return AsyncEvalTypesResourceWithStreamingResponse(self)
 
-    async def list(
+    def list(
         self,
         *,
+        limit: int | NotGiven = NOT_GIVEN,
+        offset: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalTypeListResponse:
-        """List all available eval types."""
-        return await self._get(
+    ) -> AsyncPaginator[EvalType, AsyncOffsetPage[EvalType]]:
+        """
+        List all available eval types.
+
+        Returns: list[EvalTypeSchema]: List of available eval types.
+
+        Raises: AymaraAPIError: If the request is invalid.
+
+        Example: GET /api/eval-types
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
             "/v2/eval-types",
+            page=AsyncOffsetPage[EvalType],
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                    },
+                    eval_type_list_params.EvalTypeListParams,
+                ),
             ),
-            cast_to=EvalTypeListResponse,
+            model=EvalType,
         )
 
     async def get(
@@ -144,7 +214,15 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalType:
         """
-        Get a specific eval type by UUID.
+        Retrieve a specific eval type by its UUID.
+
+        Args: eval_type_uuid (str): UUID of the eval type to retrieve.
+
+        Returns: EvalTypeSchema: The eval type data.
+
+        Raises: AymaraAPIError: If the eval type is not found.
+
+        Example: GET /api/eval-types/{eval_type_uuid}
 
         Args:
           extra_headers: Send extra headers

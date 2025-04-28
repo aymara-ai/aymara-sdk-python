@@ -1,7 +1,8 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List, Union, Optional
 from datetime import datetime
+from typing_extensions import TypeAlias
 
 from ..eval import Eval
 from ..._models import BaseModel
@@ -9,17 +10,24 @@ from ..eval_prompt import EvalPrompt
 from ..shared.status import Status
 from ..shared.content_type import ContentType
 
-__all__ = ["EvalRunResult", "Response"]
+__all__ = ["EvalRunResult", "Response", "ResponseContent", "ResponseContentFileReference"]
+
+
+class ResponseContentFileReference(BaseModel):
+    remote_file_path: Optional[str] = None
+
+
+ResponseContent: TypeAlias = Union[str, ResponseContentFileReference, None]
 
 
 class Response(BaseModel):
-    content: str
-
     prompt_uuid: str
 
     ai_refused: Optional[bool] = None
 
     confidence: Optional[float] = None
+
+    content: Optional[ResponseContent] = None
 
     content_type: Optional[ContentType] = None
     """Content type for AI interactions."""
@@ -46,6 +54,8 @@ class EvalRunResult(BaseModel):
 
     eval_run_uuid: str
 
+    eval_uuid: str
+
     status: Status
     """Resource status."""
 
@@ -55,6 +65,8 @@ class EvalRunResult(BaseModel):
 
     evaluation: Optional[Eval] = None
     """Schema for configuring an Eval based on a eval_type."""
+
+    name: Optional[str] = None
 
     num_prompts: Optional[int] = None
 

@@ -23,10 +23,7 @@ from ...types import (
     eval_list_prompts_params,
 )
 from ..._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
-from ..._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -80,6 +77,7 @@ class EvalsResource(SyncAPIResource):
         created_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
         eval_instructions: Optional[str] | NotGiven = NOT_GIVEN,
         eval_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        ground_truth: Optional[eval_create_params.GroundTruth] | NotGiven = NOT_GIVEN,
         is_jailbreak: bool | NotGiven = NOT_GIVEN,
         is_sandbox: bool | NotGiven = NOT_GIVEN,
         language: Optional[str] | NotGiven = NOT_GIVEN,
@@ -97,10 +95,16 @@ class EvalsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Eval:
         """
-        Create a new eval using a template configuration.
+        Create a new eval using an eval type configuration.
 
-        This function converts the EvalInSchema to TestInSchema and delegates to the
-        create_test function.
+        Args: eval_request (Eval): Data for the eval to create, including eval type and
+        configuration.
+
+        Returns: Eval: The created eval object.
+
+        Raises: AymaraAPIError: If the workspace is not found or the request is invalid.
+
+        Example: POST /api/evals { "eval_type": "...", "workspace_uuid": "...", ... }
 
         Args:
           modality: Content type for AI interactions.
@@ -126,6 +130,7 @@ class EvalsResource(SyncAPIResource):
                     "created_at": created_at,
                     "eval_instructions": eval_instructions,
                     "eval_uuid": eval_uuid,
+                    "ground_truth": ground_truth,
                     "is_jailbreak": is_jailbreak,
                     "is_sandbox": is_sandbox,
                     "language": language,
@@ -160,9 +165,13 @@ class EvalsResource(SyncAPIResource):
         """
         List all evals, with optional filtering.
 
-        Args: workspace_uuid: Optional workspace UUID for filtering
+        Args: workspace_uuid (str, optional): Optional workspace UUID for filtering.
 
-        Returns: List of evals
+        Returns: list[Eval]: List of evals matching the filter.
+
+        Raises: AymaraAPIError: If the request is invalid.
+
+        Example: GET /api/evals?workspace_uuid=...
 
         Args:
           extra_headers: Send extra headers
@@ -205,13 +214,18 @@ class EvalsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
-        """
-        Delete an eval.
+        """Delete an eval.
 
-        Args: eval_uuid: UUID of the eval to delete workspace_uuid: Optional workspace
-        UUID for filtering
+        Args: eval_uuid (str): UUID of the eval to delete.
 
-        Returns: 204 No Content on success
+        workspace_uuid (str,
+        optional): Optional workspace UUID for filtering.
+
+        Returns: None
+
+        Raises: AymaraAPIError: If the eval is not found.
+
+        Example: DELETE /api/evals/{eval_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -250,12 +264,16 @@ class EvalsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Eval:
         """
-        Get a specific eval by UUID.
+        Retrieve a specific eval by its UUID.
 
-        Args: eval_uuid: UUID of the eval to retrieve workspace_uuid: Optional workspace
-        UUID for filtering
+        Args: eval_uuid (str): UUID of the eval to retrieve. workspace_uuid (str,
+        optional): Optional workspace UUID for filtering.
 
-        Returns: The eval data
+        Returns: Eval: The eval data.
+
+        Raises: AymaraAPIError: If the eval is not found.
+
+        Example: GET /api/evals/{eval_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -295,12 +313,16 @@ class EvalsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> SyncOffsetPage[EvalPrompt]:
         """
-        Find and return prompts for an eval if they exist.
+        Retrieve prompts for a specific eval if they exist.
 
-        Args: eval_uuid: UUID of the eval to get questions for workspace_uuid: Optional
-        workspace UUID for filtering
+        Args: eval_uuid (str): UUID of the eval to get prompts for. workspace_uuid (str,
+        optional): Optional workspace UUID for filtering.
 
-        Returns: List of questions and metadata
+        Returns: list[EvalPrompt]: List of prompts and metadata for the eval.
+
+        Raises: AymaraAPIError: If the eval is not found.
+
+        Example: GET /api/evals/{eval_uuid}/prompts
 
         Args:
           extra_headers: Send extra headers
@@ -368,6 +390,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         created_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
         eval_instructions: Optional[str] | NotGiven = NOT_GIVEN,
         eval_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        ground_truth: Optional[eval_create_params.GroundTruth] | NotGiven = NOT_GIVEN,
         is_jailbreak: bool | NotGiven = NOT_GIVEN,
         is_sandbox: bool | NotGiven = NOT_GIVEN,
         language: Optional[str] | NotGiven = NOT_GIVEN,
@@ -385,10 +408,16 @@ class AsyncEvalsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Eval:
         """
-        Create a new eval using a template configuration.
+        Create a new eval using an eval type configuration.
 
-        This function converts the EvalInSchema to TestInSchema and delegates to the
-        create_test function.
+        Args: eval_request (Eval): Data for the eval to create, including eval type and
+        configuration.
+
+        Returns: Eval: The created eval object.
+
+        Raises: AymaraAPIError: If the workspace is not found or the request is invalid.
+
+        Example: POST /api/evals { "eval_type": "...", "workspace_uuid": "...", ... }
 
         Args:
           modality: Content type for AI interactions.
@@ -414,6 +443,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     "created_at": created_at,
                     "eval_instructions": eval_instructions,
                     "eval_uuid": eval_uuid,
+                    "ground_truth": ground_truth,
                     "is_jailbreak": is_jailbreak,
                     "is_sandbox": is_sandbox,
                     "language": language,
@@ -448,9 +478,13 @@ class AsyncEvalsResource(AsyncAPIResource):
         """
         List all evals, with optional filtering.
 
-        Args: workspace_uuid: Optional workspace UUID for filtering
+        Args: workspace_uuid (str, optional): Optional workspace UUID for filtering.
 
-        Returns: List of evals
+        Returns: list[Eval]: List of evals matching the filter.
+
+        Raises: AymaraAPIError: If the request is invalid.
+
+        Example: GET /api/evals?workspace_uuid=...
 
         Args:
           extra_headers: Send extra headers
@@ -493,13 +527,18 @@ class AsyncEvalsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
-        """
-        Delete an eval.
+        """Delete an eval.
 
-        Args: eval_uuid: UUID of the eval to delete workspace_uuid: Optional workspace
-        UUID for filtering
+        Args: eval_uuid (str): UUID of the eval to delete.
 
-        Returns: 204 No Content on success
+        workspace_uuid (str,
+        optional): Optional workspace UUID for filtering.
+
+        Returns: None
+
+        Raises: AymaraAPIError: If the eval is not found.
+
+        Example: DELETE /api/evals/{eval_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -540,12 +579,16 @@ class AsyncEvalsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Eval:
         """
-        Get a specific eval by UUID.
+        Retrieve a specific eval by its UUID.
 
-        Args: eval_uuid: UUID of the eval to retrieve workspace_uuid: Optional workspace
-        UUID for filtering
+        Args: eval_uuid (str): UUID of the eval to retrieve. workspace_uuid (str,
+        optional): Optional workspace UUID for filtering.
 
-        Returns: The eval data
+        Returns: Eval: The eval data.
+
+        Raises: AymaraAPIError: If the eval is not found.
+
+        Example: GET /api/evals/{eval_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -585,12 +628,16 @@ class AsyncEvalsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncPaginator[EvalPrompt, AsyncOffsetPage[EvalPrompt]]:
         """
-        Find and return prompts for an eval if they exist.
+        Retrieve prompts for a specific eval if they exist.
 
-        Args: eval_uuid: UUID of the eval to get questions for workspace_uuid: Optional
-        workspace UUID for filtering
+        Args: eval_uuid (str): UUID of the eval to get prompts for. workspace_uuid (str,
+        optional): Optional workspace UUID for filtering.
 
-        Returns: List of questions and metadata
+        Returns: list[EvalPrompt]: List of prompts and metadata for the eval.
+
+        Raises: AymaraAPIError: If the eval is not found.
+
+        Example: GET /api/evals/{eval_uuid}/prompts
 
         Args:
           extra_headers: Send extra headers
