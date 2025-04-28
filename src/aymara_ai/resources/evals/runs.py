@@ -76,8 +76,16 @@ class RunsResource(SyncAPIResource):
         """
         Create a new eval run for an eval.
 
-        This function converts the EvalRunInSchema to ScoreRunInSchema and delegates to
-        the create_score_run function.
+        Args: eval_run_data (EvalRunRequest): Data for the eval run to create.
+        workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+        is_sandbox (bool, optional): Whether to run in sandbox mode. Defaults to None.
+
+        Returns: EvalRunResult: The created eval run result.
+
+        Raises: AymaraAPIError: If the organization is missing or the request is
+        invalid.
+
+        Example: POST /api/eval-runs { "eval_uuid": "...", ... }
 
         Args:
           extra_headers: Send extra headers
@@ -135,7 +143,14 @@ class RunsResource(SyncAPIResource):
         """
         List all eval runs, with optional filtering.
 
-        This function delegates to the list_score_runs function.
+        Args: eval_uuid (str, optional): UUID of the eval to filter runs by. Defaults to
+        None. workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: list[EvalRunResult]: List of eval runs matching the filters.
+
+        Raises: AymaraAPIError: If the organization is missing.
+
+        Example: GET /api/eval-runs?eval_uuid=...&workspace_uuid=...
 
         Args:
           extra_headers: Send extra headers
@@ -179,10 +194,19 @@ class RunsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
-        """
-        Delete an eval run.
+        """Delete an eval run.
 
-        This function delegates to the delete_score_run function.
+        Args: eval_run_uuid (str): UUID of the eval run to delete.
+
+        workspace_uuid (str,
+        optional): UUID of the workspace. Defaults to None.
+
+        Returns: None
+
+        Raises: AymaraAPIError: If the organization is missing or the eval run is not
+        found.
+
+        Example: DELETE /api/eval-runs/{eval_run_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -221,9 +245,17 @@ class RunsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalRunResult:
         """
-        Get a specific eval run by UUID.
+        Retrieve a specific eval run by its UUID.
 
-        This function delegates to the get_score_run function.
+        Args: eval_run_uuid (str): UUID of the eval run to retrieve. workspace_uuid
+        (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: EvalRunResult: The eval run data.
+
+        Raises: AymaraAPIError: If the organization is missing or the eval run is not
+        found.
+
+        Example: GET /api/eval-runs/{eval_run_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -263,9 +295,17 @@ class RunsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> SyncOffsetPage[RunListResponsesResponse]:
         """
-        Get responses for a specific eval run.
+        Retrieve all responses for a specific eval run.
 
-        This function delegates to the get_score_run_answers function.
+        Args: eval_run_uuid (str): UUID of the eval run to retrieve responses for.
+        workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: list[EvalScoredResponse]: List of scored responses for the eval run.
+
+        Raises: AymaraAPIError: If the organization is missing or the eval run is not
+        found.
+
+        Example: GET /api/eval-runs/{eval_run_uuid}/responses
 
         Args:
           extra_headers: Send extra headers
@@ -317,10 +357,21 @@ class RunsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalRunResult:
-        """Run the eval with the provided responses.
+        """
+        Run the eval with the provided responses.
 
-        This function is used to submit AI
-        responses to the eval prompts.
+        Args: eval_run_data (EvalRunRequest): Data for the eval run, including
+        responses. workspace_uuid (str, optional): UUID of the workspace. Defaults to
+        None. is_sandbox (bool, optional): Whether to run in sandbox mode. Defaults to
+        False.
+
+        Returns: EvalRunResult: The result of the eval run after scoring the responses.
+
+        Raises: AymaraAPIError: If the organization is missing or the request is
+        invalid.
+
+        Example: POST /api/eval-runs/-/score-responses { "eval_uuid": "...",
+        "responses": [...] }
 
         Args:
           extra_headers: Send extra headers
@@ -404,8 +455,16 @@ class AsyncRunsResource(AsyncAPIResource):
         """
         Create a new eval run for an eval.
 
-        This function converts the EvalRunInSchema to ScoreRunInSchema and delegates to
-        the create_score_run function.
+        Args: eval_run_data (EvalRunRequest): Data for the eval run to create.
+        workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+        is_sandbox (bool, optional): Whether to run in sandbox mode. Defaults to None.
+
+        Returns: EvalRunResult: The created eval run result.
+
+        Raises: AymaraAPIError: If the organization is missing or the request is
+        invalid.
+
+        Example: POST /api/eval-runs { "eval_uuid": "...", ... }
 
         Args:
           extra_headers: Send extra headers
@@ -463,7 +522,14 @@ class AsyncRunsResource(AsyncAPIResource):
         """
         List all eval runs, with optional filtering.
 
-        This function delegates to the list_score_runs function.
+        Args: eval_uuid (str, optional): UUID of the eval to filter runs by. Defaults to
+        None. workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: list[EvalRunResult]: List of eval runs matching the filters.
+
+        Raises: AymaraAPIError: If the organization is missing.
+
+        Example: GET /api/eval-runs?eval_uuid=...&workspace_uuid=...
 
         Args:
           extra_headers: Send extra headers
@@ -507,10 +573,19 @@ class AsyncRunsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
-        """
-        Delete an eval run.
+        """Delete an eval run.
 
-        This function delegates to the delete_score_run function.
+        Args: eval_run_uuid (str): UUID of the eval run to delete.
+
+        workspace_uuid (str,
+        optional): UUID of the workspace. Defaults to None.
+
+        Returns: None
+
+        Raises: AymaraAPIError: If the organization is missing or the eval run is not
+        found.
+
+        Example: DELETE /api/eval-runs/{eval_run_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -551,9 +626,17 @@ class AsyncRunsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalRunResult:
         """
-        Get a specific eval run by UUID.
+        Retrieve a specific eval run by its UUID.
 
-        This function delegates to the get_score_run function.
+        Args: eval_run_uuid (str): UUID of the eval run to retrieve. workspace_uuid
+        (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: EvalRunResult: The eval run data.
+
+        Raises: AymaraAPIError: If the organization is missing or the eval run is not
+        found.
+
+        Example: GET /api/eval-runs/{eval_run_uuid}
 
         Args:
           extra_headers: Send extra headers
@@ -593,9 +676,17 @@ class AsyncRunsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncPaginator[RunListResponsesResponse, AsyncOffsetPage[RunListResponsesResponse]]:
         """
-        Get responses for a specific eval run.
+        Retrieve all responses for a specific eval run.
 
-        This function delegates to the get_score_run_answers function.
+        Args: eval_run_uuid (str): UUID of the eval run to retrieve responses for.
+        workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: list[EvalScoredResponse]: List of scored responses for the eval run.
+
+        Raises: AymaraAPIError: If the organization is missing or the eval run is not
+        found.
+
+        Example: GET /api/eval-runs/{eval_run_uuid}/responses
 
         Args:
           extra_headers: Send extra headers
@@ -647,10 +738,21 @@ class AsyncRunsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalRunResult:
-        """Run the eval with the provided responses.
+        """
+        Run the eval with the provided responses.
 
-        This function is used to submit AI
-        responses to the eval prompts.
+        Args: eval_run_data (EvalRunRequest): Data for the eval run, including
+        responses. workspace_uuid (str, optional): UUID of the workspace. Defaults to
+        None. is_sandbox (bool, optional): Whether to run in sandbox mode. Defaults to
+        False.
+
+        Returns: EvalRunResult: The result of the eval run after scoring the responses.
+
+        Raises: AymaraAPIError: If the organization is missing or the request is
+        invalid.
+
+        Example: POST /api/eval-runs/-/score-responses { "eval_uuid": "...",
+        "responses": [...] }
 
         Args:
           extra_headers: Send extra headers

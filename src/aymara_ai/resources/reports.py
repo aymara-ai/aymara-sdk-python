@@ -60,10 +60,6 @@ class ReportsResource(SyncAPIResource):
         """
         Create a summary for a suite of eval runs.
 
-        This function converts the EvalRunSuiteSummaryInSchema to
-        ScoreRunSuiteSummaryInSchema and delegates to the create_score_run_suite_summary
-        function.
-
         Args:
           extra_headers: Send extra headers
 
@@ -108,8 +104,6 @@ class ReportsResource(SyncAPIResource):
         """
         List all eval run suite summaries, with optional filtering.
 
-        This function delegates to the list_score_run_suite_summaries function.
-
         Args:
           extra_headers: Send extra headers
 
@@ -152,9 +146,7 @@ class ReportsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
         """
-        Delete an eval run suite summary.
-
-        This function delegates to the delete_score_run_suite_summary function.
+        Delete an eval run suite report.
 
         Args:
           extra_headers: Send extra headers
@@ -193,9 +185,7 @@ class ReportsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalSuiteReport:
         """
-        Get a specific eval run suite summary by UUID.
-
-        This function delegates to the get_score_run_suite_summary function.
+        Get a specific eval run suite report by UUID.
 
         Args:
           extra_headers: Send extra headers
@@ -257,10 +247,6 @@ class AsyncReportsResource(AsyncAPIResource):
         """
         Create a summary for a suite of eval runs.
 
-        This function converts the EvalRunSuiteSummaryInSchema to
-        ScoreRunSuiteSummaryInSchema and delegates to the create_score_run_suite_summary
-        function.
-
         Args:
           extra_headers: Send extra headers
 
@@ -307,8 +293,6 @@ class AsyncReportsResource(AsyncAPIResource):
         """
         List all eval run suite summaries, with optional filtering.
 
-        This function delegates to the list_score_run_suite_summaries function.
-
         Args:
           extra_headers: Send extra headers
 
@@ -351,9 +335,7 @@ class AsyncReportsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
         """
-        Delete an eval run suite summary.
-
-        This function delegates to the delete_score_run_suite_summary function.
+        Delete an eval run suite report.
 
         Args:
           extra_headers: Send extra headers
@@ -394,9 +376,7 @@ class AsyncReportsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EvalSuiteReport:
         """
-        Get a specific eval run suite summary by UUID.
-
-        This function delegates to the get_score_run_suite_summary function.
+        Get a specific eval run suite report by UUID.
 
         Args:
           extra_headers: Send extra headers
