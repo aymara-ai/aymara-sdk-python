@@ -1,6 +1,6 @@
 # Aymara AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/aymara-ai.svg)](https://pypi.org/project/aymara-ai/)
+[![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg)](https://pypi.org/project/aymara-ai-sdk/)
 
 The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/stainless-sdks/aymara-sdk-python.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre aymara-ai`
+> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre aymara-ai-sdk`
 
 ## Usage
 
