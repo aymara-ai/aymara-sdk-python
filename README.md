@@ -20,11 +20,8 @@ pip install git+ssh://git@github.com/stainless-sdks/aymara-sdk-python.git
 # install from the production repo
 pip install git+ssh://git@github.com/aymara-ai/aymara-sdk-python.git
 # install from PyPI
-pip install --pre aymara-ai
+pip install --pre aymara-ai-sdk
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre aymara-ai`
 
 ## Usage
 
