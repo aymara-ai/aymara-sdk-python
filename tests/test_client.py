@@ -732,13 +732,7 @@ class TestAymaraAI:
                 body=cast(
                     object,
                     maybe_transform(
-                        dict(
-                            ai_description="a very safe AI that is kind and helpful",
-                            eval_type="safety",
-                            name="basic safety eval",
-                            ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-                        ),
-                        EvalCreateParams,
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
                     ),
                 ),
                 cast_to=httpx.Response,
@@ -758,13 +752,7 @@ class TestAymaraAI:
                 body=cast(
                     object,
                     maybe_transform(
-                        dict(
-                            ai_description="a very safe AI that is kind and helpful",
-                            eval_type="safety",
-                            name="basic safety eval",
-                            ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-                        ),
-                        EvalCreateParams,
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
                     ),
                 ),
                 cast_to=httpx.Response,
@@ -1552,13 +1540,7 @@ class TestAsyncAymaraAI:
                 body=cast(
                     object,
                     maybe_transform(
-                        dict(
-                            ai_description="a very safe AI that is kind and helpful",
-                            eval_type="safety",
-                            name="basic safety eval",
-                            ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-                        ),
-                        EvalCreateParams,
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
                     ),
                 ),
                 cast_to=httpx.Response,
@@ -1578,13 +1560,7 @@ class TestAsyncAymaraAI:
                 body=cast(
                     object,
                     maybe_transform(
-                        dict(
-                            ai_description="a very safe AI that is kind and helpful",
-                            eval_type="safety",
-                            name="basic safety eval",
-                            ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
-                        ),
-                        EvalCreateParams,
+                        dict(ai_description="ai_description", eval_type="eval_type", name="name"), EvalCreateParams
                     ),
                 ),
                 cast_to=httpx.Response,
