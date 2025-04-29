@@ -110,7 +110,7 @@ client = AymaraAI()
 all_evals = []
 # Automatically fetches more pages as needed.
 for eval in client.evals.list_prompts(
-    eval_uuid="eval_uuid",
+    eval_uuid="some-eval-uuid",
     limit=30,
 ):
     # Do something with eval here
@@ -131,7 +131,7 @@ async def main() -> None:
     all_evals = []
     # Iterate through items across all pages, issuing requests as needed.
     async for eval in client.evals.list_prompts(
-        eval_uuid="eval_uuid",
+        eval_uuid="some-eval-uuid",
         limit=30,
     ):
         all_evals.append(eval)
@@ -145,7 +145,7 @@ Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get
 
 ```python
 first_page = await client.evals.list_prompts(
-    eval_uuid="eval_uuid",
+    eval_uuid="some-eval-uuid",
     limit=30,
 )
 if first_page.has_next_page():
@@ -160,7 +160,7 @@ Or just work directly with the returned data:
 
 ```python
 first_page = await client.evals.list_prompts(
-    eval_uuid="eval_uuid",
+    eval_uuid="some-eval-uuid",
     limit=30,
 )
 
