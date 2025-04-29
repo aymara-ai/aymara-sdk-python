@@ -5,6 +5,7 @@ from __future__ import annotations
 from .eval import Eval as Eval
 from .shared import Status as Status, EvalType as EvalType, ContentType as ContentType
 from .eval_prompt import EvalPrompt as EvalPrompt
+from .file_reference import FileReference as FileReference
 from .prompt_example import PromptExample as PromptExample
 from .eval_get_params import EvalGetParams as EvalGetParams
 from .eval_list_params import EvalListParams as EvalListParams
@@ -16,6 +17,7 @@ from .file_create_params import FileCreateParams as FileCreateParams
 from .report_list_params import ReportListParams as ReportListParams
 from .eval_response_param import EvalResponseParam as EvalResponseParam
 from .file_create_response import FileCreateResponse as FileCreateResponse
+from .file_reference_param import FileReferenceParam as FileReferenceParam
 from .prompt_example_param import PromptExampleParam as PromptExampleParam
 from .report_create_params import ReportCreateParams as ReportCreateParams
 from .report_delete_params import ReportDeleteParams as ReportDeleteParams

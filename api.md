@@ -15,7 +15,14 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import Eval, EvalPrompt, EvalResponse, EvalRunExample, PromptExample
+from aymara_ai.types import (
+    Eval,
+    EvalPrompt,
+    EvalResponse,
+    EvalRunExample,
+    FileReference,
+    PromptExample,
+)
 ```
 
 Methods:

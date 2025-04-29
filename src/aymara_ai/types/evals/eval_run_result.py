@@ -8,16 +8,12 @@ from ..eval import Eval
 from ..._models import BaseModel
 from ..eval_prompt import EvalPrompt
 from ..shared.status import Status
+from ..file_reference import FileReference
 from ..shared.content_type import ContentType
 
-__all__ = ["EvalRunResult", "Response", "ResponseContent", "ResponseContentFileReference"]
+__all__ = ["EvalRunResult", "Response", "ResponseContent"]
 
-
-class ResponseContentFileReference(BaseModel):
-    remote_file_path: Optional[str] = None
-
-
-ResponseContent: TypeAlias = Union[str, ResponseContentFileReference, None]
+ResponseContent: TypeAlias = Union[str, FileReference, None]
 
 
 class Response(BaseModel):

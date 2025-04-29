@@ -9,9 +9,10 @@ from typing_extensions import Required, Annotated, TypeAlias, TypedDict
 from .._utils import PropertyInfo
 from .shared.status import Status
 from .shared.content_type import ContentType
+from .file_reference_param import FileReferenceParam
 from .prompt_example_param import PromptExampleParam
 
-__all__ = ["EvalCreateParams", "GroundTruth", "GroundTruthFileReference"]
+__all__ = ["EvalCreateParams", "GroundTruth"]
 
 
 class EvalCreateParams(TypedDict, total=False):
@@ -52,8 +53,4 @@ class EvalCreateParams(TypedDict, total=False):
     workspace_uuid: Optional[str]
 
 
-class GroundTruthFileReference(TypedDict, total=False):
-    remote_file_path: Optional[str]
-
-
-GroundTruth: TypeAlias = Union[str, GroundTruthFileReference]
+GroundTruth: TypeAlias = Union[str, FileReferenceParam]
