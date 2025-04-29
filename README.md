@@ -15,10 +15,6 @@ The REST API documentation can be found on [docs.aymara.ai](https://docs.aymara.
 ## Installation
 
 ```sh
-# install from this staging repo
-pip install git+ssh://git@github.com/stainless-sdks/aymara-sdk-python.git
-# install from the production repo
-pip install git+ssh://git@github.com/aymara-ai/aymara-sdk-python.git
 # install from PyPI
 pip install --pre aymara-ai-sdk
 ```
