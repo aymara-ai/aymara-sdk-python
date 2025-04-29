@@ -6,17 +6,13 @@ from typing_extensions import TypeAlias
 
 from .._models import BaseModel
 from .shared.status import Status
+from .file_reference import FileReference
 from .prompt_example import PromptExample
 from .shared.content_type import ContentType
 
-__all__ = ["Eval", "GroundTruth", "GroundTruthFileReference"]
+__all__ = ["Eval", "GroundTruth"]
 
-
-class GroundTruthFileReference(BaseModel):
-    remote_file_path: Optional[str] = None
-
-
-GroundTruth: TypeAlias = Union[str, GroundTruthFileReference, None]
+GroundTruth: TypeAlias = Union[str, FileReference, None]
 
 
 class Eval(BaseModel):
