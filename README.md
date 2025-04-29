@@ -23,6 +23,9 @@ pip install git+ssh://git@github.com/aymara-ai/aymara-sdk-python.git
 pip install --pre aymara-ai-sdk
 ```
 
+> [!NOTE]
+> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre aymara-ai-sdk`
+
 ## Usage
 
 The full API of this library can be found in [api.md](api.md).
