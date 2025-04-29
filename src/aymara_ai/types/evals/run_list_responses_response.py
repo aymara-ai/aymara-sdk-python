@@ -5,16 +5,12 @@ from typing_extensions import TypeAlias
 
 from ..._models import BaseModel
 from ..eval_prompt import EvalPrompt
+from ..file_reference import FileReference
 from ..shared.content_type import ContentType
 
-__all__ = ["RunListResponsesResponse", "Content", "ContentFileReference"]
+__all__ = ["RunListResponsesResponse", "Content"]
 
-
-class ContentFileReference(BaseModel):
-    remote_file_path: Optional[str] = None
-
-
-Content: TypeAlias = Union[str, ContentFileReference, None]
+Content: TypeAlias = Union[str, FileReference, None]
 
 
 class RunListResponsesResponse(BaseModel):
