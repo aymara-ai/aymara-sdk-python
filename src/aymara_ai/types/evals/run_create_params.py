@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Iterable, Optional
 from typing_extensions import Required, TypedDict
 
+from .run_example_param import RunExampleParam
 from ..eval_response_param import EvalResponseParam
-from ..eval_run_example_param import EvalRunExampleParam
 
 __all__ = ["RunCreateParams"]
 
@@ -24,7 +24,7 @@ class RunCreateParams(TypedDict, total=False):
 
     continue_thread: Optional[bool]
 
-    eval_run_examples: Optional[Iterable[EvalRunExampleParam]]
+    eval_run_examples: Optional[Iterable[RunExampleParam]]
 
     eval_run_uuid: Optional[str]
 

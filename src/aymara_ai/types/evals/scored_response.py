@@ -5,15 +5,15 @@ from typing_extensions import TypeAlias
 
 from ..._models import BaseModel
 from ..eval_prompt import EvalPrompt
-from ..file_reference import FileReference
 from ..shared.content_type import ContentType
+from ..shared.file_reference import FileReference
 
-__all__ = ["RunListResponsesResponse", "Content"]
+__all__ = ["ScoredResponse", "Content"]
 
 Content: TypeAlias = Union[str, FileReference, None]
 
 
-class RunListResponsesResponse(BaseModel):
+class ScoredResponse(BaseModel):
     prompt_uuid: str
 
     ai_refused: Optional[bool] = None

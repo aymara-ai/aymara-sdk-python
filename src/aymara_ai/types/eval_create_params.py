@@ -9,8 +9,8 @@ from typing_extensions import Required, Annotated, TypeAlias, TypedDict
 from .._utils import PropertyInfo
 from .shared.status import Status
 from .shared.content_type import ContentType
-from .file_reference_param import FileReferenceParam
 from .prompt_example_param import PromptExampleParam
+from .shared_params.file_reference import FileReference
 
 __all__ = ["EvalCreateParams", "GroundTruth"]
 
@@ -53,4 +53,4 @@ class EvalCreateParams(TypedDict, total=False):
     workspace_uuid: Optional[str]
 
 
-GroundTruth: TypeAlias = Union[str, FileReferenceParam]
+GroundTruth: TypeAlias = Union[str, FileReference]

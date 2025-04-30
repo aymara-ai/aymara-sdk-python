@@ -1,7 +1,7 @@
 # Shared Types
 
 ```python
-from aymara_ai.types import AIInstruction, ContentType, EvalType, Status
+from aymara_ai.types import ContentType, FileReference, Status
 ```
 
 # Health
@@ -15,14 +15,7 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import (
-    Eval,
-    EvalPrompt,
-    EvalResponse,
-    EvalRunExample,
-    FileReference,
-    PromptExample,
-)
+from aymara_ai.types import Eval, EvalPrompt, EvalResponse, PromptExample
 ```
 
 Methods:
@@ -38,32 +31,32 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types.evals import EvalRunRequest, EvalRunResult, RunListResponsesResponse
+from aymara_ai.types.evals import RunExample, RunRequest, RunResult, ScoredResponse
 ```
 
 Methods:
 
-- <code title="post /v2/eval-runs">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">create</a>(\*\*<a href="src/aymara_ai/types/evals/run_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
-- <code title="get /v2/eval-runs">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list</a>(\*\*<a href="src/aymara_ai/types/evals/run_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">SyncOffsetPage[EvalRunResult]</a></code>
+- <code title="post /v2/eval-runs">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">create</a>(\*\*<a href="src/aymara_ai/types/evals/run_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/run_result.py">RunResult</a></code>
+- <code title="get /v2/eval-runs">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list</a>(\*\*<a href="src/aymara_ai/types/evals/run_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/run_result.py">SyncOffsetPage[RunResult]</a></code>
 - <code title="delete /v2/eval-runs/{eval_run_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">delete</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_delete_params.py">params</a>) -> None</code>
-- <code title="get /v2/eval-runs/{eval_run_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">get</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_get_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
-- <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_list_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/run_list_responses_response.py">SyncOffsetPage[RunListResponsesResponse]</a></code>
-- <code title="post /v2/eval-runs/-/score-responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">score_responses</a>(\*\*<a href="src/aymara_ai/types/evals/run_score_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
+- <code title="get /v2/eval-runs/{eval_run_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">get</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_get_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/run_result.py">RunResult</a></code>
+- <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_list_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/scored_response.py">SyncOffsetPage[ScoredResponse]</a></code>
+- <code title="post /v2/eval-runs/-/score-responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">score_responses</a>(\*\*<a href="src/aymara_ai/types/evals/run_score_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/run_result.py">RunResult</a></code>
 
 # EvalTypes
 
 Types:
 
 ```python
-from aymara_ai.types import EvalTypeFindInstructionsResponse
+from aymara_ai.types import AIInstruction, EvalType, EvalTypeFindInstructionsResponse
 ```
 
 Methods:
 
-- <code title="get /v2/eval-types">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_type_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/shared/eval_type.py">SyncOffsetPage[EvalType]</a></code>
+- <code title="get /v2/eval-types">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_type_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_type.py">SyncOffsetPage[EvalType]</a></code>
 - <code title="get /v2/eval-types/-/instructions">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">find_instructions</a>(\*\*<a href="src/aymara_ai/types/eval_type_find_instructions_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_type_find_instructions_response.py">EvalTypeFindInstructionsResponse</a></code>
-- <code title="get /v2/eval-types/{eval_type_uuid}">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">get</a>(eval_type_uuid) -> <a href="./src/aymara_ai/types/shared/eval_type.py">EvalType</a></code>
-- <code title="get /v2/eval-types/{eval_type_uuid}/instructions">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list_instructions</a>(eval_type_uuid, \*\*<a href="src/aymara_ai/types/eval_type_list_instructions_params.py">params</a>) -> <a href="./src/aymara_ai/types/shared/ai_instruction.py">SyncOffsetPage[AIInstruction]</a></code>
+- <code title="get /v2/eval-types/{eval_type_uuid}">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">get</a>(eval_type_uuid) -> <a href="./src/aymara_ai/types/eval_type.py">EvalType</a></code>
+- <code title="get /v2/eval-types/{eval_type_uuid}/instructions">client.eval_types.<a href="./src/aymara_ai/resources/eval_types.py">list_instructions</a>(eval_type_uuid, \*\*<a href="src/aymara_ai/types/eval_type_list_instructions_params.py">params</a>) -> <a href="./src/aymara_ai/types/ai_instruction.py">SyncOffsetPage[AIInstruction]</a></code>
 
 # Reports
 
