@@ -78,7 +78,7 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import FileCreateResponse
+from aymara_ai.types import FileUpload, FileCreateResponse
 ```
 
 Methods:
