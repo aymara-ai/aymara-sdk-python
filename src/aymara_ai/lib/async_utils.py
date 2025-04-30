@@ -3,6 +3,8 @@ import time
 import asyncio
 from typing import Any, Union, TypeVar, Callable, Optional, Awaitable
 
+from aymara_ai.types.shared.status import Status
+
 T = TypeVar("T")
 
 
@@ -13,7 +15,7 @@ def _get_status(resource: Any, status_path: str) -> str:
     keys = status_path.split(".")
     for k in keys:
         resource = resource.get(k, {}) if isinstance(resource, dict) else getattr(resource, k, {})  # type: ignore
-    return resource if isinstance(resource, str) else ""
+    return resource if isinstance(resource, str) else "failed"
 
 
 def wait_until(
@@ -56,8 +58,8 @@ def wait_until_complete(
     get_fn: Callable[[str], T],
     resource_id: str,
     status_path: str = "status",
-    success_status: str = "finished",
-    failure_status: Optional[str] = "failed",
+    success_status: Status = "finished",
+    failure_status: Optional[Status] = "failed",
     timeout: int = 300,
     interval: int = 2,
     backoff: bool = False,
@@ -163,8 +165,8 @@ async def async_wait_until_complete(
     get_fn: Callable[[str], Awaitable[T]],
     resource_id: str,
     status_path: str = "status",
-    success_status: str = "finished",
-    failure_status: Optional[str] = "failed",
+    success_status: Status = "finished",
+    failure_status: Optional[Status] = "failed",
     timeout: int = 300,
     interval: int = 2,
     backoff: bool = False,
