@@ -9,19 +9,12 @@ __all__ = ["EvalRunExampleParam"]
 
 
 class EvalRunExampleParam(TypedDict, total=False):
-    """Schema for examples to include with an eval run."""
-
     prompt: Required[str]
-    """Prompt text for the example."""
 
     response: Required[str]
-    """Expected response for the example."""
 
     type: Required[Literal["pass", "fail"]]
-    """Type of the example: "pass" or "fail"."""
 
     example_uuid: Optional[str]
-    """Unique identifier for the example, if any."""
 
     explanation: Optional[str]
-    """Explanation for the example, if any."""

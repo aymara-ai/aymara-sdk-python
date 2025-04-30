@@ -8,10 +8,10 @@ from ..._models import BaseModel
 from ..shared.status import Status
 from .scored_response import ScoredResponse
 
-__all__ = ["RunResult"]
+__all__ = ["EvalRunResult"]
 
 
-class RunResult(BaseModel):
+class EvalRunResult(BaseModel):
     created_at: datetime
 
     eval_run_uuid: str
