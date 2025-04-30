@@ -568,7 +568,7 @@ class TestAymaraAI:
             client = AymaraAI(
                 base_url=None, api_key=api_key, _strict_response_validation=True, environment="production"
             )
-            assert str(client.base_url).startswith("https://api.example.com")
+            assert str(client.base_url).startswith("https://api.aymara.ai")
 
     @pytest.mark.parametrize(
         "client",
@@ -1376,7 +1376,7 @@ class TestAsyncAymaraAI:
             client = AsyncAymaraAI(
                 base_url=None, api_key=api_key, _strict_response_validation=True, environment="production"
             )
-            assert str(client.base_url).startswith("https://api.example.com")
+            assert str(client.base_url).startswith("https://api.aymara.ai")
 
     @pytest.mark.parametrize(
         "client",

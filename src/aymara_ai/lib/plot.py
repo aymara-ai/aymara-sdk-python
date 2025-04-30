@@ -17,8 +17,8 @@ def eval_pass_stats(
     """
     Create a DataFrame of pass rates and pass totals from one or more score runs.
 
-    :param score_runs: One or a list of test score runs to graph.
-    :type score_runs: Union[ScoreRunResponse, List[ScoreRunResponse]]
+    :param eval_runs: One or a list of test score runs to graph.
+    :type eval_runs: Union[EvalRunResponse, List[EvalRunResponse]]
     :return: DataFrame of pass rates per test score run.
     :rtype: pd.DataFrame
     """
@@ -36,7 +36,7 @@ def eval_pass_stats(
 
     return pd.DataFrame(
         data=data,
-        columns=["eval_name", "pass_rate", "pass_total"],
+        columns=["name", "pass_rate", "pass_total"],
         index=pd.Index([run.eval_run_uuid for run in eval_runs], name="eval_run_uuid"),
     )
 
@@ -114,9 +114,9 @@ def graph_eval_stats(
     :type ylim_min: float, optional
     :param ylim_max: y-axis upper limit, defaults to matplotlib's preference but is capped at 100.
     :type ylim_max: float, optional
-    :param yaxis_is_percent: Whether to show the pass rate as a percent (instead of the total number of questions passed), defaults to True.
+    :param yaxis_is_percent: Whether to show the pass rate as a percent (instead of the total number of prompts passed), defaults to True.
     :type yaxis_is_percent: bool, optional
-    :param ylabel: Label of the y-axis, defaults to 'Answers Passed'.
+    :param ylabel: Label of the y-axis, defaults to 'Responses Passed'.
     :type ylabel: str
     :param xaxis_is_eval_run_uuids: Whether the x-axis represents tests (True) or score runs (False), defaults to True.
     :type xaxis_is_test: bool, optional
@@ -124,7 +124,7 @@ def graph_eval_stats(
     :type xlabel: str
     :param xtick_rot: rotation of the x-axis tick labels, defaults to 30.
     :type xtick_rot: float
-    :param xtick_labels_dict: Maps test_names (keys) to x-axis tick labels (values).
+    :param xtick_labels_dict: Maps eval names (keys) to x-axis tick labels (values).
     :type xtick_labels_dict: dict, optional
     :param kwargs: Options to pass to matplotlib.pyplot.bar.
     """
@@ -134,7 +134,7 @@ def graph_eval_stats(
 
     for eval_run in eval_runs:
         if not eval_run.status == "finished":
-            raise ValueError(f"Eval run {eval_run.eval_run_uuid} has no answers")
+            raise ValueError(f"Eval run {eval_run.eval_run_uuid} has no Responses")
 
     df_pass_stats = eval_pass_stats(eval_runs)
 
@@ -142,7 +142,7 @@ def graph_eval_stats(
         xlabel = "Eval Runs" if xaxis_is_eval_run_uuids else "Evals"
 
     _plot_pass_stats(
-        names=df_pass_stats["eval_run_uuid" if xaxis_is_eval_run_uuids else "eval_name"],
+        names=df_pass_stats["eval_run_uuid" if xaxis_is_eval_run_uuids else "name"],
         pass_stats=df_pass_stats["pass_rate" if yaxis_is_percent else "pass_total"],
         title=title,
         xlabel=xlabel,
