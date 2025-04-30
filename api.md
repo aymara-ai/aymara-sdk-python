@@ -1,7 +1,7 @@
 # Shared Types
 
 ```python
-from aymara_ai.types import ContentType, EvalType, Status
+from aymara_ai.types import AIInstruction, ContentType, EvalType, Status
 ```
 
 # Health
