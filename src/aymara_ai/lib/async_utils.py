@@ -81,6 +81,7 @@ def wait_until_complete(
     Raises:
         TimeoutError or RuntimeError on failure.
     """
+
     def predicate(resource: Any) -> bool:
         status = _get_status(resource, status_path)
         if failure_status and status == failure_status:
@@ -187,6 +188,7 @@ async def async_wait_until_complete(
     Raises:
         TimeoutError or RuntimeError on failure.
     """
+
     async def predicate(resource: Any) -> bool:
         status = _get_status(resource, status_path)
         if failure_status and status == failure_status:
