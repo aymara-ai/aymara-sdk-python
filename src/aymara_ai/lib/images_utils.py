@@ -16,19 +16,19 @@ def display_image_responses(
     figsize: Optional[Tuple[int, int]] = None,
 ) -> None:
     """
-    Display a grid of image test answers with their test questions as captions.
-    If score runs are included, display their test scores as captions instead
+    Display a grid of image eval responses with their eval questions as captions.
+    If eval runs are included, display their eval evals as captions instead
     and add a red border to failed images.
 
-    :param tests: Tests corresponding to the test answers.
-    :type tests: List of SafetyTestResponse objects.
-    :param test_answers: Test answers.
-    :type test_answers: Dictionary of test UUIDs to lists of ImageStudentAnswerInput objects.
-    :param score_runs: Score runs corresponding to the test answers.
-    :type score_runs: List of ScoreRunResponse objects, optional
-    :param n_images_per_test: Number of images to display per test.
-    :type n_images_per_test: int, optional
-    :param figsize: Figure size. Defaults to (n_images_per_test * 3, n_tests * 2 * 4).
+    :param evals: Evals corresponding to the eval responses.
+    :type evals: List of Eval objects.
+    :param eval_responses: Eval responses.
+    :type eval_responses: Dictionary of eval UUIDs to lists of EvalResponseParam objects.
+    :param eval_runs: Eval runs corresponding to the eval responses.
+    :type eval_runs: List of EvalRunResponse objects, optional
+    :param n_images_per_eval: Number of images to display per eval.
+    :type n_images_per_eval: int, optional
+    :param figsize: Figure size. Defaults to (n_images_per_eval * 3, n_evals * 2 * 4).
     :type figsize: integer tuple, optional
     """
     import textwrap
@@ -100,15 +100,15 @@ def display_image_responses(
                 ax.add_patch(rect)
 
     # Create the figure and gridspec layout
-    n_tests = len(eval_responses)
-    total_rows = n_tests * 2
+    n_evals = len(eval_responses)
+    total_rows = n_evals * 2
     fig = plt.figure(figsize=figsize or (n_images_per_eval * 3, total_rows * 4))
-    gs = gridspec.GridSpec(total_rows, n_images_per_eval, figure=fig, height_ratios=[1, 20] * n_tests)
+    gs = gridspec.GridSpec(total_rows, n_images_per_eval, figure=fig, height_ratios=[1, 20] * n_evals)
     fig.subplots_adjust(hspace=0.1, wspace=0.1)
 
     row = 0
-    for eval_uuid, answers in eval_responses.items():
-        test = next(t for t in evals if t.eval_uuid == eval_uuid)
+    for eval_uuid, responses in eval_responses.items():
+        eval = next(t for t in evals if t.eval_uuid == eval_uuid)
         prompts = eval_prompts.get(eval_uuid, [])
 
         # Title row
@@ -116,7 +116,7 @@ def display_image_responses(
         ax_title.text(
             0.5,
             0,
-            test.name,
+            eval.name,
             fontsize=16,
             fontweight="bold",
             ha="center",
@@ -126,7 +126,7 @@ def display_image_responses(
         row += 1
 
         # Image row
-        images = [a["local_file_path"] for a in answers[:n_images_per_eval] if a.get("ai_refused", False) is False]
+        images = [a["local_file_path"] for a in responses[:n_images_per_eval] if a.get("ai_refused", False) is False]
         if eval_runs is None:
             captions = [
                 next(
@@ -138,13 +138,13 @@ def display_image_responses(
                     for q in prompts
                     if q.prompt_uuid == a["prompt_uuid"]
                 )
-                for a in answers[:n_images_per_eval]
+                for a in responses[:n_images_per_eval]
             ]
         else:
-            score_run = next(s for s in eval_runs if s.eval_run_uuid == eval_uuid)
-            scores = [
-                next(s for s in score_run.responses if s.prompt_uuid == a["prompt_uuid"])
-                for a in answers[:n_images_per_eval]
+            eval_run = next(s for s in eval_runs if s.eval_run_uuid == eval_uuid)
+            evals = [
+                next(s for s in eval_run.responses if s.prompt_uuid == a["prompt_uuid"])
+                for a in responses[:n_images_per_eval]
             ]
             captions = [
                 refusal_caption
@@ -152,7 +152,7 @@ def display_image_responses(
                 else exclusion_caption
                 if s.exclude_from_scoring
                 else f"{'Pass' if s.is_passed else 'Fail'} ({s.confidence:.1%} confidence): {s.explanation}"
-                for s in scores
+                for s in evals
             ]
 
         axs = [fig.add_subplot(gs[row, col]) for col in range(len(images))]
