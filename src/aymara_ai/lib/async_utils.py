@@ -17,13 +17,13 @@ def _get_status(resource: Any, status_path: str) -> str:
 
 
 def wait_until(
-    operation: Callable[..., Any],
+    operation: Callable[..., T],
     predicate: Callable[[Any], bool],
     interval: float = 1.0,
     timeout: int = 60,
     *args: Any,
     **kwargs: Any,
-) -> Any:
+) -> T:
     """
     Synchronously calls `operation` with provided args/kwargs until `predicate` returns True for the result,
     or until timeout is reached.
@@ -90,7 +90,7 @@ def wait_until_complete(
 
     current_interval = interval
 
-    def operation(resource_id: str) -> Any:
+    def operation(resource_id: str) -> T:
         return get_fn(resource_id)
 
     if not backoff:
@@ -118,13 +118,13 @@ def wait_until_complete(
 
 
 async def async_wait_until(
-    operation: Callable[..., Awaitable[Any]],
+    operation: Callable[..., Awaitable[T]],
     predicate: Union[Callable[[Any], bool], Callable[[Any], Awaitable[bool]]],
     interval: Optional[float] = 1.0,
     timeout: Optional[int] = 30,
     *args: Any,
     **kwargs: Any,
-) -> Any:
+) -> T:
     """
     Asynchronously calls `operation` with provided args/kwargs until `predicate` returns True for the result,
     or until timeout is reached.
@@ -160,7 +160,7 @@ async def async_wait_until(
 
 
 async def async_wait_until_complete(
-    get_fn: Callable[[str], Awaitable[Any]],
+    get_fn: Callable[[str], Awaitable[T]],
     resource_id: str,
     status_path: str = "status",
     success_status: str = "finished",
@@ -168,7 +168,7 @@ async def async_wait_until_complete(
     timeout: int = 300,
     interval: int = 2,
     backoff: bool = False,
-) -> Any:
+) -> T:
     """
     Async polling helper for long-running resources.
 
@@ -189,7 +189,7 @@ async def async_wait_until_complete(
         TimeoutError or RuntimeError on failure.
     """
 
-    async def predicate(resource: Any) -> bool:
+    def predicate(resource: Any) -> bool:
         status = _get_status(resource, status_path)
         if failure_status and status == failure_status:
             raise RuntimeError(f"Resource {resource_id} failed with status '{status}'")
@@ -197,7 +197,7 @@ async def async_wait_until_complete(
 
     current_interval = interval
 
-    async def operation(resource_id: str) -> Any:
+    async def operation(resource_id: str) -> T:
         return await get_fn(resource_id)
 
     if not backoff:
@@ -215,8 +215,6 @@ async def async_wait_until_complete(
             resource = await get_fn(resource_id)
             try:
                 pred_result = predicate(resource)
-                if asyncio.iscoroutine(pred_result):
-                    pred_result = await pred_result
                 if pred_result:
                     return resource
             except RuntimeError:
