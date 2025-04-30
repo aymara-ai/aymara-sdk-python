@@ -12,7 +12,6 @@ from tests.utils import assert_matches_type
 from aymara_ai.types import (
     EvalType,
     AIInstruction,
-    EvalTypeFindInstructionsResponse,
 )
 from aymara_ai.pagination import SyncOffsetPage, AsyncOffsetPage
 
@@ -65,7 +64,7 @@ class TestEvalTypes:
         eval_type = client.eval_types.find_instructions(
             eval_type_slug="eval_type_slug",
         )
-        assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+        assert_matches_type(SyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -75,7 +74,7 @@ class TestEvalTypes:
             limit=1,
             offset=0,
         )
-        assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+        assert_matches_type(SyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -87,7 +86,7 @@ class TestEvalTypes:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_type = response.parse()
-        assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+        assert_matches_type(SyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -99,7 +98,7 @@ class TestEvalTypes:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_type = response.parse()
-            assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+            assert_matches_type(SyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -244,7 +243,7 @@ class TestAsyncEvalTypes:
         eval_type = await async_client.eval_types.find_instructions(
             eval_type_slug="eval_type_slug",
         )
-        assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+        assert_matches_type(AsyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -254,7 +253,7 @@ class TestAsyncEvalTypes:
             limit=1,
             offset=0,
         )
-        assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+        assert_matches_type(AsyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -266,7 +265,7 @@ class TestAsyncEvalTypes:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         eval_type = await response.parse()
-        assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+        assert_matches_type(AsyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -278,7 +277,7 @@ class TestAsyncEvalTypes:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             eval_type = await response.parse()
-            assert_matches_type(EvalTypeFindInstructionsResponse, eval_type, path=["response"])
+            assert_matches_type(AsyncOffsetPage[AIInstruction], eval_type, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
