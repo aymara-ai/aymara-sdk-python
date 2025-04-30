@@ -5,6 +5,7 @@ import pandas as pd  # type: ignore
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
+from aymara_ai.types.evals.run_list_responses_response import RunListResponsesResponse
 
 
 def to_prompts_df(eval: Eval, prompts: List[EvalPrompt]) -> pd.DataFrame:
@@ -26,27 +27,29 @@ def to_prompts_df(eval: Eval, prompts: List[EvalPrompt]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt]) -> pd.DataFrame:
+def to_scores_df(
+    eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: List[RunListResponsesResponse]
+) -> pd.DataFrame:
     """Create a scores DataFrame."""
     rows = (
         [
             {
                 "eval_run_uuid": eval_run.eval_run_uuid,
                 "eval_uuid": eval_run.eval_uuid,
-                "test_name": eval_run.evaluation.name if eval_run.evaluation else "",
+                "name": eval_run.evaluation.name if eval_run.evaluation else "",
                 "prompt_uuid": response.prompt_uuid,
                 "response_uuid": response.response_uuid,
                 "is_passed": response.is_passed,
-                "prompt_content": prompts[i].content,
+                "prompt_content": prompts[i].content if prompts else "",
                 "response_content": response.content,
                 "ai_refused": response.ai_refused,
                 "exclude_from_scoring": response.exclude_from_scoring,
                 "explanation": response.explanation,
                 "confidence": response.confidence,
             }
-            for i, response in enumerate(eval_run.responses)
+            for i, response in enumerate(responses)
         ]
-        if eval_run.responses
+        if responses
         else []
     )
 
