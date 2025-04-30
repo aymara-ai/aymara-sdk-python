@@ -6,7 +6,7 @@ import httpx
 
 from ..types import eval_type_list_params, eval_type_find_instructions_params, eval_type_list_instructions_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import maybe_transform, async_maybe_transform
+from .._utils import maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -19,7 +19,6 @@ from ..pagination import SyncOffsetPage, AsyncOffsetPage
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.eval_type import EvalType
 from ..types.ai_instruction import AIInstruction
-from ..types.eval_type_find_instructions_response import EvalTypeFindInstructionsResponse
 
 __all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]
 
@@ -105,7 +104,7 @@ class EvalTypesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalTypeFindInstructionsResponse:
+    ) -> SyncOffsetPage[AIInstruction]:
         """
         Retrieve instructions for a specific eval type by its slug.
 
@@ -126,8 +125,9 @@ class EvalTypesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v2/eval-types/-/instructions",
+            page=SyncOffsetPage[AIInstruction],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -142,7 +142,7 @@ class EvalTypesResource(SyncAPIResource):
                     eval_type_find_instructions_params.EvalTypeFindInstructionsParams,
                 ),
             ),
-            cast_to=EvalTypeFindInstructionsResponse,
+            model=AIInstruction,
         )
 
     def get(
@@ -310,7 +310,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
             model=EvalType,
         )
 
-    async def find_instructions(
+    def find_instructions(
         self,
         *,
         eval_type_slug: str,
@@ -322,7 +322,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> EvalTypeFindInstructionsResponse:
+    ) -> AsyncPaginator[AIInstruction, AsyncOffsetPage[AIInstruction]]:
         """
         Retrieve instructions for a specific eval type by its slug.
 
@@ -343,14 +343,15 @@ class AsyncEvalTypesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v2/eval-types/-/instructions",
+            page=AsyncOffsetPage[AIInstruction],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "eval_type_slug": eval_type_slug,
                         "limit": limit,
@@ -359,7 +360,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
                     eval_type_find_instructions_params.EvalTypeFindInstructionsParams,
                 ),
             ),
-            cast_to=EvalTypeFindInstructionsResponse,
+            model=AIInstruction,
         )
 
     async def get(
