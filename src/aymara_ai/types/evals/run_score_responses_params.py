@@ -6,7 +6,7 @@ from typing import Iterable, Optional
 from typing_extensions import Required, TypedDict
 
 from ..eval_response_param import EvalResponseParam
-from ..eval_run_example_param import EvalRunExampleParam
+from .eval_run_example_param import EvalRunExampleParam
 
 __all__ = ["RunScoreResponsesParams"]
 

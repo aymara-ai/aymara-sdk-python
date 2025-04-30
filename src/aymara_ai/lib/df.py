@@ -5,7 +5,7 @@ import pandas as pd  # type: ignore
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
-from aymara_ai.types.evals.run_list_responses_response import RunListResponsesResponse
+from aymara_ai.types.evals.scored_response import ScoredResponse
 
 
 def to_prompts_df(eval: Eval, prompts: List[EvalPrompt]) -> pd.DataFrame:
@@ -27,9 +27,7 @@ def to_prompts_df(eval: Eval, prompts: List[EvalPrompt]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def to_scores_df(
-    eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: List[RunListResponsesResponse]
-) -> pd.DataFrame:
+def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: List[ScoredResponse]) -> pd.DataFrame:
     """Create a scores DataFrame."""
     rows = (
         [

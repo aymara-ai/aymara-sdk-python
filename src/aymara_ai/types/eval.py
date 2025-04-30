@@ -6,9 +6,9 @@ from typing_extensions import TypeAlias
 
 from .._models import BaseModel
 from .shared.status import Status
-from .file_reference import FileReference
 from .prompt_example import PromptExample
 from .shared.content_type import ContentType
+from .shared.file_reference import FileReference
 
 __all__ = ["Eval", "GroundTruth"]
 

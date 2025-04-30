@@ -1,48 +1,14 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Union, Optional
+from typing import List, Optional
 from datetime import datetime
-from typing_extensions import TypeAlias
 
 from ..eval import Eval
 from ..._models import BaseModel
-from ..eval_prompt import EvalPrompt
 from ..shared.status import Status
-from ..file_reference import FileReference
-from ..shared.content_type import ContentType
+from .scored_response import ScoredResponse
 
-__all__ = ["EvalRunResult", "Response", "ResponseContent"]
-
-ResponseContent: TypeAlias = Union[str, FileReference, None]
-
-
-class Response(BaseModel):
-    prompt_uuid: str
-
-    ai_refused: Optional[bool] = None
-
-    confidence: Optional[float] = None
-
-    content: Optional[ResponseContent] = None
-
-    content_type: Optional[ContentType] = None
-    """Content type for AI interactions."""
-
-    continue_thread: Optional[bool] = None
-
-    exclude_from_scoring: Optional[bool] = None
-
-    explanation: Optional[str] = None
-
-    is_passed: Optional[bool] = None
-
-    next_prompt: Optional[EvalPrompt] = None
-
-    response_uuid: Optional[str] = None
-
-    thread_uuid: Optional[str] = None
-
-    turn_number: Optional[int] = None
+__all__ = ["EvalRunResult"]
 
 
 class EvalRunResult(BaseModel):
@@ -70,6 +36,6 @@ class EvalRunResult(BaseModel):
 
     pass_rate: Optional[float] = None
 
-    responses: Optional[List[Response]] = None
+    responses: Optional[List[ScoredResponse]] = None
 
     workspace_uuid: Optional[str] = None

@@ -28,8 +28,8 @@ from ...types.evals import (
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.eval_response_param import EvalResponseParam
 from ...types.evals.eval_run_result import EvalRunResult
-from ...types.eval_run_example_param import EvalRunExampleParam
-from ...types.evals.run_list_responses_response import RunListResponsesResponse
+from ...types.evals.scored_response import ScoredResponse
+from ...types.evals.eval_run_example_param import EvalRunExampleParam
 
 __all__ = ["RunsResource", "AsyncRunsResource"]
 
@@ -293,7 +293,7 @@ class RunsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncOffsetPage[RunListResponsesResponse]:
+    ) -> SyncOffsetPage[ScoredResponse]:
         """
         Retrieve all responses for a specific eval run.
 
@@ -320,7 +320,7 @@ class RunsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return self._get_api_list(
             f"/v2/eval-runs/{eval_run_uuid}/responses",
-            page=SyncOffsetPage[RunListResponsesResponse],
+            page=SyncOffsetPage[ScoredResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -335,7 +335,7 @@ class RunsResource(SyncAPIResource):
                     run_list_responses_params.RunListResponsesParams,
                 ),
             ),
-            model=RunListResponsesResponse,
+            model=ScoredResponse,
         )
 
     def score_responses(
@@ -674,7 +674,7 @@ class AsyncRunsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[RunListResponsesResponse, AsyncOffsetPage[RunListResponsesResponse]]:
+    ) -> AsyncPaginator[ScoredResponse, AsyncOffsetPage[ScoredResponse]]:
         """
         Retrieve all responses for a specific eval run.
 
@@ -701,7 +701,7 @@ class AsyncRunsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return self._get_api_list(
             f"/v2/eval-runs/{eval_run_uuid}/responses",
-            page=AsyncOffsetPage[RunListResponsesResponse],
+            page=AsyncOffsetPage[ScoredResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -716,7 +716,7 @@ class AsyncRunsResource(AsyncAPIResource):
                     run_list_responses_params.RunListResponsesParams,
                 ),
             ),
-            model=RunListResponsesResponse,
+            model=ScoredResponse,
         )
 
     async def score_responses(

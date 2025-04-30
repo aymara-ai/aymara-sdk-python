@@ -4,8 +4,14 @@ from typing import Optional
 
 from .._models import BaseModel
 
-__all__ = ["FileReference"]
+__all__ = ["FileUpload"]
 
 
-class FileReference(BaseModel):
+class FileUpload(BaseModel):
+    file_url: Optional[str] = None
+
+    file_uuid: Optional[str] = None
+
+    local_file_path: Optional[str] = None
+
     remote_file_path: Optional[str] = None

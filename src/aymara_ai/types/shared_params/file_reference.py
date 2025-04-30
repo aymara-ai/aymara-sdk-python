@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Optional
 from typing_extensions import TypedDict
 
-__all__ = ["FileReferenceParam"]
+__all__ = ["FileReference"]
 
 
-class FileReferenceParam(TypedDict, total=False):
+class FileReference(TypedDict, total=False):
     remote_file_path: Optional[str]
