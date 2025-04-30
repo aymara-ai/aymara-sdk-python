@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .eval import Eval as Eval
-from .shared import Status as Status, EvalType as EvalType, ContentType as ContentType
+from .shared import Status as Status, EvalType as EvalType, ContentType as ContentType, AIInstruction as AIInstruction
 from .eval_prompt import EvalPrompt as EvalPrompt
 from .file_reference import FileReference as FileReference
 from .prompt_example import PromptExample as PromptExample
