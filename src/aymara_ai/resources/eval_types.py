@@ -17,8 +17,8 @@ from .._response import (
 )
 from ..pagination import SyncOffsetPage, AsyncOffsetPage
 from .._base_client import AsyncPaginator, make_request_options
-from ..types.shared.eval_type import EvalType
-from ..types.shared.ai_instruction import AIInstruction
+from ..types.eval_type import EvalType
+from ..types.ai_instruction import AIInstruction
 from ..types.eval_type_find_instructions_response import EvalTypeFindInstructionsResponse
 
 __all__ = ["EvalTypesResource", "AsyncEvalTypesResource"]

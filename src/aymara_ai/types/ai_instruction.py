@@ -8,8 +8,6 @@ __all__ = ["AIInstruction"]
 
 
 class AIInstruction(BaseModel):
-    """Schema for AI instructions."""
-
     content: str
 
     eval_type: str
