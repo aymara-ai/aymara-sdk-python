@@ -33,7 +33,7 @@ client = AymaraAI(
     environment="staging",
 )
 
-run_result = client.evals.runs.create(
+eval_run_result = client.evals.runs.create(
     eval_uuid="your_eval_uuid_here",
     responses=[
         {
@@ -42,7 +42,7 @@ run_result = client.evals.runs.create(
         }
     ],
 )
-print(run_result.eval_run_uuid)
+print(eval_run_result.eval_run_uuid)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -67,7 +67,7 @@ client = AsyncAymaraAI(
 
 
 async def main() -> None:
-    run_result = await client.evals.runs.create(
+    eval_run_result = await client.evals.runs.create(
         eval_uuid="your_eval_uuid_here",
         responses=[
             {
@@ -76,7 +76,7 @@ async def main() -> None:
             }
         ],
     )
-    print(run_result.eval_run_uuid)
+    print(eval_run_result.eval_run_uuid)
 
 
 asyncio.run(main())

@@ -26,10 +26,10 @@ from ...types.evals import (
     run_score_responses_params,
 )
 from ..._base_client import AsyncPaginator, make_request_options
-from ...types.evals.run_result import RunResult
 from ...types.eval_response_param import EvalResponseParam
+from ...types.evals.eval_run_result import EvalRunResult
 from ...types.evals.scored_response import ScoredResponse
-from ...types.evals.run_example_param import RunExampleParam
+from ...types.evals.eval_run_example_param import EvalRunExampleParam
 
 __all__ = ["RunsResource", "AsyncRunsResource"]
 
@@ -63,7 +63,7 @@ class RunsResource(SyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[RunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -72,7 +72,7 @@ class RunsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> RunResult:
+    ) -> EvalRunResult:
         """
         Create a new eval run for an eval.
 
@@ -123,7 +123,7 @@ class RunsResource(SyncAPIResource):
                     run_create_params.RunCreateParams,
                 ),
             ),
-            cast_to=RunResult,
+            cast_to=EvalRunResult,
         )
 
     def list(
@@ -139,7 +139,7 @@ class RunsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncOffsetPage[RunResult]:
+    ) -> SyncOffsetPage[EvalRunResult]:
         """
         List all eval runs, with optional filtering.
 
@@ -163,7 +163,7 @@ class RunsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v2/eval-runs",
-            page=SyncOffsetPage[RunResult],
+            page=SyncOffsetPage[EvalRunResult],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -179,7 +179,7 @@ class RunsResource(SyncAPIResource):
                     run_list_params.RunListParams,
                 ),
             ),
-            model=RunResult,
+            model=EvalRunResult,
         )
 
     def delete(
@@ -243,7 +243,7 @@ class RunsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> RunResult:
+    ) -> EvalRunResult:
         """
         Retrieve a specific eval run by its UUID.
 
@@ -277,7 +277,7 @@ class RunsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform({"workspace_uuid": workspace_uuid}, run_get_params.RunGetParams),
             ),
-            cast_to=RunResult,
+            cast_to=EvalRunResult,
         )
 
     def list_responses(
@@ -347,7 +347,7 @@ class RunsResource(SyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[RunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -356,7 +356,7 @@ class RunsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> RunResult:
+    ) -> EvalRunResult:
         """
         Run the eval with the provided responses.
 
@@ -409,7 +409,7 @@ class RunsResource(SyncAPIResource):
                     run_score_responses_params.RunScoreResponsesParams,
                 ),
             ),
-            cast_to=RunResult,
+            cast_to=EvalRunResult,
         )
 
 
@@ -442,7 +442,7 @@ class AsyncRunsResource(AsyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[RunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -451,7 +451,7 @@ class AsyncRunsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> RunResult:
+    ) -> EvalRunResult:
         """
         Create a new eval run for an eval.
 
@@ -502,7 +502,7 @@ class AsyncRunsResource(AsyncAPIResource):
                     run_create_params.RunCreateParams,
                 ),
             ),
-            cast_to=RunResult,
+            cast_to=EvalRunResult,
         )
 
     def list(
@@ -518,7 +518,7 @@ class AsyncRunsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[RunResult, AsyncOffsetPage[RunResult]]:
+    ) -> AsyncPaginator[EvalRunResult, AsyncOffsetPage[EvalRunResult]]:
         """
         List all eval runs, with optional filtering.
 
@@ -542,7 +542,7 @@ class AsyncRunsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v2/eval-runs",
-            page=AsyncOffsetPage[RunResult],
+            page=AsyncOffsetPage[EvalRunResult],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -558,7 +558,7 @@ class AsyncRunsResource(AsyncAPIResource):
                     run_list_params.RunListParams,
                 ),
             ),
-            model=RunResult,
+            model=EvalRunResult,
         )
 
     async def delete(
@@ -624,7 +624,7 @@ class AsyncRunsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> RunResult:
+    ) -> EvalRunResult:
         """
         Retrieve a specific eval run by its UUID.
 
@@ -658,7 +658,7 @@ class AsyncRunsResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform({"workspace_uuid": workspace_uuid}, run_get_params.RunGetParams),
             ),
-            cast_to=RunResult,
+            cast_to=EvalRunResult,
         )
 
     def list_responses(
@@ -728,7 +728,7 @@ class AsyncRunsResource(AsyncAPIResource):
         workspace_uuid: str | NotGiven = NOT_GIVEN,
         ai_description: Optional[str] | NotGiven = NOT_GIVEN,
         continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[RunExampleParam]] | NotGiven = NOT_GIVEN,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
         eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
         name: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -737,7 +737,7 @@ class AsyncRunsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> RunResult:
+    ) -> EvalRunResult:
         """
         Run the eval with the provided responses.
 
@@ -790,7 +790,7 @@ class AsyncRunsResource(AsyncAPIResource):
                     run_score_responses_params.RunScoreResponsesParams,
                 ),
             ),
-            cast_to=RunResult,
+            cast_to=EvalRunResult,
         )
 
 
