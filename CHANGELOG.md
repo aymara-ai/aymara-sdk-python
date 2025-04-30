@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0-alpha.6 (2025-04-30)
+
+Full Changelog: [v1.0.0-alpha.5...v1.0.0-alpha.6](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.5...v1.0.0-alpha.6)
+
+### Features
+
+* **api:** api update ([93a6df0](https://github.com/aymara-ai/aymara-sdk-python/commit/93a6df0fb0a07a8b2dbfeb046822768b9b901b51))
+* **api:** api update ([d5481e6](https://github.com/aymara-ai/aymara-sdk-python/commit/d5481e68d1f8818407e5663fb6b8a11f810d157e))
+
 ## 1.0.0-alpha.5 (2025-04-29)
 
 Full Changelog: [v1.0.0-alpha.4...v1.0.0-alpha.5](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.4...v1.0.0-alpha.5)
