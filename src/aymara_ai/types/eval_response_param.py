@@ -6,11 +6,11 @@ from typing import Union, Optional
 from typing_extensions import Required, TypeAlias, TypedDict
 
 from .shared.content_type import ContentType
-from .file_reference_param import FileReferenceParam
+from .shared_params.file_reference import FileReference
 
 __all__ = ["EvalResponseParam", "Content"]
 
-Content: TypeAlias = Union[str, FileReferenceParam]
+Content: TypeAlias = Union[str, FileReference]
 
 
 class EvalResponseParam(TypedDict, total=False):

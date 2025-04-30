@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Optional
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["EvalRunExampleParam"]
+__all__ = ["RunExampleParam"]
 
 
-class EvalRunExampleParam(TypedDict, total=False):
+class RunExampleParam(TypedDict, total=False):
     prompt: Required[str]
 
     response: Required[str]

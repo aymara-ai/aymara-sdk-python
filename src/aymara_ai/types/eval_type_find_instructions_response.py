@@ -3,7 +3,7 @@
 from typing import List
 
 from .._models import BaseModel
-from .shared.ai_instruction import AIInstruction
+from .ai_instruction import AIInstruction
 
 __all__ = ["EvalTypeFindInstructionsResponse"]
 

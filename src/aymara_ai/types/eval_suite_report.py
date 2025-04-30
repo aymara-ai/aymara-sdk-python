@@ -5,13 +5,13 @@ from datetime import datetime
 
 from .._models import BaseModel
 from .shared.status import Status
-from .evals.eval_run_result import EvalRunResult
+from .evals.run_result import RunResult
 
 __all__ = ["EvalSuiteReport", "EvalRunReport"]
 
 
 class EvalRunReport(BaseModel):
-    eval_run: EvalRunResult
+    eval_run: RunResult
     """Schema for returning eval run data."""
 
     eval_run_report_uuid: str
