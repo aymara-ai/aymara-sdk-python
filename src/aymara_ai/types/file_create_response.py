@@ -3,21 +3,12 @@
 from typing import List, Optional
 
 from .._models import BaseModel
+from .file_upload import FileUpload
 
-__all__ = ["FileCreateResponse", "File"]
-
-
-class File(BaseModel):
-    file_url: Optional[str] = None
-
-    file_uuid: Optional[str] = None
-
-    local_file_path: Optional[str] = None
-
-    remote_file_path: Optional[str] = None
+__all__ = ["FileCreateResponse"]
 
 
 class FileCreateResponse(BaseModel):
-    files: List[File]
+    files: List[FileUpload]
 
     workspace_uuid: Optional[str] = None
