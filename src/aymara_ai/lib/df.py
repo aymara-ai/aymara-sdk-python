@@ -56,7 +56,7 @@ def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: 
 
 
 def to_df(results: Union[List[Union[BaseModel, Dict[str, Any]]], Dict[str, Any], BaseModel]) -> pd.DataFrame:
-    """Convert a BaseModel to a DataFrame."""
+    """Convert a BaseModel or Dict to a DataFrame."""
     if isinstance(results, dict) or isinstance(results, BaseModel):
         results = [results]
     rows = [r.to_dict() if isinstance(r, BaseModel) else r for r in results]
