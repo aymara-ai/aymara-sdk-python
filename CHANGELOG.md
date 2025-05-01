@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.0-alpha.10 (2025-05-01)
+
+Full Changelog: [v1.0.0-alpha.9...v1.0.0-alpha.10](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.9...v1.0.0-alpha.10)
+
+### Features
+
+* image eval runner example ([fc0be9e](https://github.com/aymara-ai/aymara-sdk-python/commit/fc0be9e3660a6b08f614f087edbedda382c7d04c))
+
+
+### Bug Fixes
+
+* async call ([8ed887a](https://github.com/aymara-ai/aymara-sdk-python/commit/8ed887a2d1c104407ee181a4aab5c764c5d3e439))
+* image content handling ([ff31da0](https://github.com/aymara-ai/aymara-sdk-python/commit/ff31da00b59fe3920ddcffc3a9b29ad57ffee08c))
+* image upload handling ([2317a6a](https://github.com/aymara-ai/aymara-sdk-python/commit/2317a6ae508b0ba9cd8e5a4ac9b156c58e99a75c))
+* lint ([875077a](https://github.com/aymara-ai/aymara-sdk-python/commit/875077a3ba09aad8b93967a516495a0530d2ba9d))
+* response type ([f42329d](https://github.com/aymara-ai/aymara-sdk-python/commit/f42329d56ad02a4234ce20e627e683a247a14650))
+
 ## 1.0.0-alpha.9 (2025-05-01)
 
 Full Changelog: [v1.0.0-alpha.8...v1.0.0-alpha.9](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.8...v1.0.0-alpha.9)
