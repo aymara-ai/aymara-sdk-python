@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-alpha.12 (2025-05-01)
+
+Full Changelog: [v1.0.0-alpha.11...v1.0.0-alpha.12](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.11...v1.0.0-alpha.12)
+
+### Features
+
+* handle bytes from model ([a8e3ca5](https://github.com/aymara-ai/aymara-sdk-python/commit/a8e3ca5cdaabe4f2d8f1d983fb8d66b0b81af0bf))
+
 ## 1.0.0-alpha.11 (2025-05-01)
 
 Full Changelog: [v1.0.0-alpha.10...v1.0.0-alpha.11](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.10...v1.0.0-alpha.11)
