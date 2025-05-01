@@ -3,8 +3,8 @@ from typing import Dict, List, Tuple, Optional
 
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
-from aymara_ai.types.eval_response_param import EvalResponseParam
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
+from aymara_ai.types.evals.run_create_params import EvalResponseParam
 
 
 def display_image_responses(

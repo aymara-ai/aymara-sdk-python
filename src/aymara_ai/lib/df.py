@@ -1,7 +1,8 @@
-from typing import List
+from typing import Any, Dict, List, Union
 
 import pandas as pd  # type: ignore
 
+from aymara_ai._models import BaseModel
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
@@ -50,5 +51,14 @@ def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: 
         if responses
         else []
     )
+
+    return pd.DataFrame(rows)
+
+
+def to_df(results: Union[List[Union[BaseModel, Dict[str, Any]]], Dict[str, Any], BaseModel]) -> pd.DataFrame:
+    """Convert a BaseModel or Dict to a DataFrame."""
+    if isinstance(results, dict) or isinstance(results, BaseModel):
+        results = [results]
+    rows = [r.to_dict() if isinstance(r, BaseModel) else r for r in results]
 
     return pd.DataFrame(rows)
