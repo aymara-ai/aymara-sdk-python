@@ -6,6 +6,8 @@ EvalRunner & AsyncEvalRunner: Simple orchestrators for Aymara SDK evals (sync an
 from typing import Any, Dict, List, Union, Callable, Optional, Awaitable
 from pathlib import Path
 
+import httpx
+
 from aymara_ai import AymaraAI, AsyncAymaraAI
 from aymara_ai.lib.async_utils import wait_until_complete, async_wait_until_complete
 from aymara_ai.types.eval_prompt import EvalPrompt
@@ -23,7 +25,7 @@ class EvalRunner:
     def __init__(
         self,
         client: AymaraAI,
-        model_callable: Callable[[str], Union[str, Path]],
+        model_callable: Callable[[str], Union[str, Path, None]],
     ):
         """
         Args:
@@ -75,10 +77,39 @@ class EvalRunner:
 
         # 4. Model inference and response adaptation
         responses: List[EvalResponseParam] = []
-        for prompt in prompts:
-            model_output = self.model_callable(prompt.content)
-            response = self._default_response_adapter(model_output, prompt)
-            responses.append(response)
+        with httpx.Client() as client:
+            for prompt in prompts:
+                model_output = self.model_callable(prompt.content)
+                # Allow model_callable to return None, str, or Path
+                if model_output is None:
+                    # Model refused to answer
+                    response = EvalResponseParam(prompt_uuid=prompt.prompt_uuid, ai_refused=True)
+                    responses.append(response)
+                    continue
+                if isinstance(model_output, str):
+                    response = EvalResponseParam(content=model_output, prompt_uuid=prompt.prompt_uuid)
+                    responses.append(response)
+                    continue
+                if isinstance(model_output, Path):  # type: ignore
+                    # Upload the image file and use remote path
+                    upload_resp = self.client.files.create(files=[{"local_file_path": str(model_output)}])
+                    file_info = upload_resp.files[0]
+                    if not file_info.file_url:
+                        raise RuntimeError("No presigned file_url returned for upload.")
+                    # Upload to presigned URL
+                    with open(str(model_output), "rb") as f:
+                        put_resp = client.put(file_info.file_url, content=f)
+                        put_resp.raise_for_status()
+                    response = EvalResponseParam(
+                        content=FileReference(remote_file_path=file_info.remote_file_path),
+                        prompt_uuid=prompt.prompt_uuid,
+                        content_type="image",
+                    )
+                    # Optionally include local_file_path for downstream use
+                    response["local_file_path"] = str(model_output)  # type: ignore
+                    responses.append(response)
+                    continue
+                raise ValueError("Unsupported model output type for response adapter.")
 
         # 5. Create eval run
         eval_run = self.client.evals.runs.create(eval_uuid=str(self.eval_id), responses=responses)
@@ -99,7 +130,7 @@ class AsyncEvalRunner:
     def __init__(
         self,
         client: AsyncAymaraAI,
-        model_callable: Callable[[str], Awaitable[Union[str, Path]]],
+        model_callable: Callable[[str], Awaitable[Union[str, Path, None]]],
     ):
         """
         Args:
@@ -113,14 +144,14 @@ class AsyncEvalRunner:
         self.eval_run_result: Optional[Any] = None
 
     @staticmethod
-    def _default_response_adapter(model_output: Any, prompt: Any) -> Any:
+    def _default_response_adapter(model_output: Union[str, Path], prompt: EvalPrompt) -> Any:
         """
         Adapts model output to EvalResponseParam or FileReferenceParam based on type.
         """
 
         if isinstance(model_output, str):
             return EvalResponseParam(content=model_output, prompt_uuid=prompt.prompt_uuid)
-        elif isinstance(model_output, Path):
+        elif isinstance(model_output, Path):  # type: ignore
             # For image, wrap in FileReference
             # Try both possible FileReference imports for compatibility
             file_ref = FileReference(remote_file_path=str(model_output))
@@ -151,11 +182,40 @@ class AsyncEvalRunner:
         prompts = prompts_response.items
 
         # 4. Model inference and response adaptation
+
         responses: List[EvalResponseParam] = []
-        for prompt in prompts:
-            model_output = await self.model_callable(prompt.content)
-            response = self._default_response_adapter(model_output, prompt)
-            responses.append(response)
+
+        async with httpx.AsyncClient() as client:
+            for prompt in prompts:
+                model_output = await self.model_callable(prompt.content)
+                if model_output is None:
+                    response = EvalResponseParam(prompt_uuid=prompt.prompt_uuid, ai_refused=True)
+                    responses.append(response)
+                    continue
+                if isinstance(model_output, str):
+                    response = EvalResponseParam(content=model_output, prompt_uuid=prompt.prompt_uuid)
+                    responses.append(response)
+                    continue
+                if isinstance(model_output, Path):  # type: ignore
+                    # Upload the image file and use remote path
+                    upload_resp = await self.client.files.create(files=[{"local_file_path": str(model_output)}])
+                    file_info = upload_resp.files[0]
+                    if not file_info.file_url:
+                        raise RuntimeError("No presigned file_url returned for upload.")
+                        # Upload to presigned URL (async)
+                    with open(str(model_output), "rb") as f:
+                        put_resp = await client.put(file_info.file_url, content=f)
+                        if put_resp.status_code != 200:
+                            raise RuntimeError(f"Failed to upload file: {put_resp.status_code}")
+                    response = EvalResponseParam(
+                        content=FileReference(remote_file_path=file_info.remote_file_path),
+                        prompt_uuid=prompt.prompt_uuid,
+                        content_type="image",
+                    )
+                    response["local_file_path"] = str(model_output)  # type: ignore
+                    responses.append(response)
+                    continue
+                raise ValueError("Unsupported model output type for response adapter.")
 
         # 5. Create eval run
         eval_run = await self.client.evals.runs.create(eval_uuid=str(self.eval_id), responses=responses)
