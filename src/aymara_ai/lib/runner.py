@@ -3,12 +3,11 @@ EvalRunner & AsyncEvalRunner: Simple orchestrators for Aymara SDK evals (sync an
 
 """
 
-import asyncio
 from typing import Any, Dict, List, Union, Callable, Optional, Awaitable
 from pathlib import Path
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
-from aymara_ai.lib.async_utils import wait_until_complete
+from aymara_ai.lib.async_utils import wait_until_complete, async_wait_until_complete
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.shared_params import FileReference
 from aymara_ai.types.eval_response_param import EvalResponseParam
@@ -24,12 +23,12 @@ class EvalRunner:
     def __init__(
         self,
         client: AymaraAI,
-        model_callable: Callable[..., Any],
+        model_callable: Callable[[str], Union[str, Path]],
     ):
         """
         Args:
             client: An instance of AymaraClient.
-            model_callable: Callable for model inference (prompt, system_prompt) -> str or Path (for image).
+            model_callable: Callable for model inference (prompt) -> str or Path (for image).
         """
         self.client = client
         self.model_callable = model_callable
@@ -58,7 +57,6 @@ class EvalRunner:
     def run_eval(
         self,
         eval_params: Dict[str, Any],
-        system_prompt: Optional[str] = None,
         timeout: float = 120.0,
         poll_interval: float = 5.0,
     ) -> EvalRunResult:
@@ -80,7 +78,7 @@ class EvalRunner:
         # 4. Model inference and response adaptation
         responses: List[EvalResponseParam] = []
         for prompt in prompts:
-            model_output = self.model_callable(prompt.content, system_prompt)
+            model_output = self.model_callable(prompt.content)
             response = self._default_response_adapter(model_output, prompt)
             responses.append(response)
 
@@ -103,12 +101,12 @@ class AsyncEvalRunner:
     def __init__(
         self,
         client: AsyncAymaraAI,
-        model_callable: Callable[..., Awaitable[Any]],
+        model_callable: Callable[[str], Awaitable[Union[str, Path]]],
     ):
         """
         Args:
             client: An instance of AsyncAymaraClient.
-            model_callable: Async callable for model inference (prompt, system_prompt) -> str or Path (for image).
+            model_callable: Async callable for model inference (prompt) -> str or Path (for image).
         """
         self.client = client
         self.model_callable = model_callable
@@ -135,9 +133,8 @@ class AsyncEvalRunner:
     async def run_eval(
         self,
         eval_params: Dict[str, Any],
-        system_prompt: Optional[str] = None,
-        timeout: float = 120.0,
-        poll_interval: float = 5.0,
+        timeout: int = 30,
+        poll_interval: int = 5,
     ) -> EvalRunResult:
         """
         Orchestrate the full eval flow (async).
@@ -147,20 +144,8 @@ class AsyncEvalRunner:
         self.eval_id = eval_obj.eval_uuid
 
         # 2. Wait for eval readiness
-        async def wait_until_complete_async(
-            get_fn: Callable[..., Awaitable[Any]], resource_id: str, poll_interval: float, timeout: float
-        ) -> Any:
-            start = asyncio.get_event_loop().time()
-            while True:
-                obj = await get_fn(resource_id=resource_id)
-                if getattr(obj, "status", None) == "ready":
-                    return obj
-                if asyncio.get_event_loop().time() - start > timeout:
-                    raise TimeoutError("Eval did not become ready in time.")
-                await asyncio.sleep(poll_interval)
-
-        eval_obj = await wait_until_complete_async(
-            self.client.evals.get, resource_id=str(self.eval_id), poll_interval=poll_interval, timeout=timeout
+        eval_obj = await async_wait_until_complete(
+            self.client.evals.get, resource_id=str(self.eval_id), interval=poll_interval, timeout=timeout
         )
 
         # 3. Fetch prompts
@@ -170,7 +155,7 @@ class AsyncEvalRunner:
         # 4. Model inference and response adaptation
         responses: List[EvalResponseParam] = []
         for prompt in prompts:
-            model_output = await self.model_callable(prompt.content, system_prompt)
+            model_output = await self.model_callable(prompt.content)
             response = self._default_response_adapter(model_output, prompt)
             responses.append(response)
 
@@ -179,8 +164,8 @@ class AsyncEvalRunner:
         self.run_id = eval_run.eval_run_uuid
 
         # 6. Wait for eval run completion
-        eval_run = await wait_until_complete_async(
-            self.client.evals.runs.get, resource_id=str(self.run_id), poll_interval=poll_interval, timeout=timeout
+        eval_run = await async_wait_until_complete(
+            self.client.evals.runs.get, resource_id=str(self.run_id), interval=poll_interval, timeout=timeout
         )
         self.eval_run_result = eval_run
         return eval_run
