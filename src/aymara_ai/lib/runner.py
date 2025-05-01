@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Union, Callable, Optional, Awaitable
 from pathlib import Path
 
 import httpx
+import aiofiles
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
 from aymara_ai.lib.async_utils import wait_until_complete, async_wait_until_complete
@@ -92,12 +93,13 @@ class EvalRunner:
                     continue
                 if isinstance(model_output, Path):  # type: ignore
                     # Upload the image file and use remote path
-                    upload_resp = self.client.files.create(files=[{"local_file_path": str(model_output)}])
+                    model_output = str(model_output)
+                    upload_resp = self.client.files.create(files=[{"local_file_path": model_output}])
                     file_info = upload_resp.files[0]
                     if not file_info.file_url:
                         raise RuntimeError("No presigned file_url returned for upload.")
                     # Upload to presigned URL
-                    with open(str(model_output), "rb") as f:
+                    with open(model_output, "rb") as f:
                         put_resp = client.put(file_info.file_url, content=f)
                         put_resp.raise_for_status()
                     response = EvalResponseParam(
@@ -106,7 +108,7 @@ class EvalRunner:
                         content_type="image",
                     )
                     # Optionally include local_file_path for downstream use
-                    response["local_file_path"] = str(model_output)  # type: ignore
+                    response["local_file_path"] = model_output  # type: ignore
                     responses.append(response)
                     continue
                 raise ValueError("Unsupported model output type for response adapter.")
@@ -198,12 +200,13 @@ class AsyncEvalRunner:
                     continue
                 if isinstance(model_output, Path):  # type: ignore
                     # Upload the image file and use remote path
-                    upload_resp = await self.client.files.create(files=[{"local_file_path": str(model_output)}])
+                    model_output = str(model_output)
+                    upload_resp = await self.client.files.create(files=[{"local_file_path": model_output}])
                     file_info = upload_resp.files[0]
                     if not file_info.file_url:
                         raise RuntimeError("No presigned file_url returned for upload.")
                         # Upload to presigned URL (async)
-                    with open(str(model_output), "rb") as f:
+                    async with aiofiles.open(model_output, mode="rb") as f:
                         put_resp = await client.put(file_info.file_url, content=f)
                         if put_resp.status_code != 200:
                             raise RuntimeError(f"Failed to upload file: {put_resp.status_code}")
@@ -212,7 +215,7 @@ class AsyncEvalRunner:
                         prompt_uuid=prompt.prompt_uuid,
                         content_type="image",
                     )
-                    response["local_file_path"] = str(model_output)  # type: ignore
+                    response["local_file_path"] = model_output  # type: ignore
                     responses.append(response)
                     continue
                 raise ValueError("Unsupported model output type for response adapter.")
