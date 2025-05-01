@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.0-alpha.9 (2025-05-01)
+
+Full Changelog: [v1.0.0-alpha.8...v1.0.0-alpha.9](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.8...v1.0.0-alpha.9)
+
+### Features
+
+* add df util ([cb37ee7](https://github.com/aymara-ai/aymara-sdk-python/commit/cb37ee79816bd031c8ba9c6d442385596dce223f))
+* eval runner ([a95b857](https://github.com/aymara-ai/aymara-sdk-python/commit/a95b85769619d6b42cbf71bd57ab3d7689e746cf))
+
+
+### Bug Fixes
+
+* eval runner waiting ([ae05de0](https://github.com/aymara-ai/aymara-sdk-python/commit/ae05de0d30053070cc1cfc94721e89de6d5fe528))
+* example async ([0ab6116](https://github.com/aymara-ai/aymara-sdk-python/commit/0ab61160ede326967a884276f218da6f9a62876f))
+* lint ([e634bd1](https://github.com/aymara-ai/aymara-sdk-python/commit/e634bd1fb1f376fe25a68be83361e5e927837484))
+
 ## 1.0.0-alpha.8 (2025-04-30)
 
 Full Changelog: [v1.0.0-alpha.7...v1.0.0-alpha.8](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.7...v1.0.0-alpha.8)
