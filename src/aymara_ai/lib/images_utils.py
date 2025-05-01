@@ -4,13 +4,13 @@ from typing import Dict, List, Tuple, Optional
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
-from aymara_ai.types.evals.run_create_params import EvalResponseParam
+from aymara_ai.types.evals.scored_response import ScoredResponse
 
 
 def display_image_responses(
     evals: List[Eval],
     eval_prompts: Dict[str, List[EvalPrompt]],
-    eval_responses: Dict[str, List[EvalResponseParam]],
+    eval_responses: Dict[str, List[ScoredResponse]],
     eval_runs: Optional[List[EvalRunResult]] = None,
     n_images_per_eval: Optional[int] = 5,
     figsize: Optional[Tuple[int, int]] = None,
@@ -126,7 +126,7 @@ def display_image_responses(
         row += 1
 
         # Image row
-        images = [a["local_file_path"] for a in responses[:n_images_per_eval] if a.get("ai_refused", False) is False]
+        images = [a["local_file_path"] for a in responses[:n_images_per_eval] if a.ai_refused is False]
         if eval_runs is None:
             captions = [
                 next(
