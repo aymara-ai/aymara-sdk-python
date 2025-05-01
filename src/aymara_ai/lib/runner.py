@@ -47,7 +47,7 @@ class EvalRunner:
         elif isinstance(model_output, Path):  # type: ignore
             # For image, wrap in FileReferenceParam
             return EvalResponseParam(
-                content=FileReference(local_file_path=str(model_output.absolute)),
+                content=FileReference(remote_file_path=str(model_output.absolute)),
                 prompt_uuid=prompt.prompt_uuid,
                 content_type="image",
             )
@@ -57,8 +57,6 @@ class EvalRunner:
     def run_eval(
         self,
         eval_params: Dict[str, Any],
-        timeout: float = 120.0,
-        poll_interval: float = 5.0,
     ) -> EvalRunResult:
         """
         Orchestrate the full eval flow (sync).
@@ -72,7 +70,7 @@ class EvalRunner:
         eval_obj = wait_until_complete(self.client.evals.get, resource_id=str(self.eval_id))
 
         # 3. Fetch prompts
-        prompts_response = self.client.evals.list_prompts(self.eval_id)
+        prompts_response = self.client.evals.list_prompts(str(self.eval_id))
         prompts = prompts_response.items
 
         # 4. Model inference and response adaptation
@@ -83,7 +81,7 @@ class EvalRunner:
             responses.append(response)
 
         # 5. Create eval run
-        eval_run = self.client.evals.runs.create(eval_uuid=self.eval_id, responses=responses)
+        eval_run = self.client.evals.runs.create(eval_uuid=str(self.eval_id), responses=responses)
         self.run_id = eval_run.eval_run_uuid
 
         # 6. Wait for eval run completion
@@ -149,7 +147,7 @@ class AsyncEvalRunner:
         )
 
         # 3. Fetch prompts
-        prompts_response = await self.client.evals.list_prompts(self.eval_id)
+        prompts_response = await self.client.evals.list_prompts(str(self.eval_id))
         prompts = prompts_response.items
 
         # 4. Model inference and response adaptation
@@ -160,7 +158,7 @@ class AsyncEvalRunner:
             responses.append(response)
 
         # 5. Create eval run
-        eval_run = await self.client.evals.runs.create(eval_uuid=self.eval_id, responses=responses)
+        eval_run = await self.client.evals.runs.create(eval_uuid=str(self.eval_id), responses=responses)
         self.run_id = eval_run.eval_run_uuid
 
         # 6. Wait for eval run completion
