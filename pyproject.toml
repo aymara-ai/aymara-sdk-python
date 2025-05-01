@@ -62,6 +62,7 @@ dev-dependencies = [
     "python-dotenv>=1.1.0",
     "requests>=2.32.3",
     "pillow>=11.2.1",
+    "types-aiofiles>=24.1.0.20250326",
 ]
 
 [tool.rye.scripts]
