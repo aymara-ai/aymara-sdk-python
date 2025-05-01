@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-alpha.11 (2025-05-01)
+
+Full Changelog: [v1.0.0-alpha.10...v1.0.0-alpha.11](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.10...v1.0.0-alpha.11)
+
+### Features
+
+* add prompt category ([b31a58d](https://github.com/aymara-ai/aymara-sdk-python/commit/b31a58d48b78f5c6eb861faee36344c4e726d49b))
+
 ## 1.0.0-alpha.10 (2025-05-01)
 
 Full Changelog: [v1.0.0-alpha.9...v1.0.0-alpha.10](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.9...v1.0.0-alpha.10)

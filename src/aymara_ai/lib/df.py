@@ -21,6 +21,7 @@ def to_prompts_df(eval: Eval, prompts: List[EvalPrompt]) -> pd.DataFrame:
             "eval_name": eval.name,
             "prompt_uuid": prompt.prompt_uuid,
             "prompt_content": prompt.content,
+            "prompt_category": prompt.category,
         }
         for prompt in prompts
     ]
@@ -40,6 +41,7 @@ def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: 
                 "response_uuid": response.response_uuid,
                 "is_passed": response.is_passed,
                 "prompt_content": prompts[i].content if prompts else "",
+                "prompt_category": prompts[i].category if prompts else "",
                 "response_content": response.content,
                 "ai_refused": response.ai_refused,
                 "exclude_from_scoring": response.exclude_from_scoring,
