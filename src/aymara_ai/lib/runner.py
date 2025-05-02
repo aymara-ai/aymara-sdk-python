@@ -3,14 +3,13 @@ EvalRunner & AsyncEvalRunner: Simple orchestrators for Aymara SDK evals (sync an
 
 """
 
-import mimetypes
 from typing import Any, Dict, List, Union, Callable, Optional, Awaitable
 from pathlib import Path
 
 import httpx
-import aiofiles
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
+from aymara_ai.lib.uploads import upload_file, upload_file_async
 from aymara_ai.lib.async_utils import wait_until_complete, async_wait_until_complete
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.shared_params import FileReference
@@ -58,30 +57,6 @@ class EvalRunner:
         else:
             raise ValueError("Unsupported model output type for response adapter.")
 
-    def upload_file_content(
-        self, *, client: httpx.Client, file_name: str, file_content: Union[Path, bytes]
-    ) -> FileReference:
-        """
-        Helper to upload file content (from Path or bytes) and return (FileReference).
-        """
-        upload_resp = self.client.files.create(files=[{"local_file_path": file_name}])
-        file_info = upload_resp.files[0]
-        if not file_info.file_url:
-            raise RuntimeError("No presigned file_url returned for upload.")
-
-        mime_type = mimetypes.guess_type(file_name)[0]
-        headers = {"Content-Type": mime_type if mime_type else "application/octet-stream"}
-        if isinstance(file_content, Path):
-            with open(str(file_content), "rb") as f:
-                put_resp = client.put(file_info.file_url, content=f, headers=headers)
-                put_resp.raise_for_status()
-        elif isinstance(file_content, bytes):  # type: ignore
-            put_resp = client.put(file_info.file_url, content=file_content, headers=headers)
-            put_resp.raise_for_status()
-        else:
-            raise ValueError("Unsupported file_content type for upload.")
-        return FileReference(remote_file_path=file_info.remote_file_path)
-
     def run_eval(
         self,
         eval_params: Dict[str, Any],
@@ -118,17 +93,23 @@ class EvalRunner:
                     continue
 
                 file_content = model_output
-                file_name = "model_output.png"
+                file_name = None
                 if isinstance(model_output, Path):  # type: ignore
                     file_content = model_output
                     file_name = str(model_output)
-                file_ref = self.upload_file_content(client=client, file_content=file_content, file_name=file_name)
+                file_ref = upload_file(
+                    client=self.client,
+                    http_client=client,
+                    file_name=file_name,
+                    file_content=file_content,
+                    content_type=None,
+                )
                 response = EvalResponseParam(
                     content=file_ref,
                     prompt_uuid=prompt.prompt_uuid,
                     content_type="image",
                 )
-                response["local_file_path"] = file_name  # type: ignore
+                response["local_file_path"] = file_name if file_name is not None else "file.png"  # type: ignore
                 responses.append(response)
 
         # 5. Create eval run
@@ -179,32 +160,6 @@ class AsyncEvalRunner:
         else:
             raise ValueError("Unsupported model output type for response adapter.")
 
-    async def upload_file_content_async(
-        self, *, client: httpx.AsyncClient, file_name: str, file_content: Union[Path, bytes]
-    ) -> FileReference:
-        """
-        Async helper to upload file content (from Path or bytes) and return (FileReference).
-        """
-        upload_resp = await self.client.files.create(files=[{"local_file_path": file_name}])
-        file_info = upload_resp.files[0]
-        if not file_info.file_url:
-            raise RuntimeError("No presigned file_url returned for upload.")
-
-        mime_type = mimetypes.guess_type(file_name)[0]
-        headers = {"Content-Type": mime_type if mime_type else "application/octet-stream"}
-        if isinstance(file_content, Path):
-            async with aiofiles.open(str(file_content), mode="rb") as f:
-                put_resp = await client.put(file_info.file_url, content=f, headers=headers)
-                if put_resp.status_code != 200:
-                    raise RuntimeError(f"Failed to upload file: {put_resp.status_code}")
-        elif isinstance(file_content, bytes):  # type: ignore
-            put_resp = await client.put(file_info.file_url, content=file_content, headers=headers)
-            if put_resp.status_code != 200:
-                raise RuntimeError(f"Failed to upload file: {put_resp.status_code}")
-        else:
-            raise ValueError("Unsupported file_content type for upload.")
-        return FileReference(remote_file_path=file_info.remote_file_path)
-
     async def run_eval(
         self,
         eval_params: Dict[str, Any],
@@ -244,19 +199,23 @@ class AsyncEvalRunner:
                     continue
 
                 file_content = model_output
-                file_name = "model_output.png"
+                file_name = None
                 if isinstance(model_output, Path):  # type: ignore
                     file_content = model_output
                     file_name = str(model_output)
-                file_ref = await self.upload_file_content_async(
-                    client=client, file_name=file_name, file_content=file_content
+                file_ref = await upload_file_async(
+                    client=self.client,
+                    http_client=client,
+                    file_name=file_name,
+                    file_content=file_content,
+                    content_type=None,
                 )
                 response = EvalResponseParam(
                     content=file_ref,
                     prompt_uuid=prompt.prompt_uuid,
                     content_type="image",
                 )
-                response["local_file_path"] = file_name  # type: ignore
+                response["local_file_path"] = file_name if file_name is not None else "file.png"  # type: ignore
                 responses.append(response)
 
         # 5. Create eval run
