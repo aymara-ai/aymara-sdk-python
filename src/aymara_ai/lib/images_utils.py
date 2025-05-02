@@ -126,7 +126,7 @@ def display_image_responses(
         row += 1
 
         # Image row
-        images = [a["local_file_path"] for a in responses[:n_images_per_eval] if a.ai_refused is False]
+        images = [a["local_file_path"] for a in responses[:n_images_per_eval] if a.get("ai_refused", False) is False]
         if eval_runs is None:
             captions = [
                 next(
