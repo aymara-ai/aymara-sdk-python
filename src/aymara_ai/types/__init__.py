@@ -16,6 +16,7 @@ from .report_get_params import ReportGetParams as ReportGetParams
 from .eval_create_params import EvalCreateParams as EvalCreateParams
 from .eval_delete_params import EvalDeleteParams as EvalDeleteParams
 from .file_create_params import FileCreateParams as FileCreateParams
+from .file_upload_params import FileUploadParams as FileUploadParams
 from .report_list_params import ReportListParams as ReportListParams
 from .eval_response_param import EvalResponseParam as EvalResponseParam
 from .file_create_response import FileCreateResponse as FileCreateResponse
