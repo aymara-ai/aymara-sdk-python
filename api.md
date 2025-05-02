@@ -84,3 +84,4 @@ from aymara_ai.types import FileUpload, FileCreateResponse
 Methods:
 
 - <code title="post /v2/files">client.files.<a href="./src/aymara_ai/resources/files.py">create</a>(\*\*<a href="src/aymara_ai/types/file_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_create_response.py">FileCreateResponse</a></code>
+- <code title="post /v2/files/uploads">client.files.<a href="./src/aymara_ai/resources/files.py">upload</a>(\*\*<a href="src/aymara_ai/types/file_upload_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_upload.py">FileUpload</a></code>
