@@ -3,6 +3,7 @@ EvalRunner & AsyncEvalRunner: Simple orchestrators for Aymara SDK evals (sync an
 
 """
 
+import mimetypes
 from typing import Any, Dict, List, Union, Callable, Optional, Awaitable
 from pathlib import Path
 
@@ -67,12 +68,15 @@ class EvalRunner:
         file_info = upload_resp.files[0]
         if not file_info.file_url:
             raise RuntimeError("No presigned file_url returned for upload.")
+
+        mime_type = mimetypes.guess_type(file_name)[0]
+        headers = {"Content-Type": mime_type if mime_type else "application/octet-stream"}
         if isinstance(file_content, Path):
             with open(str(file_content), "rb") as f:
-                put_resp = client.put(file_info.file_url, content=f)
+                put_resp = client.put(file_info.file_url, content=f, headers=headers)
                 put_resp.raise_for_status()
         elif isinstance(file_content, bytes):  # type: ignore
-            put_resp = client.put(file_info.file_url, content=file_content)
+            put_resp = client.put(file_info.file_url, content=file_content, headers=headers)
             put_resp.raise_for_status()
         else:
             raise ValueError("Unsupported file_content type for upload.")
@@ -185,13 +189,16 @@ class AsyncEvalRunner:
         file_info = upload_resp.files[0]
         if not file_info.file_url:
             raise RuntimeError("No presigned file_url returned for upload.")
+
+        mime_type = mimetypes.guess_type(file_name)[0]
+        headers = {"Content-Type": mime_type if mime_type else "application/octet-stream"}
         if isinstance(file_content, Path):
             async with aiofiles.open(str(file_content), mode="rb") as f:
-                put_resp = await client.put(file_info.file_url, content=f)
+                put_resp = await client.put(file_info.file_url, content=f, headers=headers)
                 if put_resp.status_code != 200:
                     raise RuntimeError(f"Failed to upload file: {put_resp.status_code}")
         elif isinstance(file_content, bytes):  # type: ignore
-            put_resp = await client.put(file_info.file_url, content=file_content)
+            put_resp = await client.put(file_info.file_url, content=file_content, headers=headers)
             if put_resp.status_code != 200:
                 raise RuntimeError(f"Failed to upload file: {put_resp.status_code}")
         else:
