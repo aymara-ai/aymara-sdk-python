@@ -125,7 +125,7 @@ class FilesResource(SyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return self._post(
-            "/v2/files/uploads",
+            "/v2/files/-/uploads",
             body=maybe_transform(body, file_upload_params.FileUploadParams),
             files=files,
             options=make_request_options(
@@ -236,7 +236,7 @@ class AsyncFilesResource(AsyncAPIResource):
         # multipart/form-data; boundary=---abc--
         extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return await self._post(
-            "/v2/files/uploads",
+            "/v2/files/-/uploads",
             body=await async_maybe_transform(body, file_upload_params.FileUploadParams),
             files=files,
             options=make_request_options(
