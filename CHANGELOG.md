@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-alpha.17 (2025-05-05)
+
+Full Changelog: [v1.0.0-alpha.16...v1.0.0-alpha.17](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.16...v1.0.0-alpha.17)
+
+### Chores
+
+* examples ([3588a0c](https://github.com/aymara-ai/aymara-sdk-python/commit/3588a0cee9344e0ce102c202c2aeb447d9c1dbea))
+
 ## 1.0.0-alpha.16 (2025-05-05)
 
 Full Changelog: [v1.0.0-alpha.15...v1.0.0-alpha.16](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.15...v1.0.0-alpha.16)
