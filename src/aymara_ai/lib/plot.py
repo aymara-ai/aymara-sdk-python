@@ -27,7 +27,7 @@ def eval_pass_stats(
 
     data = [
         (
-            run.evaluation.name if run.evaluation else "",
+            run.name or run.evaluation.name if run.evaluation else "",
             run.pass_rate,
             min(run.pass_rate or 0, 0) * min(run.num_responses_scored or 0, 0),
         )
