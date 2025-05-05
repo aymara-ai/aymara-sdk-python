@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0-alpha.14 (2025-05-05)
+
+Full Changelog: [v1.0.0-alpha.13...v1.0.0-alpha.14](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.13...v1.0.0-alpha.14)
+
+### Features
+
+* **api:** api update ([44120be](https://github.com/aymara-ai/aymara-sdk-python/commit/44120be06463a5a2058dae16fb53ee3c157f36b1))
+* **api:** api update ([baaf7a4](https://github.com/aymara-ai/aymara-sdk-python/commit/baaf7a4ecb15c6c2fcb88d901424420bc4d48b11))
+* image upload examples ([a78b4c1](https://github.com/aymara-ai/aymara-sdk-python/commit/a78b4c1642a3908a5f6f958a23dba6571245b7e2))
+
+
+### Chores
+
+* lint ([bc1b752](https://github.com/aymara-ai/aymara-sdk-python/commit/bc1b752fcc009e523c072324be657b273ae91864))
+
 ## 1.0.0-alpha.13 (2025-05-02)
 
 Full Changelog: [v1.0.0-alpha.12...v1.0.0-alpha.13](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.12...v1.0.0-alpha.13)
