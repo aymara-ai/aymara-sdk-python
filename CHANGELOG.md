@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-alpha.15 (2025-05-05)
+
+Full Changelog: [v1.0.0-alpha.14...v1.0.0-alpha.15](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.14...v1.0.0-alpha.15)
+
+### Features
+
+* use remote image paths ([a51c113](https://github.com/aymara-ai/aymara-sdk-python/commit/a51c1132f6e3fdf815999e2ea1ad0396d8e97631))
+
 ## 1.0.0-alpha.14 (2025-05-05)
 
 Full Changelog: [v1.0.0-alpha.13...v1.0.0-alpha.14](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.13...v1.0.0-alpha.14)
