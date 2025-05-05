@@ -7,8 +7,10 @@ from typing import Any, Dict, List, Union, Callable, Optional, Awaitable
 from pathlib import Path
 
 import httpx
+from pydantic import BaseModel
 
 from aymara_ai import AymaraAI, AsyncAymaraAI
+from aymara_ai.types.eval import Eval
 from aymara_ai.lib.uploads import upload_file, upload_file_async
 from aymara_ai.lib.async_utils import wait_until_complete, async_wait_until_complete
 from aymara_ai.types.eval_prompt import EvalPrompt
@@ -59,12 +61,13 @@ class EvalRunner:
 
     def run_eval(
         self,
-        eval_params: Dict[str, Any],
+        eval_params: Union[Eval, Dict[str, Any]],
     ) -> EvalRunResult:
         """
         Orchestrate the full eval flow (sync).
         """
         # 1. Create eval
+        eval_params = eval_params.model_dump() if isinstance(eval_params, BaseModel) else eval_params
         eval_obj = self.client.evals.create(**eval_params)
         self.eval_id = eval_obj.eval_uuid
 
@@ -162,7 +165,7 @@ class AsyncEvalRunner:
 
     async def run_eval(
         self,
-        eval_params: Dict[str, Any],
+        eval_params: Union[Eval, Dict[str, Any]],
         timeout: int = 30,
         poll_interval: int = 5,
     ) -> EvalRunResult:
@@ -170,6 +173,7 @@ class AsyncEvalRunner:
         Orchestrate the full eval flow (async).
         """
         # 1. Create eval
+        eval_params = eval_params.model_dump() if isinstance(eval_params, BaseModel) else eval_params
         eval_obj = await self.client.evals.create(**eval_params)
         self.eval_id = eval_obj.eval_uuid
 

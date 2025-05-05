@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.0-alpha.16 (2025-05-05)
+
+Full Changelog: [v1.0.0-alpha.15...v1.0.0-alpha.16](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.15...v1.0.0-alpha.16)
+
+### Features
+
+* **api:** api update ([0d3b428](https://github.com/aymara-ai/aymara-sdk-python/commit/0d3b428d0b2205d1ef4db1ac52daf9098b938c07))
+* make name optional ([918f8d3](https://github.com/aymara-ai/aymara-sdk-python/commit/918f8d336f82047d96ca7ccbebc07d8da4396b1a))
+
+
+### Bug Fixes
+
+* use name in plots ([c7977f4](https://github.com/aymara-ai/aymara-sdk-python/commit/c7977f4e2554d23976ad230277faf63ed6782b81))
+
 ## 1.0.0-alpha.15 (2025-05-05)
 
 Full Changelog: [v1.0.0-alpha.14...v1.0.0-alpha.15](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.14...v1.0.0-alpha.15)

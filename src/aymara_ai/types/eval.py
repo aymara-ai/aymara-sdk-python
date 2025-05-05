@@ -20,8 +20,6 @@ class Eval(BaseModel):
 
     eval_type: str
 
-    name: str
-
     ai_instructions: Optional[str] = None
 
     created_at: Optional[datetime] = None
@@ -40,6 +38,8 @@ class Eval(BaseModel):
 
     modality: Optional[ContentType] = None
     """Content type for AI interactions."""
+
+    name: Optional[str] = None
 
     num_prompts: Optional[int] = None
 
