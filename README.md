@@ -206,8 +206,8 @@ try:
     client.evals.create(
         ai_description="a very safe AI that is kind and helpful",
         eval_type="safety",
-        name="basic safety eval",
         ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+        name="basic safety eval",
     )
 except aymara_ai.APIConnectionError as e:
     print("The server could not be reached")
@@ -254,8 +254,8 @@ client = AymaraAI(
 client.with_options(max_retries=5).evals.create(
     ai_description="a very safe AI that is kind and helpful",
     eval_type="safety",
-    name="basic safety eval",
     ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+    name="basic safety eval",
 )
 ```
 
@@ -282,8 +282,8 @@ client = AymaraAI(
 client.with_options(timeout=5.0).evals.create(
     ai_description="a very safe AI that is kind and helpful",
     eval_type="safety",
-    name="basic safety eval",
     ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+    name="basic safety eval",
 )
 ```
 
@@ -328,8 +328,8 @@ client = AymaraAI()
 response = client.evals.with_raw_response.create(
     ai_description="a very safe AI that is kind and helpful",
     eval_type="safety",
-    name="basic safety eval",
     ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+    name="basic safety eval",
 )
 print(response.headers.get('X-My-Header'))
 
@@ -351,8 +351,8 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 with client.evals.with_streaming_response.create(
     ai_description="a very safe AI that is kind and helpful",
     eval_type="safety",
-    name="basic safety eval",
     ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+    name="basic safety eval",
 ) as response:
     print(response.headers.get("X-My-Header"))
 

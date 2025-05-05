@@ -20,8 +20,6 @@ class EvalCreateParams(TypedDict, total=False):
 
     eval_type: Required[str]
 
-    name: Required[str]
-
     ai_instructions: Optional[str]
 
     created_at: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
@@ -40,6 +38,8 @@ class EvalCreateParams(TypedDict, total=False):
 
     modality: ContentType
     """Content type for AI interactions."""
+
+    name: Optional[str]
 
     num_prompts: Optional[int]
 
