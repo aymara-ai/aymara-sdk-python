@@ -735,8 +735,8 @@ class TestAymaraAI:
                         dict(
                             ai_description="a very safe AI that is kind and helpful",
                             eval_type="safety",
-                            name="basic safety eval",
                             ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+                            name="basic safety eval",
                         ),
                         EvalCreateParams,
                     ),
@@ -761,8 +761,8 @@ class TestAymaraAI:
                         dict(
                             ai_description="a very safe AI that is kind and helpful",
                             eval_type="safety",
-                            name="basic safety eval",
                             ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+                            name="basic safety eval",
                         ),
                         EvalCreateParams,
                     ),
@@ -799,9 +799,7 @@ class TestAymaraAI:
 
         respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = client.evals.with_raw_response.create(
-            ai_description="ai_description", eval_type="eval_type", name="name"
-        )
+        response = client.evals.with_raw_response.create(ai_description="ai_description", eval_type="eval_type")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -826,10 +824,7 @@ class TestAymaraAI:
         respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
         response = client.evals.with_raw_response.create(
-            ai_description="ai_description",
-            eval_type="eval_type",
-            name="name",
-            extra_headers={"x-stainless-retry-count": Omit()},
+            ai_description="ai_description", eval_type="eval_type", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -854,10 +849,7 @@ class TestAymaraAI:
         respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
         response = client.evals.with_raw_response.create(
-            ai_description="ai_description",
-            eval_type="eval_type",
-            name="name",
-            extra_headers={"x-stainless-retry-count": "42"},
+            ai_description="ai_description", eval_type="eval_type", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1555,8 +1547,8 @@ class TestAsyncAymaraAI:
                         dict(
                             ai_description="a very safe AI that is kind and helpful",
                             eval_type="safety",
-                            name="basic safety eval",
                             ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+                            name="basic safety eval",
                         ),
                         EvalCreateParams,
                     ),
@@ -1581,8 +1573,8 @@ class TestAsyncAymaraAI:
                         dict(
                             ai_description="a very safe AI that is kind and helpful",
                             eval_type="safety",
-                            name="basic safety eval",
                             ai_instructions="The AI is very safe and helpful. It should not be rude or mean.",
+                            name="basic safety eval",
                         ),
                         EvalCreateParams,
                     ),
@@ -1620,9 +1612,7 @@ class TestAsyncAymaraAI:
 
         respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
-        response = await client.evals.with_raw_response.create(
-            ai_description="ai_description", eval_type="eval_type", name="name"
-        )
+        response = await client.evals.with_raw_response.create(ai_description="ai_description", eval_type="eval_type")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1648,10 +1638,7 @@ class TestAsyncAymaraAI:
         respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
         response = await client.evals.with_raw_response.create(
-            ai_description="ai_description",
-            eval_type="eval_type",
-            name="name",
-            extra_headers={"x-stainless-retry-count": Omit()},
+            ai_description="ai_description", eval_type="eval_type", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1677,10 +1664,7 @@ class TestAsyncAymaraAI:
         respx_mock.post("/v2/evals").mock(side_effect=retry_handler)
 
         response = await client.evals.with_raw_response.create(
-            ai_description="ai_description",
-            eval_type="eval_type",
-            name="name",
-            extra_headers={"x-stainless-retry-count": "42"},
+            ai_description="ai_description", eval_type="eval_type", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

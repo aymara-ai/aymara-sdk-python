@@ -28,7 +28,6 @@ class TestEvals:
         eval = client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
         )
         assert_matches_type(Eval, eval, path=["response"])
 
@@ -38,7 +37,6 @@ class TestEvals:
         eval = client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
             ai_instructions="ai_instructions",
             created_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             eval_instructions="eval_instructions",
@@ -48,6 +46,7 @@ class TestEvals:
             is_sandbox=True,
             language="language",
             modality="text",
+            name="name",
             num_prompts=0,
             prompt_examples=[
                 {
@@ -69,7 +68,6 @@ class TestEvals:
         response = client.evals.with_raw_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
         )
 
         assert response.is_closed is True
@@ -83,7 +81,6 @@ class TestEvals:
         with client.evals.with_streaming_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -296,7 +293,6 @@ class TestAsyncEvals:
         eval = await async_client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
         )
         assert_matches_type(Eval, eval, path=["response"])
 
@@ -306,7 +302,6 @@ class TestAsyncEvals:
         eval = await async_client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
             ai_instructions="ai_instructions",
             created_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             eval_instructions="eval_instructions",
@@ -316,6 +311,7 @@ class TestAsyncEvals:
             is_sandbox=True,
             language="language",
             modality="text",
+            name="name",
             num_prompts=0,
             prompt_examples=[
                 {
@@ -337,7 +333,6 @@ class TestAsyncEvals:
         response = await async_client.evals.with_raw_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
         )
 
         assert response.is_closed is True
@@ -351,7 +346,6 @@ class TestAsyncEvals:
         async with async_client.evals.with_streaming_response.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            name="name",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
