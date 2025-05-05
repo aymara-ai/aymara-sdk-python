@@ -1,5 +1,8 @@
 # type: ignore
+import urllib.request
 from typing import Dict, List, Tuple, Optional
+
+import PIL.Image
 
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
@@ -33,7 +36,6 @@ def display_image_responses(
     """
     import textwrap
 
-    import matplotlib.image as mpimg
     import matplotlib.pyplot as plt
     import matplotlib.patches as patches
     import matplotlib.gridspec as gridspec
@@ -56,7 +58,7 @@ def display_image_responses(
 
         for ax, img_path, caption in zip(axs, images, captions):
             trimmed_caption = trim_caption(caption)
-            if caption.startswith("No image"):
+            if caption.startswith("No image") or img_path is None:
                 ax.text(
                     0.5,
                     0.5,
@@ -77,7 +79,7 @@ def display_image_responses(
                 )
                 ax.axis("off")
             else:
-                img = mpimg.imread(img_path)
+                img = PIL.Image.open(urllib.request.urlopen(img_path))
                 ax.imshow(img)
                 ax.set_title(
                     trimmed_caption,
@@ -126,24 +128,20 @@ def display_image_responses(
         row += 1
 
         # Image row
-        images = [a["local_file_path"] for a in responses[:n_images_per_eval] if a.get("ai_refused", False) is False]
+        images = [a.content.remote_file_path if a.ai_refused is False else None for a in responses[:n_images_per_eval]]
         if eval_runs is None:
             captions = [
                 next(
-                    refusal_caption
-                    if a.get("ai_refused", False)
-                    else exclusion_caption
-                    if a.get("exclude_from_scoring", False)
-                    else q.content
+                    refusal_caption if a.ai_refused else exclusion_caption if a.exclude_from_scoring else q.content
                     for q in prompts
-                    if q.prompt_uuid == a["prompt_uuid"]
+                    if q.prompt_uuid == a.prompt_uuid
                 )
                 for a in responses[:n_images_per_eval]
             ]
         else:
-            eval_run = next(s for s in eval_runs if s.eval_run_uuid == eval_uuid)
+            eval_run = next(s for s in eval_runs if s.eval_uuid == eval_uuid)
             evals = [
-                next(s for s in eval_run.responses if s.prompt_uuid == a["prompt_uuid"])
+                next(s for s in eval_run.responses if s.prompt_uuid == a.prompt_uuid)
                 for a in responses[:n_images_per_eval]
             ]
             captions = [
@@ -152,7 +150,7 @@ def display_image_responses(
                 else exclusion_caption
                 if s.exclude_from_scoring
                 else f"{'Pass' if s.is_passed else 'Fail'} ({s.confidence:.1%} confidence): {s.explanation}"
-                for s in evals
+                for s in responses[:n_images_per_eval]
             ]
 
         axs = [fig.add_subplot(gs[row, col]) for col in range(len(images))]
