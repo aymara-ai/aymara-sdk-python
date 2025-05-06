@@ -4,4 +4,4 @@ from typing_extensions import Literal, TypeAlias
 
 __all__ = ["ContentType"]
 
-ContentType: TypeAlias = Literal["text", "image", "audio", "video"]
+ContentType: TypeAlias = Literal["text", "image"]
