@@ -88,6 +88,20 @@ class RunsResource(SyncAPIResource):
         Example: POST /api/eval-runs { "eval_uuid": "...", ... }
 
         Args:
+          eval_uuid: Unique identifier for the eval.
+
+          responses: List of AI responses to eval prompts.
+
+          ai_description: Description of the AI for this run, if any.
+
+          continue_thread: Whether to continue the thread after this run.
+
+          eval_run_examples: Examples to include with the eval run, if any.
+
+          eval_run_uuid: Unique identifier for the eval run, if any.
+
+          name: Name of the eval run, if any (defaults to the eval name + timestamp).
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -374,6 +388,20 @@ class RunsResource(SyncAPIResource):
         "responses": [...] }
 
         Args:
+          eval_uuid: Unique identifier for the eval.
+
+          responses: List of AI responses to eval prompts.
+
+          ai_description: Description of the AI for this run, if any.
+
+          continue_thread: Whether to continue the thread after this run.
+
+          eval_run_examples: Examples to include with the eval run, if any.
+
+          eval_run_uuid: Unique identifier for the eval run, if any.
+
+          name: Name of the eval run, if any (defaults to the eval name + timestamp).
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -467,6 +495,20 @@ class AsyncRunsResource(AsyncAPIResource):
         Example: POST /api/eval-runs { "eval_uuid": "...", ... }
 
         Args:
+          eval_uuid: Unique identifier for the eval.
+
+          responses: List of AI responses to eval prompts.
+
+          ai_description: Description of the AI for this run, if any.
+
+          continue_thread: Whether to continue the thread after this run.
+
+          eval_run_examples: Examples to include with the eval run, if any.
+
+          eval_run_uuid: Unique identifier for the eval run, if any.
+
+          name: Name of the eval run, if any (defaults to the eval name + timestamp).
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -755,6 +797,20 @@ class AsyncRunsResource(AsyncAPIResource):
         "responses": [...] }
 
         Args:
+          eval_uuid: Unique identifier for the eval.
+
+          responses: List of AI responses to eval prompts.
+
+          ai_description: Description of the AI for this run, if any.
+
+          continue_thread: Whether to continue the thread after this run.
+
+          eval_run_examples: Examples to include with the eval run, if any.
+
+          eval_run_uuid: Unique identifier for the eval run, if any.
+
+          name: Name of the eval run, if any (defaults to the eval name + timestamp).
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request

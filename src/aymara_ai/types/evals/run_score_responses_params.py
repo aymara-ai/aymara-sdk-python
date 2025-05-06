@@ -13,19 +13,26 @@ __all__ = ["RunScoreResponsesParams"]
 
 class RunScoreResponsesParams(TypedDict, total=False):
     eval_uuid: Required[str]
+    """Unique identifier for the eval."""
 
     responses: Required[Iterable[EvalResponseParam]]
+    """List of AI responses to eval prompts."""
 
     is_sandbox: bool
 
     workspace_uuid: str
 
     ai_description: Optional[str]
+    """Description of the AI for this run, if any."""
 
     continue_thread: Optional[bool]
+    """Whether to continue the thread after this run."""
 
     eval_run_examples: Optional[Iterable[EvalRunExampleParam]]
+    """Examples to include with the eval run, if any."""
 
     eval_run_uuid: Optional[str]
+    """Unique identifier for the eval run, if any."""
 
     name: Optional[str]
+    """Name of the eval run, if any (defaults to the eval name + timestamp)."""

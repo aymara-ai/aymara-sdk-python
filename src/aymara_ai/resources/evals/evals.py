@@ -107,9 +107,39 @@ class EvalsResource(SyncAPIResource):
         Example: POST /api/evals { "eval_type": "...", "workspace_uuid": "...", ... }
 
         Args:
+          ai_description: Description of the AI under evaluation.
+
+          eval_type: Type of the eval (safety, accuracy, etc.)
+
+          ai_instructions: Instructions the AI should follow.
+
+          created_at: Timestamp when the eval was created.
+
+          eval_instructions: Additional instructions for the eval, if any.
+
+          eval_uuid: Unique identifier for the evaluation.
+
+          ground_truth: Ground truth data or reference file, if any.
+
+          is_jailbreak: Indicates if the eval is a jailbreak test.
+
+          is_sandbox: Indicates if the eval results are sandboxed.
+
+          language: Language code for the eval (default: "en").
+
           modality: Content type for AI interactions.
 
+          name: Name of the evaluation.
+
+          num_prompts: Number of prompts/questions in the eval (default: 50).
+
+          prompt_examples: List of example prompts for the eval.
+
           status: Resource status.
+
+          updated_at: Timestamp when the eval was last updated.
+
+          workspace_uuid: UUID of the associated workspace, if any.
 
           extra_headers: Send extra headers
 
@@ -420,9 +450,39 @@ class AsyncEvalsResource(AsyncAPIResource):
         Example: POST /api/evals { "eval_type": "...", "workspace_uuid": "...", ... }
 
         Args:
+          ai_description: Description of the AI under evaluation.
+
+          eval_type: Type of the eval (safety, accuracy, etc.)
+
+          ai_instructions: Instructions the AI should follow.
+
+          created_at: Timestamp when the eval was created.
+
+          eval_instructions: Additional instructions for the eval, if any.
+
+          eval_uuid: Unique identifier for the evaluation.
+
+          ground_truth: Ground truth data or reference file, if any.
+
+          is_jailbreak: Indicates if the eval is a jailbreak test.
+
+          is_sandbox: Indicates if the eval results are sandboxed.
+
+          language: Language code for the eval (default: "en").
+
           modality: Content type for AI interactions.
 
+          name: Name of the evaluation.
+
+          num_prompts: Number of prompts/questions in the eval (default: 50).
+
+          prompt_examples: List of example prompts for the eval.
+
           status: Resource status.
+
+          updated_at: Timestamp when the eval was last updated.
+
+          workspace_uuid: UUID of the associated workspace, if any.
 
           extra_headers: Send extra headers
 

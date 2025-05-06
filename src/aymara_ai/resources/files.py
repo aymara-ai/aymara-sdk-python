@@ -72,6 +72,10 @@ class FilesResource(SyncAPIResource):
         "path/to/file2.csv"} ] }
 
         Args:
+          files: List of files to upload.
+
+          workspace_uuid: UUID of the workspace to associate with the upload, if any.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -183,6 +187,10 @@ class AsyncFilesResource(AsyncAPIResource):
         "path/to/file2.csv"} ] }
 
         Args:
+          files: List of files to upload.
+
+          workspace_uuid: UUID of the workspace to associate with the upload, if any.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
