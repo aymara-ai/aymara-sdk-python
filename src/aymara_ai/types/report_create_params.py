@@ -10,6 +10,7 @@ __all__ = ["ReportCreateParams"]
 
 class ReportCreateParams(TypedDict, total=False):
     eval_run_uuids: Required[List[str]]
+    """List of eval run UUIDs to include in the suite summary."""
 
     is_sandbox: Optional[bool]
 
