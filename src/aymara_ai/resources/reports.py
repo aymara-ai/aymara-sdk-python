@@ -61,6 +61,8 @@ class ReportsResource(SyncAPIResource):
         Create a summary for a suite of eval runs.
 
         Args:
+          eval_run_uuids: List of eval run UUIDs to include in the suite summary.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -248,6 +250,8 @@ class AsyncReportsResource(AsyncAPIResource):
         Create a summary for a suite of eval runs.
 
         Args:
+          eval_run_uuids: List of eval run UUIDs to include in the suite summary.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
