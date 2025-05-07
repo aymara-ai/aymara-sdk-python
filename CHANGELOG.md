@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-alpha.19 (2025-05-07)
+
+Full Changelog: [v1.0.0-alpha.18...v1.0.0-alpha.19](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.18...v1.0.0-alpha.19)
+
+### Bug Fixes
+
+* add lib init ([defae5b](https://github.com/aymara-ai/aymara-sdk-python/commit/defae5b92151e795d2945db2e7f659cc5be9f5fe))
+
 ## 1.0.0-alpha.18 (2025-05-06)
 
 Full Changelog: [v1.0.0-alpha.17...v1.0.0-alpha.18](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.17...v1.0.0-alpha.18)
