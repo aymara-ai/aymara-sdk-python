@@ -33,6 +33,7 @@ def to_prompts_df(eval: Eval, prompts: List[EvalPrompt]) -> pd.DataFrame:
 
 def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: List[ScoredResponse]) -> pd.DataFrame:
     """Create a scores DataFrame."""
+    prompt_map: Dict[str, EvalPrompt] = {prompt.prompt_uuid: prompt for prompt in prompts} if prompts else {}
     rows = (
         [
             {
@@ -42,15 +43,15 @@ def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: 
                 "prompt_uuid": response.prompt_uuid,
                 "response_uuid": response.response_uuid,
                 "is_passed": response.is_passed,
-                "prompt_content": prompts[i].content if prompts else "",
-                "prompt_category": prompts[i].category if prompts else "",
+                "prompt_content": (prompt.content if (prompt := prompt_map.get(response.prompt_uuid)) else ""),
+                "prompt_category": (prompt.category if (prompt := prompt_map.get(response.prompt_uuid)) else ""),
                 "response_content": response.content,
                 "ai_refused": response.ai_refused,
                 "exclude_from_scoring": response.exclude_from_scoring,
                 "explanation": response.explanation,
                 "confidence": response.confidence,
             }
-            for i, response in enumerate(responses)
+            for response in responses
         ]
         if responses
         else []
