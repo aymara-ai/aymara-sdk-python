@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-alpha.22 (2025-05-08)
+
+Full Changelog: [v1.0.0-alpha.21...v1.0.0-alpha.22](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.21...v1.0.0-alpha.22)
+
+### Features
+
+* print report by category ([14d2d31](https://github.com/aymara-ai/aymara-sdk-python/commit/14d2d31d689ff48d0aac4b279a1e54c2204d6e18))
+
 ## 1.0.0-alpha.21 (2025-05-08)
 
 Full Changelog: [v1.0.0-alpha.20...v1.0.0-alpha.21](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.20...v1.0.0-alpha.21)
