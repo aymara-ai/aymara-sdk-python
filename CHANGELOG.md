@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0-alpha.20 (2025-05-08)
+
+Full Changelog: [v1.0.0-alpha.19...v1.0.0-alpha.20](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.19...v1.0.0-alpha.20)
+
+### Bug Fixes
+
+* image display ([2ed5aea](https://github.com/aymara-ai/aymara-sdk-python/commit/2ed5aea7ebb233034b956051ea060b7b15a3fd50))
+* image handling for non-scored responses ([b018a38](https://github.com/aymara-ai/aymara-sdk-python/commit/b018a380466cdd8dab1dc108160e114bca8f6eaf))
+* scored image display ([95f64df](https://github.com/aymara-ai/aymara-sdk-python/commit/95f64df97cb7902a06482785afc5beb7068d7464))
+
+
+### Chores
+
+* lint ([7795c70](https://github.com/aymara-ai/aymara-sdk-python/commit/7795c7056fcad4aff8e36058b8483219fcfe4a86))
+
 ## 1.0.0-alpha.19 (2025-05-07)
 
 Full Changelog: [v1.0.0-alpha.18...v1.0.0-alpha.19](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.18...v1.0.0-alpha.19)
