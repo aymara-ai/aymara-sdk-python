@@ -1,19 +1,27 @@
 # type: ignore
 import urllib.request
-from typing import Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional
 
 import PIL.Image
 
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
+from aymara_ai.types.eval_response_param import EvalResponseParam
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
-from aymara_ai.types.evals.scored_response import ScoredResponse
+
+
+def as_eval_response_dict(obj: Any) -> dict:
+    if isinstance(obj, dict):
+        return obj
+    if hasattr(obj, "dict"):
+        return obj.dict()
+    return vars(obj)
 
 
 def display_image_responses(
     evals: List[Eval],
     eval_prompts: Dict[str, List[EvalPrompt]],
-    eval_responses: Dict[str, List[ScoredResponse]],
+    eval_responses: Dict[str, List[EvalResponseParam]],
     eval_runs: Optional[List[EvalRunResult]] = None,
     n_images_per_eval: Optional[int] = 5,
     figsize: Optional[Tuple[int, int]] = None,
@@ -79,7 +87,13 @@ def display_image_responses(
                 )
                 ax.axis("off")
             else:
-                img = PIL.Image.open(urllib.request.urlopen(img_path))
+                # Handle local file paths and URLs
+                if isinstance(img_path, str) and (
+                    img_path.startswith("http://") or img_path.startswith("https://") or img_path.startswith("file://")
+                ):
+                    img = PIL.Image.open(urllib.request.urlopen(img_path))
+                else:
+                    img = PIL.Image.open(img_path)
                 ax.imshow(img)
                 ax.set_title(
                     trimmed_caption,
@@ -110,6 +124,8 @@ def display_image_responses(
 
     row = 0
     for eval_uuid, responses in eval_responses.items():
+        if eval_uuid is None:
+            continue
         eval = next(t for t in evals if t.eval_uuid == eval_uuid)
         prompts = eval_prompts.get(eval_uuid, [])
 
@@ -128,21 +144,32 @@ def display_image_responses(
         row += 1
 
         # Image row
-        images = [a.content.remote_file_path if a.ai_refused is False else None for a in responses[:n_images_per_eval]]
+        norm_responses = [as_eval_response_dict(a) for a in responses[:n_images_per_eval]]
+        images = [
+            a["local_file_path"]
+            if a.get("ai_refused", False) is False and a.get("local_file_path")
+            else a["content"]["remote_file_path"]
+            if a.get("content") and a.get("ai_refused", False)
+            else None
+            for a in norm_responses
+        ]
         if eval_runs is None:
             captions = [
                 next(
-                    refusal_caption if a.ai_refused else exclusion_caption if a.exclude_from_scoring else q.content
+                    refusal_caption
+                    if a.get("ai_refused", False)
+                    else exclusion_caption
+                    if a.get("exclude_from_scoring", False)
+                    else q.content
                     for q in prompts
-                    if q.prompt_uuid == a.prompt_uuid
+                    if q.prompt_uuid == a.get("prompt_uuid")
                 )
-                for a in responses[:n_images_per_eval]
+                for a in norm_responses
             ]
         else:
             eval_run = next(s for s in eval_runs if s.eval_uuid == eval_uuid)
-            evals = [
-                next(s for s in eval_run.responses if s.prompt_uuid == a.prompt_uuid)
-                for a in responses[:n_images_per_eval]
+            evals_for_row = [
+                next(s for s in eval_run.responses if s.prompt_uuid == a.get("prompt_uuid")) for a in norm_responses
             ]
             captions = [
                 refusal_caption
@@ -150,7 +177,7 @@ def display_image_responses(
                 else exclusion_caption
                 if s.exclude_from_scoring
                 else f"{'Pass' if s.is_passed else 'Fail'} ({s.confidence:.1%} confidence): {s.explanation}"
-                for s in responses[:n_images_per_eval]
+                for s in evals_for_row
             ]
 
         axs = [fig.add_subplot(gs[row, col]) for col in range(len(images))]
