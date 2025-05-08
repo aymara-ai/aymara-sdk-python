@@ -68,48 +68,61 @@ def to_df(results: Union[List[Union[BaseModel, Dict[str, Any]]], Dict[str, Any],
     return pd.DataFrame(rows)
 
 
-def to_categories_df(suite_report: EvalSuiteReport) -> pd.DataFrame:
-    """Create report by category."""
+def to_reports_df(suite_report: EvalSuiteReport) -> pd.DataFrame:
+    """Create report by prompt category."""
 
     rows = []
     for report in suite_report.eval_run_reports:
-        # Extract sections using XML tags
-        passing_sections = re.findall(r"<(\w+)>(.*?)</\1>", report.passing_responses_summary, re.DOTALL)
-        failing_sections = (
-            re.findall(r"<(\w+)>(.*?)</\1>", report.failing_responses_summary, re.DOTALL)
-            if report.failing_responses_summary
-            else []
-        )
-        advice_sections = re.findall(r"<(\w+)>(.*?)</\1>", report.improvement_advice, re.DOTALL)
+        if report.eval_run.evaluation.eval_type == "accuracy" if report.eval_run.evaluation else False:
+            # Extract sections using XML tags
+            passing_sections = re.findall(r"<(\w+)>(.*?)</\1>", report.passing_responses_summary, re.DOTALL)
+            failing_sections = (
+                re.findall(r"<(\w+)>(.*?)</\1>", report.failing_responses_summary, re.DOTALL)
+                if report.failing_responses_summary
+                else []
+            )
+            advice_sections = re.findall(r"<(\w+)>(.*?)</\1>", report.improvement_advice, re.DOTALL)
 
-        # Create a mapping of question types to their content
-        passing_by_type = {tag: content.strip() for tag, content in passing_sections}
-        failing_by_type = {tag: content.strip() for tag, content in failing_sections}
-        advice_by_type = {tag: content.strip() for tag, content in advice_sections}
+            # Create a mapping of question types to their content
+            passing_by_type = {tag: content.strip() for tag, content in passing_sections}
+            failing_by_type = {tag: content.strip() for tag, content in failing_sections}
+            advice_by_type = {tag: content.strip() for tag, content in advice_sections}
 
-        # Get ordered unique question types while preserving order
-        categories = []
-        for tag, _ in passing_sections + failing_sections:
-            if tag not in categories:
-                categories.append(tag)
+            # Get ordered unique question types while preserving order
+            categories = []
+            for tag, _ in passing_sections + failing_sections:
+                if tag not in categories:
+                    categories.append(tag)  # type: ignore
 
-        # Create a row for each question type
-        for q_type in categories:
-            rows.append(
+            # Create a row for each question type
+            for q_type in categories:  # type: ignore
+                rows.append(  # type: ignore
+                    {
+                        "eval_name": report.eval_run.evaluation.name
+                        if report.eval_run.evaluation
+                        else report.eval_run.name,
+                        "prompt_category": q_type,
+                        "passing_responses_summary": passing_by_type.get(q_type, ""),
+                        "failing_responses_summary": failing_by_type.get(q_type, ""),
+                        "improvement_advice": advice_by_type.get(q_type, ""),
+                    }
+                )
+        else:
+            # Handle non-accuracy tests as before
+            rows.append(  # type: ignore
                 {
                     "eval_name": report.eval_run.evaluation.name
                     if report.eval_run.evaluation
                     else report.eval_run.name,
-                    "prompt_category": q_type,
-                    "passing_responses_summary": passing_by_type.get(q_type, ""),
-                    "failing_responses_summary": failing_by_type.get(q_type, ""),
-                    "improvement_advice": advice_by_type.get(q_type, ""),
+                    "passing_responses_summary": report.passing_responses_summary,
+                    "failing_responses_summary": report.failing_responses_summary,
+                    "improvement_advice": report.improvement_advice,
                 }
             )
 
     # Add overall summary if available
     if suite_report.overall_passing_responses_summary or suite_report.overall_failing_responses_summary:
-        rows.append(
+        rows.append(  # type: ignore
             {
                 "eval_name": "Overall",
                 "passing_responses_summary": suite_report.overall_passing_responses_summary,
