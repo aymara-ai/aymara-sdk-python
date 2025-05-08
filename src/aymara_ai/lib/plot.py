@@ -9,6 +9,10 @@ from matplotlib.figure import Figure
 from matplotlib.ticker import FuncFormatter
 
 from aymara_ai.types.evals import EvalRunResult
+from aymara_ai.types.eval_prompt import EvalPrompt
+from aymara_ai.types.evals.scored_response import ScoredResponse
+
+from .df import to_scores_df
 
 
 def eval_pass_stats(
@@ -38,6 +42,34 @@ def eval_pass_stats(
         data=data,
         columns=["name", "pass_rate", "pass_total"],
         index=pd.Index([run.eval_run_uuid for run in eval_runs], name="eval_run_uuid"),
+    )
+
+
+def eval_pass_stats_by_category(
+    eval_run: EvalRunResult,
+    prompts: List[EvalPrompt],
+    responses: List[ScoredResponse],
+) -> pd.DataFrame:
+    """
+    Create a DataFrame of pass rates and pass totals from one eval run.
+
+    :param eval_run: One eval run to graph.
+    :type eval_run: EvalRunResult
+    :param prompts: List of evaluation prompts.
+    :type prompts: List[EvalPrompt]
+    :param responses: List of scored responses.
+    :type responses: List[ScoredResponse]
+    :return: DataFrame of pass rates per evaluation prompt category.
+    :rtype: pd.DataFrame
+    """
+
+    df_scores = to_scores_df(eval_run, prompts, responses)
+    if df_scores.empty:
+        return pd.DataFrame()
+
+    return df_scores.groupby(by="prompt_category", as_index=False)["is_passed"].agg(
+        pass_rate="mean",
+        pass_total="sum",
     )
 
 
@@ -143,6 +175,68 @@ def graph_eval_stats(
 
     _plot_pass_stats(
         names=df_pass_stats["eval_run_uuid" if xaxis_is_eval_run_uuids else "name"],
+        pass_stats=df_pass_stats["pass_rate" if yaxis_is_percent else "pass_total"],
+        title=title,
+        xlabel=xlabel,
+        ylabel=ylabel,
+        xtick_rot=xtick_rot,
+        xtick_labels_dict=xtick_labels_dict,
+        yaxis_is_percent=yaxis_is_percent,
+        ylim_min=ylim_min,
+        ylim_max=ylim_max,
+        **kwargs,
+    )
+
+
+def graph_eval_by_category(
+    eval_run: EvalRunResult,
+    prompts: List[EvalPrompt],
+    responses: List[ScoredResponse],
+    title: Optional[str] = None,
+    ylim_min: Optional[float] = None,
+    ylim_max: Optional[float] = None,
+    yaxis_is_percent: Optional[bool] = True,
+    ylabel: Optional[str] = "Responses Passed",
+    xlabel: Optional[str] = "Prompt Category",
+    xtick_rot: Optional[float] = 30.0,
+    xtick_labels_dict: Optional[dict] = None,
+    **kwargs,
+) -> None:
+    """
+    Draw a bar graph of pass rates from one eval run.
+
+    :param eval_run: The eval run to graph.
+    :type eval_run: EvalRunResult
+    :param prompts: List of evaluation prompts.
+    :type prompts: List[EvalPrompt]
+    :param responses: List of scored responses.
+    :type responses: List[ScoredResponse]
+    :param title: Graph title.
+    :type title: str, optional
+    :param ylim_min: y-axis lower limit, defaults to rounding down to the nearest ten.
+    :type ylim_min: float, optional
+    :param ylim_max: y-axis upper limit, defaults to matplotlib's preference but is capped at 100.
+    :type ylim_max: float, optional
+    :param yaxis_is_percent: Whether to show the pass rate as a percent (instead of the total number of questions passed), defaults to True.
+    :type yaxis_is_percent: bool, optional
+    :param ylabel: Label of the y-axis, defaults to 'Responses Passed'.
+    :type ylabel: str
+    :param xlabel: Label of the x-axis, defaults to 'Prompt Category'.
+    :type xlabel: str
+    :param xtick_rot: rotation of the x-axis tick labels, defaults to 30.
+    :type xtick_rot: float
+    :param xtick_labels_dict: Maps test_names (keys) to x-axis tick labels (values).
+    :type xtick_labels_dict: dict, optional
+    :param kwargs: Options to pass to matplotlib.pyplot.bar.
+    """
+
+    if not eval_run.responses and not responses:
+        raise ValueError("Eval run has no responses")
+
+    df_pass_stats = eval_pass_stats_by_category(eval_run, prompts, responses or eval_run.responses)
+
+    _plot_pass_stats(
+        names=df_pass_stats["prompt_category"],
         pass_stats=df_pass_stats["pass_rate" if yaxis_is_percent else "pass_total"],
         title=title,
         xlabel=xlabel,
