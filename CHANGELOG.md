@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 (2025-05-08)
+
+Full Changelog: [v1.0.0...v1.0.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0...v1.0.1)
+
+### Bug Fixes
+
+* prompt response alignment in df ([3eae5d3](https://github.com/aymara-ai/aymara-sdk-python/commit/3eae5d34540cac3c84276e869a618d5cedc01b1f))
+
 ## 1.0.0 (2025-05-08)
 
 Full Changelog: [v1.0.0-alpha.22...v1.0.0](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.22...v1.0.0)
