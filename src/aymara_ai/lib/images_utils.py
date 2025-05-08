@@ -149,7 +149,7 @@ def display_image_responses(
             a["local_file_path"]
             if a.get("ai_refused", False) is False and a.get("local_file_path")
             else a["content"]["remote_file_path"]
-            if a.get("content") and a.get("ai_refused", False)
+            if a.get("content") and a.get("ai_refused", False) is False
             else None
             for a in norm_responses
         ]
