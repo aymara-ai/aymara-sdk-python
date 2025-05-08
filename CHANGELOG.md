@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-alpha.21 (2025-05-08)
+
+Full Changelog: [v1.0.0-alpha.20...v1.0.0-alpha.21](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.20...v1.0.0-alpha.21)
+
+### Features
+
+* add category graph ([a0e807c](https://github.com/aymara-ai/aymara-sdk-python/commit/a0e807c817950dd30b71d091746875f95ce3b279))
+
 ## 1.0.0-alpha.20 (2025-05-08)
 
 Full Changelog: [v1.0.0-alpha.19...v1.0.0-alpha.20](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0-alpha.19...v1.0.0-alpha.20)
