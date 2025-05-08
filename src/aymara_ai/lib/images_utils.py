@@ -7,7 +7,6 @@ import PIL.Image
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.eval_response_param import EvalResponseParam
-from aymara_ai.types.evals.eval_run_result import EvalRunResult
 
 
 def as_eval_response_dict(obj: Any) -> dict:
@@ -22,7 +21,6 @@ def display_image_responses(
     evals: List[Eval],
     eval_prompts: Dict[str, List[EvalPrompt]],
     eval_responses: Dict[str, List[EvalResponseParam]],
-    eval_runs: Optional[List[EvalRunResult]] = None,
     n_images_per_eval: Optional[int] = 5,
     figsize: Optional[Tuple[int, int]] = None,
 ) -> None:
@@ -153,7 +151,7 @@ def display_image_responses(
             else None
             for a in norm_responses
         ]
-        if eval_runs is None:
+        if norm_responses[0].get("is_passed") is None:
             captions = [
                 next(
                     refusal_caption
@@ -167,17 +165,17 @@ def display_image_responses(
                 for a in norm_responses
             ]
         else:
-            eval_run = next(s for s in eval_runs if s.eval_uuid == eval_uuid)
-            evals_for_row = [
-                next(s for s in eval_run.responses if s.prompt_uuid == a.get("prompt_uuid")) for a in norm_responses
-            ]
             captions = [
-                refusal_caption
-                if s.ai_refused
-                else exclusion_caption
-                if s.exclude_from_scoring
-                else f"{'Pass' if s.is_passed else 'Fail'} ({s.confidence:.1%} confidence): {s.explanation}"
-                for s in evals_for_row
+                next(
+                    refusal_caption
+                    if a.get("ai_refused", False)
+                    else exclusion_caption
+                    if a.get("exclude_from_scoring", False)
+                    else f"{'Pass' if a.get('is_passed') else 'Fail'} ({a.get('confidence'):.1%} confidence): {a.get('explanation')}"
+                    for q in prompts
+                    if q.prompt_uuid == a.get("prompt_uuid")
+                )
+                for a in norm_responses
             ]
 
         axs = [fig.add_subplot(gs[row, col]) for col in range(len(images))]
