@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict, List, Union
 
 import pandas as pd  # type: ignore
@@ -5,6 +6,7 @@ import pandas as pd  # type: ignore
 from aymara_ai._models import BaseModel
 from aymara_ai.types.eval import Eval
 from aymara_ai.types.eval_prompt import EvalPrompt
+from aymara_ai.types.eval_suite_report import EvalSuiteReport
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
 from aymara_ai.types.evals.scored_response import ScoredResponse
 
@@ -62,5 +64,58 @@ def to_df(results: Union[List[Union[BaseModel, Dict[str, Any]]], Dict[str, Any],
     if isinstance(results, dict) or isinstance(results, BaseModel):
         results = [results]
     rows = [r.to_dict() if isinstance(r, BaseModel) else r for r in results]
+
+    return pd.DataFrame(rows)
+
+
+def to_categories_df(suite_report: EvalSuiteReport) -> pd.DataFrame:
+    """Create report by category."""
+
+    rows = []
+    for report in suite_report.eval_run_reports:
+        # Extract sections using XML tags
+        passing_sections = re.findall(r"<(\w+)>(.*?)</\1>", report.passing_responses_summary, re.DOTALL)
+        failing_sections = (
+            re.findall(r"<(\w+)>(.*?)</\1>", report.failing_responses_summary, re.DOTALL)
+            if report.failing_responses_summary
+            else []
+        )
+        advice_sections = re.findall(r"<(\w+)>(.*?)</\1>", report.improvement_advice, re.DOTALL)
+
+        # Create a mapping of question types to their content
+        passing_by_type = {tag: content.strip() for tag, content in passing_sections}
+        failing_by_type = {tag: content.strip() for tag, content in failing_sections}
+        advice_by_type = {tag: content.strip() for tag, content in advice_sections}
+
+        # Get ordered unique question types while preserving order
+        categories = []
+        for tag, _ in passing_sections + failing_sections:
+            if tag not in categories:
+                categories.append(tag)
+
+        # Create a row for each question type
+        for q_type in categories:
+            rows.append(
+                {
+                    "eval_name": report.eval_run.evaluation.name
+                    if report.eval_run.evaluation
+                    else report.eval_run.name,
+                    "prompt_category": q_type,
+                    "passing_responses_summary": passing_by_type.get(q_type, ""),
+                    "failing_responses_summary": failing_by_type.get(q_type, ""),
+                    "improvement_advice": advice_by_type.get(q_type, ""),
+                }
+            )
+
+    # Add overall summary if available
+    if suite_report.overall_passing_responses_summary or suite_report.overall_failing_responses_summary:
+        rows.append(
+            {
+                "eval_name": "Overall",
+                "passing_responses_summary": suite_report.overall_passing_responses_summary,
+                "failing_responses_summary": suite_report.overall_failing_responses_summary,
+                "improvement_advice": suite_report.overall_improvement_advice,
+            }
+        )
 
     return pd.DataFrame(rows)
