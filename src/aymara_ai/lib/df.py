@@ -5,6 +5,7 @@ import pandas as pd  # type: ignore
 
 from aymara_ai._models import BaseModel
 from aymara_ai.types.eval import Eval
+from aymara_ai._base_client import BasePage
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.eval_suite_report import EvalSuiteReport
 from aymara_ai.types.evals.eval_run_result import EvalRunResult
@@ -62,6 +63,8 @@ def to_scores_df(eval_run: EvalRunResult, prompts: List[EvalPrompt], responses: 
 
 def to_df(results: Union[List[Union[BaseModel, Dict[str, Any]]], Dict[str, Any], BaseModel]) -> pd.DataFrame:
     """Convert a BaseModel or Dict to a DataFrame."""
+    if isinstance(results, BasePage):
+        return to_df(results.items)  # type: ignore
     if isinstance(results, dict) or isinstance(results, BaseModel):
         results = [results]
     rows = [r.to_dict() if isinstance(r, BaseModel) else r for r in results]

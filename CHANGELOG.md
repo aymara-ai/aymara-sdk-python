@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.2 (2025-05-09)
+
+Full Changelog: [v1.0.1...v1.0.2](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.1...v1.0.2)
+
+### Bug Fixes
+
+* image none handling ([143b4aa](https://github.com/aymara-ai/aymara-sdk-python/commit/143b4aaa51479659e85d19fcbb90d5e821912889))
+* unwrap page responses ([5a0ff29](https://github.com/aymara-ai/aymara-sdk-python/commit/5a0ff290d48a8a04dad8030bbff117661358b1b4))
+
+
+### Chores
+
+* **internal:** avoid errors for isinstance checks on proxies ([ef5374f](https://github.com/aymara-ai/aymara-sdk-python/commit/ef5374f732376b9f29cf8affc0b2cf122a88ecff))
+* lint ([75432ee](https://github.com/aymara-ai/aymara-sdk-python/commit/75432eefeeb666832a9916d1921a0589bccee105))
+* lint ([816d315](https://github.com/aymara-ai/aymara-sdk-python/commit/816d3154fb9d383b868092fc52080af412366fc2))
+
 ## 1.0.1 (2025-05-08)
 
 Full Changelog: [v1.0.0...v1.0.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.0...v1.0.1)
