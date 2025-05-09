@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0-beta.1 (2025-05-09)
+
+Full Changelog: [v1.0.2...v1.1.0-beta.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.2...v1.1.0-beta.1)
+
+### Features
+
+* jupyter progress bar ([dde2a93](https://github.com/aymara-ai/aymara-sdk-python/commit/dde2a9301b3851b770192e0475429f503841e435))
+
 ## 1.0.2 (2025-05-09)
 
 Full Changelog: [v1.0.1...v1.0.2](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.1...v1.0.2)
