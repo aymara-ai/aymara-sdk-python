@@ -314,6 +314,8 @@ tornado==6.4.2
     # via jupyterlab
     # via notebook
     # via terminado
+tqdm==4.67.1
+    # via aymara-ai-sdk
 traitlets==5.14.3
     # via comm
     # via ipykernel
