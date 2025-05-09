@@ -73,7 +73,7 @@ def to_df(results: Union[List[Union[BaseModel, Dict[str, Any]]], Dict[str, Any],
 
 
 def to_reports_df(suite_report: EvalSuiteReport) -> pd.DataFrame:
-    """Create report by prompt category."""
+    """Create report dataframe by prompt category."""
 
     rows = []
     for report in suite_report.eval_run_reports:
