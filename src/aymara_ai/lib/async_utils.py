@@ -5,7 +5,11 @@ from typing import Any, Union, TypeVar, Callable, Optional, Awaitable
 
 from aymara_ai.types.shared.status import Status
 
+from .logger import SDKLogger
+
 T = TypeVar("T")
+
+logger = SDKLogger(__name__)  # type: ignore
 
 
 def _get_status(resource: Any, status_path: str) -> str:
@@ -24,17 +28,21 @@ def wait_until(
     interval: float = 1.0,
     timeout: int = 60,
     *args: Any,
+    backoff: bool = False,
+    max_interval: float = 30.0,
     **kwargs: Any,
 ) -> T:
     """
     Synchronously calls `operation` with provided args/kwargs until `predicate` returns True for the result,
-    or until timeout is reached.
+    or until timeout is reached. Supports optional exponential backoff.
 
     Args:
         operation: Callable to invoke.
         predicate: Callable that takes the operation result and returns True if done.
         interval: Polling interval in seconds.
         timeout: Maximum time to wait in seconds.
+        backoff: If True, exponentially increase interval (max max_interval).
+        max_interval: Maximum interval in seconds for backoff.
         *args: Positional arguments for operation.
         **kwargs: Keyword arguments for operation.
 
@@ -45,13 +53,16 @@ def wait_until(
         TimeoutError: If timeout is reached before predicate is satisfied.
     """
     start_time = time.time()
+    current_interval = interval
     while True:
         result = operation(*args, **kwargs)
         if predicate(result):
             return result
         if (time.time() - start_time) >= timeout:
             raise TimeoutError(f"Timeout after {timeout} seconds waiting for predicate to be satisfied.")
-        time.sleep(interval)
+        time.sleep(current_interval)
+        if backoff:
+            current_interval = min(current_interval * 2, max_interval)
 
 
 def wait_until_complete(
@@ -63,6 +74,7 @@ def wait_until_complete(
     timeout: int = 300,
     interval: int = 2,
     backoff: bool = False,
+    max_interval: float = 30.0,
 ) -> T:
     """
     Generic polling helper for long-running resources (sync version).
@@ -75,7 +87,8 @@ def wait_until_complete(
         failure_status: Status value that indicates failure (optional).
         timeout: Max time to wait, in seconds.
         interval: Poll interval in seconds.
-        backoff: If True, exponentially increase interval (max 30s).
+        backoff: If True, exponentially increase interval (max max_interval).
+        max_interval: Maximum interval in seconds for backoff.
 
     Returns:
         The completed resource dict.
@@ -90,33 +103,25 @@ def wait_until_complete(
             raise RuntimeError(f"Resource {resource_id} failed with status '{status}'")
         return status == success_status
 
-    current_interval = interval
-
     def operation(resource_id: str) -> T:
         return get_fn(resource_id)
 
-    if not backoff:
-        return wait_until(
-            operation,
-            predicate,
-            interval=interval,
-            timeout=timeout,
-            resource_id=resource_id,
-        )
-    else:
-        # Handle backoff manually since wait_until does not support it natively
-        start_time = time.time()
-        while True:
-            resource = get_fn(resource_id)
-            try:
-                if predicate(resource):
-                    return resource
-            except RuntimeError:
-                raise
-            if (time.time() - start_time) >= timeout:
-                raise TimeoutError(f"Resource {resource_id} did not complete in time.")
-            time.sleep(current_interval)
-            current_interval = min(current_interval * 2, 30)
+    with logger.progress_bar(name=get_fn.__name__, uuid=resource_id, status="processing"):
+        try:
+            result = wait_until(
+                operation,
+                predicate,
+                interval=interval,
+                timeout=timeout,
+                resource_id=resource_id,
+                backoff=backoff,
+                max_interval=max_interval,
+            )
+        except Exception:
+            logger.update_progress_bar(status="failed", uuid=resource_id)
+            raise
+        logger.update_progress_bar(status="finished", uuid=resource_id)
+        return result
 
 
 async def async_wait_until(
@@ -125,17 +130,21 @@ async def async_wait_until(
     interval: Optional[float] = 1.0,
     timeout: Optional[int] = 30,
     *args: Any,
+    backoff: bool = False,
+    max_interval: float = 30.0,
     **kwargs: Any,
 ) -> T:
     """
     Asynchronously calls `operation` with provided args/kwargs until `predicate` returns True for the result,
-    or until timeout is reached.
+    or until timeout is reached. Supports optional exponential backoff.
 
     Args:
         operation: Async callable to invoke (e.g., await client.evals.get).
         predicate: Callable (sync or async) that takes the operation result and returns True if done.
         interval: Polling interval in seconds (default: from AYMR_WAIT_INTERVAL or 1.0).
         timeout: Maximum time to wait in seconds (default: from AYMR_WAIT_TIMEOUT or 60.0).
+        backoff: If True, exponentially increase interval (max max_interval).
+        max_interval: Maximum interval in seconds for backoff.
         *args: Positional arguments for operation.
         **kwargs: Keyword arguments for operation.
 
@@ -149,6 +158,7 @@ async def async_wait_until(
     max_timeout = timeout if timeout is not None else float(os.getenv("AYMR_WAIT_TIMEOUT", "60.0"))
 
     start_time = asyncio.get_event_loop().time()
+    current_interval = poll_interval
     while True:
         result = await operation(*args, **kwargs)
         pred_result = predicate(result)
@@ -158,7 +168,9 @@ async def async_wait_until(
             return result
         if (asyncio.get_event_loop().time() - start_time) >= max_timeout:
             raise TimeoutError(f"Timeout after {max_timeout} seconds waiting for predicate to be satisfied.")
-        await asyncio.sleep(poll_interval)
+        await asyncio.sleep(current_interval)
+        if backoff:
+            current_interval = min(current_interval * 2, max_interval)
 
 
 async def async_wait_until_complete(
@@ -170,6 +182,7 @@ async def async_wait_until_complete(
     timeout: int = 300,
     interval: int = 2,
     backoff: bool = False,
+    max_interval: float = 30.0,
 ) -> T:
     """
     Async polling helper for long-running resources.
@@ -182,7 +195,8 @@ async def async_wait_until_complete(
         failure_status: Status value that indicates failure (optional).
         timeout: Max time to wait, in seconds.
         interval: Poll interval in seconds.
-        backoff: If True, exponentially increase interval (max 30s).
+        backoff: If True, exponentially increase interval (max max_interval).
+        max_interval: Maximum interval in seconds for backoff.
 
     Returns:
         The completed resource dict.
@@ -197,31 +211,15 @@ async def async_wait_until_complete(
             raise RuntimeError(f"Resource {resource_id} failed with status '{status}'")
         return status == success_status
 
-    current_interval = interval
-
     async def operation(resource_id: str) -> T:
         return await get_fn(resource_id)
 
-    if not backoff:
-        return await async_wait_until(
-            operation,
-            predicate,
-            interval=interval,
-            timeout=timeout,
-            resource_id=resource_id,
-        )
-    else:
-        # Handle backoff manually since async_wait_until does not support it natively
-        start_time = asyncio.get_event_loop().time()
-        while True:
-            resource = await get_fn(resource_id)
-            try:
-                pred_result = predicate(resource)
-                if pred_result:
-                    return resource
-            except RuntimeError:
-                raise
-            if (asyncio.get_event_loop().time() - start_time) >= timeout:
-                raise TimeoutError(f"Resource {resource_id} did not complete in time.")
-            await asyncio.sleep(current_interval)
-            current_interval = min(current_interval * 2, 30)
+    return await async_wait_until(
+        operation,
+        predicate,
+        interval=interval,
+        timeout=timeout,
+        resource_id=resource_id,
+        backoff=backoff,
+        max_interval=max_interval,
+    )

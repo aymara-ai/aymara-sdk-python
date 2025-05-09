@@ -16,7 +16,7 @@ The REST API documentation can be found on [docs.aymara.ai](https://docs.aymara.
 
 ```sh
 # install from PyPI
-pip install aymara-ai-sdk
+pip install --pre aymara-ai-sdk
 ```
 
 ## Usage
