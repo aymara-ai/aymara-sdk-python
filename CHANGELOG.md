@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0-beta.3 (2025-05-09)
+
+Full Changelog: [v1.1.0-beta.2...v1.1.0-beta.3](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0-beta.2...v1.1.0-beta.3)
+
+### Bug Fixes
+
+* missing dep ([c9c75e9](https://github.com/aymara-ai/aymara-sdk-python/commit/c9c75e9ac682a63afa029bc6d2396e214b2ebf66))
+
 ## 1.1.0-beta.2 (2025-05-09)
 
 Full Changelog: [v1.1.0-beta.1...v1.1.0-beta.2](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0-beta.1...v1.1.0-beta.2)

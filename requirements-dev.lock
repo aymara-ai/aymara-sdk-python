@@ -366,6 +366,7 @@ tornado==6.4.2
     # via notebook
     # via terminado
 tqdm==4.67.1
+    # via aymara-ai-sdk
     # via openai
 traitlets==5.14.3
     # via comm
