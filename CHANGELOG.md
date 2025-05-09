@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0-beta.2 (2025-05-09)
+
+Full Changelog: [v1.1.0-beta.1...v1.1.0-beta.2](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0-beta.1...v1.1.0-beta.2)
+
+### Features
+
+* async progress ([9871d3f](https://github.com/aymara-ai/aymara-sdk-python/commit/9871d3facde9d458b796e31eeae458c8b9857ff2))
+
+
+### Chores
+
+* async example ([392c5a7](https://github.com/aymara-ai/aymara-sdk-python/commit/392c5a737955a3b2bfa17243726028ae61c53c39))
+
 ## 1.1.0-beta.1 (2025-05-09)
 
 Full Changelog: [v1.0.2...v1.1.0-beta.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.2...v1.1.0-beta.1)

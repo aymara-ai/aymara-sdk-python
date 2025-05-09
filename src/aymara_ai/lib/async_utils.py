@@ -117,11 +117,11 @@ def wait_until_complete(
                 backoff=backoff,
                 max_interval=max_interval,
             )
+            logger.update_progress_bar(status="finished", uuid=resource_id)
+            return result
         except Exception:
             logger.update_progress_bar(status="failed", uuid=resource_id)
             raise
-        logger.update_progress_bar(status="finished", uuid=resource_id)
-        return result
 
 
 async def async_wait_until(
@@ -214,12 +214,20 @@ async def async_wait_until_complete(
     async def operation(resource_id: str) -> T:
         return await get_fn(resource_id)
 
-    return await async_wait_until(
-        operation,
-        predicate,
-        interval=interval,
-        timeout=timeout,
-        resource_id=resource_id,
-        backoff=backoff,
-        max_interval=max_interval,
-    )
+    with logger.progress_bar(name=get_fn.__name__, uuid=resource_id, status="processing"):
+        try:
+            result = await async_wait_until(
+                operation,
+                predicate,
+                interval=interval,
+                timeout=timeout,
+                resource_id=resource_id,
+                backoff=backoff,
+                max_interval=max_interval,
+            )
+
+            logger.update_progress_bar(status="finished", uuid=resource_id)
+            return result
+        except Exception:
+            logger.update_progress_bar(status="failed", uuid=resource_id)
+            raise
