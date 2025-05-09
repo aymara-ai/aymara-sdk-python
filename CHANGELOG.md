@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3 (2025-05-09)
+
+Full Changelog: [v1.1.0-beta.3...v1.0.3](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0-beta.3...v1.0.3)
+
 ## 1.1.0-beta.3 (2025-05-09)
 
 Full Changelog: [v1.1.0-beta.2...v1.1.0-beta.3](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0-beta.2...v1.1.0-beta.3)
