@@ -25,7 +25,7 @@ class SyncOffsetPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     def next_page_info(self) -> Optional[PageInfo]:
         count = self.count
         if count is None:
-            return None
+            return None  # type: ignore[unreachable]
 
         length = len(self._get_page_items())
         current_count = count + length
@@ -55,7 +55,7 @@ class AsyncOffsetPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     def next_page_info(self) -> Optional[PageInfo]:
         count = self.count
         if count is None:
-            return None
+            return None  # type: ignore[unreachable]
 
         length = len(self._get_page_items())
         current_count = count + length
