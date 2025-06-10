@@ -33,6 +33,9 @@ class EvalRunResult(BaseModel):
     evaluation: Optional[Eval] = None
     """Schema for configuring an Eval based on a eval_type."""
 
+    is_sandbox: Optional[bool] = None
+    """Indicates if the eval run is sandboxed (default: False)."""
+
     name: Optional[str] = None
     """Name of the eval run, if any (defaults to the eval name + timestamp)."""
 
