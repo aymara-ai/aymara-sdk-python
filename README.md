@@ -1,6 +1,6 @@
 # Aymara AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg)](https://pypi.org/project/aymara-ai-sdk/)
+[![PyPI version](<https://img.shields.io/pypi/v/aymara-ai-sdk.svg?label=pypi%20(stable)>)](https://pypi.org/project/aymara-ai-sdk/)
 
 The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
