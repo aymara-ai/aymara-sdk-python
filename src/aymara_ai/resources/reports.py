@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
-
 import httpx
 
 from ..types import report_get_params, report_list_params, report_create_params, report_delete_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
+from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -47,15 +45,14 @@ class ReportsResource(SyncAPIResource):
     def create(
         self,
         *,
-        eval_run_uuids: List[str],
-        is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        eval_run_uuids: SequenceNotStr[str],
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalSuiteReport:
         """
         Create a summary for a suite of eval runs.
@@ -79,13 +76,7 @@ class ReportsResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "is_sandbox": is_sandbox,
-                        "workspace_uuid": workspace_uuid,
-                    },
-                    report_create_params.ReportCreateParams,
-                ),
+                query=maybe_transform({"workspace_uuid": workspace_uuid}, report_create_params.ReportCreateParams),
             ),
             cast_to=EvalSuiteReport,
         )
@@ -93,15 +84,15 @@ class ReportsResource(SyncAPIResource):
     def list(
         self,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncOffsetPage[EvalSuiteReport]:
         """
         List all eval run suite summaries, with optional filtering.
@@ -139,13 +130,13 @@ class ReportsResource(SyncAPIResource):
         self,
         report_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """
         Delete an eval run suite report.
@@ -178,13 +169,13 @@ class ReportsResource(SyncAPIResource):
         self,
         report_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalSuiteReport:
         """
         Get a specific eval run suite report by UUID.
@@ -236,15 +227,14 @@ class AsyncReportsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        eval_run_uuids: List[str],
-        is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        eval_run_uuids: SequenceNotStr[str],
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalSuiteReport:
         """
         Create a summary for a suite of eval runs.
@@ -271,11 +261,7 @@ class AsyncReportsResource(AsyncAPIResource):
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {
-                        "is_sandbox": is_sandbox,
-                        "workspace_uuid": workspace_uuid,
-                    },
-                    report_create_params.ReportCreateParams,
+                    {"workspace_uuid": workspace_uuid}, report_create_params.ReportCreateParams
                 ),
             ),
             cast_to=EvalSuiteReport,
@@ -284,15 +270,15 @@ class AsyncReportsResource(AsyncAPIResource):
     def list(
         self,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[EvalSuiteReport, AsyncOffsetPage[EvalSuiteReport]]:
         """
         List all eval run suite summaries, with optional filtering.
@@ -330,13 +316,13 @@ class AsyncReportsResource(AsyncAPIResource):
         self,
         report_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """
         Delete an eval run suite report.
@@ -371,13 +357,13 @@ class AsyncReportsResource(AsyncAPIResource):
         self,
         report_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalSuiteReport:
         """
         Get a specific eval run suite report by UUID.

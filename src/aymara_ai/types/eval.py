@@ -28,6 +28,9 @@ class Eval(BaseModel):
     created_at: Optional[datetime] = None
     """Timestamp when the eval was created."""
 
+    created_by: Optional[str] = None
+    """Name of the user who created the evaluation."""
+
     eval_instructions: Optional[str] = None
     """Additional instructions for the eval, if any."""
 

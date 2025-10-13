@@ -7,7 +7,7 @@ from typing import Mapping, Iterable, Optional, cast
 import httpx
 
 from ..types import file_create_params, file_upload_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
+from .._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
 from .._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -48,13 +48,13 @@ class FilesResource(SyncAPIResource):
         self,
         *,
         files: Iterable[file_create_params.File],
-        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileCreateResponse:
         """
         Requests to upload one or more files to be used in an eval run.
@@ -63,7 +63,8 @@ class FilesResource(SyncAPIResource):
         workspace UUID.
 
         Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
-        file.
+        file. Each file is tracked in the database with a file_uuid for future
+        reference.
 
         Raises: AymaraAPIError: If the organization is missing or file upload fails.
 
@@ -108,10 +109,11 @@ class FilesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileUpload:
         """
         Receives a file and streams it to S3 using multipart upload in a single request.
+        Creates a File record in the database for tracking.
 
         Args:
           extra_headers: Send extra headers
@@ -163,13 +165,13 @@ class AsyncFilesResource(AsyncAPIResource):
         self,
         *,
         files: Iterable[file_create_params.File],
-        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileCreateResponse:
         """
         Requests to upload one or more files to be used in an eval run.
@@ -178,7 +180,8 @@ class AsyncFilesResource(AsyncAPIResource):
         workspace UUID.
 
         Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
-        file.
+        file. Each file is tracked in the database with a file_uuid for future
+        reference.
 
         Raises: AymaraAPIError: If the organization is missing or file upload fails.
 
@@ -223,10 +226,11 @@ class AsyncFilesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileUpload:
         """
         Receives a file and streams it to S3 using multipart upload in a single request.
+        Creates a File record in the database for tracking.
 
         Args:
           extra_headers: Send extra headers
