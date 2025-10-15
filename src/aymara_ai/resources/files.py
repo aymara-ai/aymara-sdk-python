@@ -6,8 +6,8 @@ from typing import Mapping, Iterable, Optional, cast
 
 import httpx
 
-from ..types import file_create_params, file_upload_params
-from .._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
+from ..types import file_list_params, file_create_params, file_upload_params
+from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, FileTypes, omit, not_given
 from .._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -17,7 +17,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncOffsetPage, AsyncOffsetPage
+from .._base_client import AsyncPaginator, make_request_options
+from ..types.file_detail import FileDetail
 from ..types.file_upload import FileUpload
 from ..types.file_create_response import FileCreateResponse
 
@@ -98,6 +100,145 @@ class FilesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=FileCreateResponse,
+        )
+
+    def list(
+        self,
+        *,
+        file_type: str | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> SyncOffsetPage[FileDetail]:
+        """
+        List all files for the authenticated organization, with optional filtering.
+
+        Args: workspace_uuid (str, optional): Filter by workspace UUID. file_type (str,
+        optional): Filter by file type (image, video, text, document).
+
+        Returns: list[FileDetail]: List of files matching the filters.
+
+        Raises: AymaraAPIError: If the organization is missing.
+
+        Example: GET /api/v2/files?workspace_uuid=...&file_type=image
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
+            "/v2/files",
+            page=SyncOffsetPage[FileDetail],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "file_type": file_type,
+                        "limit": limit,
+                        "offset": offset,
+                        "workspace_uuid": workspace_uuid,
+                    },
+                    file_list_params.FileListParams,
+                ),
+            ),
+            model=FileDetail,
+        )
+
+    def delete(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Delete a file (soft delete).
+
+        Args: file_uuid (str): UUID of the file to delete.
+
+        Returns: None (204 No Content)
+
+        Raises: AymaraAPIError: If the file is not found or user lacks access.
+
+        Example: DELETE /api/v2/files/{file_uuid}
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return self._delete(
+            f"/v2/files/{file_uuid}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
+        )
+
+    def get(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FileDetail:
+        """
+        Retrieve a specific file by its UUID.
+
+        Args: file_uuid (str): UUID of the file to retrieve.
+
+        Returns: FileDetail: Detailed file information with a fresh presigned URL.
+
+        Raises: AymaraAPIError: If the file is not found or user lacks access.
+
+        Example: GET /api/v2/files/{file_uuid}
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        return self._get(
+            f"/v2/files/{file_uuid}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FileDetail,
         )
 
     def upload(
@@ -217,6 +358,145 @@ class AsyncFilesResource(AsyncAPIResource):
             cast_to=FileCreateResponse,
         )
 
+    def list(
+        self,
+        *,
+        file_type: str | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AsyncPaginator[FileDetail, AsyncOffsetPage[FileDetail]]:
+        """
+        List all files for the authenticated organization, with optional filtering.
+
+        Args: workspace_uuid (str, optional): Filter by workspace UUID. file_type (str,
+        optional): Filter by file type (image, video, text, document).
+
+        Returns: list[FileDetail]: List of files matching the filters.
+
+        Raises: AymaraAPIError: If the organization is missing.
+
+        Example: GET /api/v2/files?workspace_uuid=...&file_type=image
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
+            "/v2/files",
+            page=AsyncOffsetPage[FileDetail],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "file_type": file_type,
+                        "limit": limit,
+                        "offset": offset,
+                        "workspace_uuid": workspace_uuid,
+                    },
+                    file_list_params.FileListParams,
+                ),
+            ),
+            model=FileDetail,
+        )
+
+    async def delete(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """
+        Delete a file (soft delete).
+
+        Args: file_uuid (str): UUID of the file to delete.
+
+        Returns: None (204 No Content)
+
+        Raises: AymaraAPIError: If the file is not found or user lacks access.
+
+        Example: DELETE /api/v2/files/{file_uuid}
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return await self._delete(
+            f"/v2/files/{file_uuid}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NoneType,
+        )
+
+    async def get(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FileDetail:
+        """
+        Retrieve a specific file by its UUID.
+
+        Args: file_uuid (str): UUID of the file to retrieve.
+
+        Returns: FileDetail: Detailed file information with a fresh presigned URL.
+
+        Raises: AymaraAPIError: If the file is not found or user lacks access.
+
+        Example: GET /api/v2/files/{file_uuid}
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        return await self._get(
+            f"/v2/files/{file_uuid}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FileDetail,
+        )
+
     async def upload(
         self,
         *,
@@ -265,6 +545,15 @@ class FilesResourceWithRawResponse:
         self.create = to_raw_response_wrapper(
             files.create,
         )
+        self.list = to_raw_response_wrapper(
+            files.list,
+        )
+        self.delete = to_raw_response_wrapper(
+            files.delete,
+        )
+        self.get = to_raw_response_wrapper(
+            files.get,
+        )
         self.upload = to_raw_response_wrapper(
             files.upload,
         )
@@ -276,6 +565,15 @@ class AsyncFilesResourceWithRawResponse:
 
         self.create = async_to_raw_response_wrapper(
             files.create,
+        )
+        self.list = async_to_raw_response_wrapper(
+            files.list,
+        )
+        self.delete = async_to_raw_response_wrapper(
+            files.delete,
+        )
+        self.get = async_to_raw_response_wrapper(
+            files.get,
         )
         self.upload = async_to_raw_response_wrapper(
             files.upload,
@@ -289,6 +587,15 @@ class FilesResourceWithStreamingResponse:
         self.create = to_streamed_response_wrapper(
             files.create,
         )
+        self.list = to_streamed_response_wrapper(
+            files.list,
+        )
+        self.delete = to_streamed_response_wrapper(
+            files.delete,
+        )
+        self.get = to_streamed_response_wrapper(
+            files.get,
+        )
         self.upload = to_streamed_response_wrapper(
             files.upload,
         )
@@ -300,6 +607,15 @@ class AsyncFilesResourceWithStreamingResponse:
 
         self.create = async_to_streamed_response_wrapper(
             files.create,
+        )
+        self.list = async_to_streamed_response_wrapper(
+            files.list,
+        )
+        self.delete = async_to_streamed_response_wrapper(
+            files.delete,
+        )
+        self.get = async_to_streamed_response_wrapper(
+            files.get,
         )
         self.upload = async_to_streamed_response_wrapper(
             files.upload,
