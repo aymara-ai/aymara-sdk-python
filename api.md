@@ -78,10 +78,13 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import FileUpload, FileCreateResponse
+from aymara_ai.types import FileDetail, FileUpload, FileCreateResponse
 ```
 
 Methods:
 
 - <code title="post /v2/files">client.files.<a href="./src/aymara_ai/resources/files.py">create</a>(\*\*<a href="src/aymara_ai/types/file_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_create_response.py">FileCreateResponse</a></code>
+- <code title="get /v2/files">client.files.<a href="./src/aymara_ai/resources/files.py">list</a>(\*\*<a href="src/aymara_ai/types/file_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_detail.py">SyncOffsetPage[FileDetail]</a></code>
+- <code title="delete /v2/files/{file_uuid}">client.files.<a href="./src/aymara_ai/resources/files.py">delete</a>(file_uuid) -> None</code>
+- <code title="get /v2/files/{file_uuid}">client.files.<a href="./src/aymara_ai/resources/files.py">get</a>(file_uuid) -> <a href="./src/aymara_ai/types/file_detail.py">FileDetail</a></code>
 - <code title="post /v2/files/-/uploads">client.files.<a href="./src/aymara_ai/resources/files.py">upload</a>(\*\*<a href="src/aymara_ai/types/file_upload_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_upload.py">FileUpload</a></code>

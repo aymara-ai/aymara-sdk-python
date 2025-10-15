@@ -1,4 +1,4 @@
-configured_endpoints: 22
+configured_endpoints: 25
 openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/aymara%2Faymara-sdk-b5bdd45811bc137e0bf3560340a9511591f60158b2701d4d1446155cb87b997c.yml
 openapi_spec_hash: 63b5c039a0b8c552dba25ecc5bf6f090
-config_hash: cce720f2877ac25d3d7777a4a17182fc
+config_hash: f6554ba2997e8d7f56b020b3ee3afc1a

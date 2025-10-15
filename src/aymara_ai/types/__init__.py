@@ -6,11 +6,13 @@ from .eval import Eval as Eval
 from .shared import Status as Status, ContentType as ContentType, FileReference as FileReference
 from .eval_type import EvalType as EvalType
 from .eval_prompt import EvalPrompt as EvalPrompt
+from .file_detail import FileDetail as FileDetail
 from .file_upload import FileUpload as FileUpload
 from .ai_instruction import AIInstruction as AIInstruction
 from .prompt_example import PromptExample as PromptExample
 from .eval_get_params import EvalGetParams as EvalGetParams
 from .eval_list_params import EvalListParams as EvalListParams
+from .file_list_params import FileListParams as FileListParams
 from .eval_suite_report import EvalSuiteReport as EvalSuiteReport
 from .report_get_params import ReportGetParams as ReportGetParams
 from .eval_create_params import EvalCreateParams as EvalCreateParams
