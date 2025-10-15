@@ -22,7 +22,7 @@ from ...types import (
     eval_delete_params,
     eval_list_prompts_params,
 )
-from ..._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -72,27 +72,28 @@ class EvalsResource(SyncAPIResource):
         *,
         ai_description: str,
         eval_type: str,
-        ai_instructions: Optional[str] | NotGiven = NOT_GIVEN,
-        created_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
-        eval_instructions: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_uuid: Optional[str] | NotGiven = NOT_GIVEN,
-        ground_truth: Optional[eval_create_params.GroundTruth] | NotGiven = NOT_GIVEN,
-        is_jailbreak: bool | NotGiven = NOT_GIVEN,
-        is_sandbox: bool | NotGiven = NOT_GIVEN,
-        language: Optional[str] | NotGiven = NOT_GIVEN,
-        modality: ContentType | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
-        num_prompts: Optional[int] | NotGiven = NOT_GIVEN,
-        prompt_examples: Optional[Iterable[PromptExampleParam]] | NotGiven = NOT_GIVEN,
-        status: Optional[Status] | NotGiven = NOT_GIVEN,
-        updated_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
-        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        ai_instructions: Optional[str] | Omit = omit,
+        created_at: Union[str, datetime, None] | Omit = omit,
+        created_by: Optional[str] | Omit = omit,
+        eval_instructions: Optional[str] | Omit = omit,
+        eval_uuid: Optional[str] | Omit = omit,
+        ground_truth: Optional[eval_create_params.GroundTruth] | Omit = omit,
+        is_jailbreak: bool | Omit = omit,
+        is_sandbox: bool | Omit = omit,
+        language: Optional[str] | Omit = omit,
+        modality: ContentType | Omit = omit,
+        name: Optional[str] | Omit = omit,
+        num_prompts: Optional[int] | Omit = omit,
+        prompt_examples: Optional[Iterable[PromptExampleParam]] | Omit = omit,
+        status: Optional[Status] | Omit = omit,
+        updated_at: Union[str, datetime, None] | Omit = omit,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Eval:
         """
         Create a new eval using an eval type configuration.
@@ -102,7 +103,7 @@ class EvalsResource(SyncAPIResource):
 
         Returns: Eval: The created eval object.
 
-        Raises: AymaraAPIError: If the workspace is not found or the request is invalid.
+        Raises: AymaraAPIError: If the request is invalid.
 
         Example: POST /api/evals { "eval_type": "...", "workspace_uuid": "...", ... }
 
@@ -114,6 +115,8 @@ class EvalsResource(SyncAPIResource):
           ai_instructions: Instructions the AI should follow.
 
           created_at: Timestamp when the eval was created.
+
+          created_by: Name of the user who created the evaluation.
 
           eval_instructions: Additional instructions for the eval, if any.
 
@@ -157,6 +160,7 @@ class EvalsResource(SyncAPIResource):
                     "eval_type": eval_type,
                     "ai_instructions": ai_instructions,
                     "created_at": created_at,
+                    "created_by": created_by,
                     "eval_instructions": eval_instructions,
                     "eval_uuid": eval_uuid,
                     "ground_truth": ground_truth,
@@ -182,20 +186,21 @@ class EvalsResource(SyncAPIResource):
     def list(
         self,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncOffsetPage[Eval]:
         """
         List all evals, with optional filtering.
 
-        Args: workspace_uuid (str, optional): Optional workspace UUID for filtering.
+        Args: workspace_uuid (str, optional): Optional workspace UUID for filtering. Use
+        "\\**" for enterprise-wide access, omit for user's current workspace.
 
         Returns: list[Eval]: List of evals matching the filter.
 
@@ -236,13 +241,13 @@ class EvalsResource(SyncAPIResource):
         self,
         eval_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """Delete an eval.
 
@@ -285,13 +290,13 @@ class EvalsResource(SyncAPIResource):
         self,
         eval_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Eval:
         """
         Retrieve a specific eval by its UUID.
@@ -332,15 +337,15 @@ class EvalsResource(SyncAPIResource):
         self,
         eval_uuid: str,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncOffsetPage[EvalPrompt]:
         """
         Retrieve prompts for a specific eval if they exist.
@@ -415,27 +420,28 @@ class AsyncEvalsResource(AsyncAPIResource):
         *,
         ai_description: str,
         eval_type: str,
-        ai_instructions: Optional[str] | NotGiven = NOT_GIVEN,
-        created_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
-        eval_instructions: Optional[str] | NotGiven = NOT_GIVEN,
-        eval_uuid: Optional[str] | NotGiven = NOT_GIVEN,
-        ground_truth: Optional[eval_create_params.GroundTruth] | NotGiven = NOT_GIVEN,
-        is_jailbreak: bool | NotGiven = NOT_GIVEN,
-        is_sandbox: bool | NotGiven = NOT_GIVEN,
-        language: Optional[str] | NotGiven = NOT_GIVEN,
-        modality: ContentType | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
-        num_prompts: Optional[int] | NotGiven = NOT_GIVEN,
-        prompt_examples: Optional[Iterable[PromptExampleParam]] | NotGiven = NOT_GIVEN,
-        status: Optional[Status] | NotGiven = NOT_GIVEN,
-        updated_at: Union[str, datetime, None] | NotGiven = NOT_GIVEN,
-        workspace_uuid: Optional[str] | NotGiven = NOT_GIVEN,
+        ai_instructions: Optional[str] | Omit = omit,
+        created_at: Union[str, datetime, None] | Omit = omit,
+        created_by: Optional[str] | Omit = omit,
+        eval_instructions: Optional[str] | Omit = omit,
+        eval_uuid: Optional[str] | Omit = omit,
+        ground_truth: Optional[eval_create_params.GroundTruth] | Omit = omit,
+        is_jailbreak: bool | Omit = omit,
+        is_sandbox: bool | Omit = omit,
+        language: Optional[str] | Omit = omit,
+        modality: ContentType | Omit = omit,
+        name: Optional[str] | Omit = omit,
+        num_prompts: Optional[int] | Omit = omit,
+        prompt_examples: Optional[Iterable[PromptExampleParam]] | Omit = omit,
+        status: Optional[Status] | Omit = omit,
+        updated_at: Union[str, datetime, None] | Omit = omit,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Eval:
         """
         Create a new eval using an eval type configuration.
@@ -445,7 +451,7 @@ class AsyncEvalsResource(AsyncAPIResource):
 
         Returns: Eval: The created eval object.
 
-        Raises: AymaraAPIError: If the workspace is not found or the request is invalid.
+        Raises: AymaraAPIError: If the request is invalid.
 
         Example: POST /api/evals { "eval_type": "...", "workspace_uuid": "...", ... }
 
@@ -457,6 +463,8 @@ class AsyncEvalsResource(AsyncAPIResource):
           ai_instructions: Instructions the AI should follow.
 
           created_at: Timestamp when the eval was created.
+
+          created_by: Name of the user who created the evaluation.
 
           eval_instructions: Additional instructions for the eval, if any.
 
@@ -500,6 +508,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     "eval_type": eval_type,
                     "ai_instructions": ai_instructions,
                     "created_at": created_at,
+                    "created_by": created_by,
                     "eval_instructions": eval_instructions,
                     "eval_uuid": eval_uuid,
                     "ground_truth": ground_truth,
@@ -525,20 +534,21 @@ class AsyncEvalsResource(AsyncAPIResource):
     def list(
         self,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Eval, AsyncOffsetPage[Eval]]:
         """
         List all evals, with optional filtering.
 
-        Args: workspace_uuid (str, optional): Optional workspace UUID for filtering.
+        Args: workspace_uuid (str, optional): Optional workspace UUID for filtering. Use
+        "\\**" for enterprise-wide access, omit for user's current workspace.
 
         Returns: list[Eval]: List of evals matching the filter.
 
@@ -579,13 +589,13 @@ class AsyncEvalsResource(AsyncAPIResource):
         self,
         eval_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """Delete an eval.
 
@@ -630,13 +640,13 @@ class AsyncEvalsResource(AsyncAPIResource):
         self,
         eval_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Eval:
         """
         Retrieve a specific eval by its UUID.
@@ -677,15 +687,15 @@ class AsyncEvalsResource(AsyncAPIResource):
         self,
         eval_uuid: str,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[EvalPrompt, AsyncOffsetPage[EvalPrompt]]:
         """
         Retrieve prompts for a specific eval if they exist.

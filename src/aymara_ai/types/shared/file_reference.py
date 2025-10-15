@@ -8,4 +8,6 @@ __all__ = ["FileReference"]
 
 
 class FileReference(BaseModel):
+    file_uuid: Optional[str] = None
+
     remote_file_path: Optional[str] = None

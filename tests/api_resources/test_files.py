@@ -17,7 +17,7 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestFiles:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_create(self, client: AymaraAI) -> None:
         file = client.files.create(
@@ -25,16 +25,22 @@ class TestFiles:
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: AymaraAI) -> None:
         file = client.files.create(
-            files=[{"local_file_path": "local_file_path"}],
+            files=[
+                {
+                    "content_type": "content_type",
+                    "local_file_path": "local_file_path",
+                    "remote_uri": "remote_uri",
+                }
+            ],
             workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.create(
@@ -46,7 +52,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.create(
@@ -60,7 +66,7 @@ class TestFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_upload(self, client: AymaraAI) -> None:
         file = client.files.upload(
@@ -68,7 +74,7 @@ class TestFiles:
         )
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_upload(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.upload(
@@ -80,7 +86,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_upload(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.upload(
@@ -100,7 +106,7 @@ class TestAsyncFiles:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.create(
@@ -108,16 +114,22 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.create(
-            files=[{"local_file_path": "local_file_path"}],
+            files=[
+                {
+                    "content_type": "content_type",
+                    "local_file_path": "local_file_path",
+                    "remote_uri": "remote_uri",
+                }
+            ],
             workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.create(
@@ -129,7 +141,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.create(
@@ -143,7 +155,7 @@ class TestAsyncFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_upload(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.upload(
@@ -151,7 +163,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_upload(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.upload(
@@ -163,7 +175,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_upload(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.upload(

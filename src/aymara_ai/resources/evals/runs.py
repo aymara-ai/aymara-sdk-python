@@ -6,7 +6,7 @@ from typing import Iterable, Optional
 
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -59,19 +59,19 @@ class RunsResource(SyncAPIResource):
         *,
         eval_uuid: str,
         responses: Iterable[EvalResponseParam],
-        is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
-        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
+        is_sandbox: Optional[bool] | Omit = omit,
+        workspace_uuid: str | Omit = omit,
+        ai_description: Optional[str] | Omit = omit,
+        continue_thread: Optional[bool] | Omit = omit,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | Omit = omit,
+        eval_run_uuid: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalRunResult:
         """
         Create a new eval run for an eval.
@@ -143,22 +143,23 @@ class RunsResource(SyncAPIResource):
     def list(
         self,
         *,
-        eval_uuid: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        eval_uuid: str | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncOffsetPage[EvalRunResult]:
         """
         List all eval runs, with optional filtering.
 
         Args: eval_uuid (str, optional): UUID of the eval to filter runs by. Defaults to
-        None. workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+        None. workspace_uuid (str, optional): UUID of the workspace. Use "\\**" for
+        enterprise-wide access, omit for user's current workspace. Defaults to None.
 
         Returns: list[EvalRunResult]: List of eval runs matching the filters.
 
@@ -200,13 +201,13 @@ class RunsResource(SyncAPIResource):
         self,
         eval_run_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """Delete an eval run.
 
@@ -250,13 +251,13 @@ class RunsResource(SyncAPIResource):
         self,
         eval_run_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalRunResult:
         """
         Retrieve a specific eval run by its UUID.
@@ -298,15 +299,15 @@ class RunsResource(SyncAPIResource):
         self,
         eval_run_uuid: str,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncOffsetPage[ScoredResponse]:
         """
         Retrieve all responses for a specific eval run.
@@ -357,19 +358,19 @@ class RunsResource(SyncAPIResource):
         *,
         eval_uuid: str,
         responses: Iterable[EvalResponseParam],
-        is_sandbox: bool | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
-        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
+        is_sandbox: bool | Omit = omit,
+        workspace_uuid: str | Omit = omit,
+        ai_description: Optional[str] | Omit = omit,
+        continue_thread: Optional[bool] | Omit = omit,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | Omit = omit,
+        eval_run_uuid: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalRunResult:
         """
         Run the eval with the provided responses.
@@ -466,19 +467,19 @@ class AsyncRunsResource(AsyncAPIResource):
         *,
         eval_uuid: str,
         responses: Iterable[EvalResponseParam],
-        is_sandbox: Optional[bool] | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
-        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
+        is_sandbox: Optional[bool] | Omit = omit,
+        workspace_uuid: str | Omit = omit,
+        ai_description: Optional[str] | Omit = omit,
+        continue_thread: Optional[bool] | Omit = omit,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | Omit = omit,
+        eval_run_uuid: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalRunResult:
         """
         Create a new eval run for an eval.
@@ -550,22 +551,23 @@ class AsyncRunsResource(AsyncAPIResource):
     def list(
         self,
         *,
-        eval_uuid: str | NotGiven = NOT_GIVEN,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        eval_uuid: str | Omit = omit,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[EvalRunResult, AsyncOffsetPage[EvalRunResult]]:
         """
         List all eval runs, with optional filtering.
 
         Args: eval_uuid (str, optional): UUID of the eval to filter runs by. Defaults to
-        None. workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+        None. workspace_uuid (str, optional): UUID of the workspace. Use "\\**" for
+        enterprise-wide access, omit for user's current workspace. Defaults to None.
 
         Returns: list[EvalRunResult]: List of eval runs matching the filters.
 
@@ -607,13 +609,13 @@ class AsyncRunsResource(AsyncAPIResource):
         self,
         eval_run_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """Delete an eval run.
 
@@ -659,13 +661,13 @@ class AsyncRunsResource(AsyncAPIResource):
         self,
         eval_run_uuid: str,
         *,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalRunResult:
         """
         Retrieve a specific eval run by its UUID.
@@ -707,15 +709,15 @@ class AsyncRunsResource(AsyncAPIResource):
         self,
         eval_run_uuid: str,
         *,
-        limit: int | NotGiven = NOT_GIVEN,
-        offset: int | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        workspace_uuid: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[ScoredResponse, AsyncOffsetPage[ScoredResponse]]:
         """
         Retrieve all responses for a specific eval run.
@@ -766,19 +768,19 @@ class AsyncRunsResource(AsyncAPIResource):
         *,
         eval_uuid: str,
         responses: Iterable[EvalResponseParam],
-        is_sandbox: bool | NotGiven = NOT_GIVEN,
-        workspace_uuid: str | NotGiven = NOT_GIVEN,
-        ai_description: Optional[str] | NotGiven = NOT_GIVEN,
-        continue_thread: Optional[bool] | NotGiven = NOT_GIVEN,
-        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | NotGiven = NOT_GIVEN,
-        eval_run_uuid: Optional[str] | NotGiven = NOT_GIVEN,
-        name: Optional[str] | NotGiven = NOT_GIVEN,
+        is_sandbox: bool | Omit = omit,
+        workspace_uuid: str | Omit = omit,
+        ai_description: Optional[str] | Omit = omit,
+        continue_thread: Optional[bool] | Omit = omit,
+        eval_run_examples: Optional[Iterable[EvalRunExampleParam]] | Omit = omit,
+        eval_run_uuid: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EvalRunResult:
         """
         Run the eval with the provided responses.

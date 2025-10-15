@@ -8,6 +8,12 @@ __all__ = ["FileUpload"]
 
 
 class FileUpload(BaseModel):
+    content_type: Optional[str] = None
+    """MIME type of the file (e.g., 'video/mp4').
+
+    If not provided, will be inferred from file extension.
+    """
+
     file_url: Optional[str] = None
     """URL to access the uploaded file, if available."""
 
@@ -19,3 +25,6 @@ class FileUpload(BaseModel):
 
     remote_file_path: Optional[str] = None
     """Remote file path of the uploaded file, if available."""
+
+    remote_uri: Optional[str] = None
+    """Remote URI to fetch the file from, if available."""

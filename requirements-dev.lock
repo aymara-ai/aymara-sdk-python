@@ -433,6 +433,9 @@ typing-extensions==4.12.2
     # via pydantic
     # via pydantic-core
     # via pyright
+    # via typing-inspection
+typing-inspection==0.4.1
+    # via pydantic
     # via python-json-logger
     # via referencing
 tzdata==2025.2

@@ -28,6 +28,9 @@ class EvalCreateParams(TypedDict, total=False):
     created_at: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
     """Timestamp when the eval was created."""
 
+    created_by: Optional[str]
+    """Name of the user who created the evaluation."""
+
     eval_instructions: Optional[str]
     """Additional instructions for the eval, if any."""
 

@@ -1,6 +1,7 @@
 # Aymara AI Python API library
 
-[![PyPI version](<https://img.shields.io/pypi/v/aymara-ai-sdk.svg?label=pypi%20(stable)>)](https://pypi.org/project/aymara-ai-sdk/)
+<!-- prettier-ignore -->
+[![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg?label=pypi%20(stable))](https://pypi.org/project/aymara-ai-sdk/)
 
 The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -98,7 +99,6 @@ pip install aymara-ai-sdk[aiohttp]
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
-import os
 import asyncio
 from aymara_ai import DefaultAioHttpClient
 from aymara_ai import AsyncAymaraAI
@@ -106,7 +106,7 @@ from aymara_ai import AsyncAymaraAI
 
 async def main() -> None:
     async with AsyncAymaraAI(
-        api_key=os.environ.get("AYMARA_AI_API_KEY"),  # This is the default and can be omitted
+        api_key="My API Key",
         http_client=DefaultAioHttpClient(),
     ) as client:
         eval_run_result = await client.evals.runs.create(
