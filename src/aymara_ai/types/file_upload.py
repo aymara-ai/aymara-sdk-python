@@ -23,6 +23,9 @@ class FileUpload(BaseModel):
     local_file_path: Optional[str] = None
     """Local file path of the uploaded file, if available."""
 
+    processing_status: Optional[str] = None
+    """Processing status: pending, processing, completed, or failed."""
+
     remote_file_path: Optional[str] = None
     """Remote file path of the uploaded file, if available."""
 

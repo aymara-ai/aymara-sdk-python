@@ -7,6 +7,8 @@ from .shared import Status as Status, ContentType as ContentType, FileReference 
 from .eval_type import EvalType as EvalType
 from .eval_prompt import EvalPrompt as EvalPrompt
 from .file_detail import FileDetail as FileDetail
+from .file_frames import FileFrames as FileFrames
+from .file_status import FileStatus as FileStatus
 from .file_upload import FileUpload as FileUpload
 from .ai_instruction import AIInstruction as AIInstruction
 from .prompt_example import PromptExample as PromptExample

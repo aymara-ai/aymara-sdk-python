@@ -2,16 +2,17 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import TypedDict
 
 __all__ = ["FileListParams"]
 
 
 class FileListParams(TypedDict, total=False):
-    file_type: str
+    file_type: Optional[str]
 
     limit: int
 
     offset: int
 
-    workspace_uuid: str
+    workspace_uuid: Optional[str]

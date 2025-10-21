@@ -11,6 +11,8 @@ from aymara_ai import AymaraAI, AsyncAymaraAI
 from tests.utils import assert_matches_type
 from aymara_ai.types import (
     FileDetail,
+    FileFrames,
+    FileStatus,
     FileUpload,
     FileCreateResponse,
 )
@@ -196,9 +198,102 @@ class TestFiles:
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
+    def test_method_get_frames(self, client: AymaraAI) -> None:
+        file = client.files.get_frames(
+            "file_uuid",
+        )
+        assert_matches_type(FileFrames, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_raw_response_get_frames(self, client: AymaraAI) -> None:
+        response = client.files.with_raw_response.get_frames(
+            "file_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        file = response.parse()
+        assert_matches_type(FileFrames, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_streaming_response_get_frames(self, client: AymaraAI) -> None:
+        with client.files.with_streaming_response.get_frames(
+            "file_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            file = response.parse()
+            assert_matches_type(FileFrames, file, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_path_params_get_frames(self, client: AymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
+            client.files.with_raw_response.get_frames(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_get_status(self, client: AymaraAI) -> None:
+        file = client.files.get_status(
+            "file_uuid",
+        )
+        assert_matches_type(FileStatus, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_raw_response_get_status(self, client: AymaraAI) -> None:
+        response = client.files.with_raw_response.get_status(
+            "file_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        file = response.parse()
+        assert_matches_type(FileStatus, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_streaming_response_get_status(self, client: AymaraAI) -> None:
+        with client.files.with_streaming_response.get_status(
+            "file_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            file = response.parse()
+            assert_matches_type(FileStatus, file, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_path_params_get_status(self, client: AymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
+            client.files.with_raw_response.get_status(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
     def test_method_upload(self, client: AymaraAI) -> None:
         file = client.files.upload(
             file=b"raw file contents",
+        )
+        assert_matches_type(FileUpload, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_upload_with_all_params(self, client: AymaraAI) -> None:
+        file = client.files.upload(
+            file=b"raw file contents",
+            workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileUpload, file, path=["response"])
 
@@ -408,9 +503,102 @@ class TestAsyncFiles:
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
+    async def test_method_get_frames(self, async_client: AsyncAymaraAI) -> None:
+        file = await async_client.files.get_frames(
+            "file_uuid",
+        )
+        assert_matches_type(FileFrames, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_raw_response_get_frames(self, async_client: AsyncAymaraAI) -> None:
+        response = await async_client.files.with_raw_response.get_frames(
+            "file_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        file = await response.parse()
+        assert_matches_type(FileFrames, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_streaming_response_get_frames(self, async_client: AsyncAymaraAI) -> None:
+        async with async_client.files.with_streaming_response.get_frames(
+            "file_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            file = await response.parse()
+            assert_matches_type(FileFrames, file, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_path_params_get_frames(self, async_client: AsyncAymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
+            await async_client.files.with_raw_response.get_frames(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_get_status(self, async_client: AsyncAymaraAI) -> None:
+        file = await async_client.files.get_status(
+            "file_uuid",
+        )
+        assert_matches_type(FileStatus, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_raw_response_get_status(self, async_client: AsyncAymaraAI) -> None:
+        response = await async_client.files.with_raw_response.get_status(
+            "file_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        file = await response.parse()
+        assert_matches_type(FileStatus, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_streaming_response_get_status(self, async_client: AsyncAymaraAI) -> None:
+        async with async_client.files.with_streaming_response.get_status(
+            "file_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            file = await response.parse()
+            assert_matches_type(FileStatus, file, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_path_params_get_status(self, async_client: AsyncAymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
+            await async_client.files.with_raw_response.get_status(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
     async def test_method_upload(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.upload(
             file=b"raw file contents",
+        )
+        assert_matches_type(FileUpload, file, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_upload_with_all_params(self, async_client: AsyncAymaraAI) -> None:
+        file = await async_client.files.upload(
+            file=b"raw file contents",
+            workspace_uuid="workspace_uuid",
         )
         assert_matches_type(FileUpload, file, path=["response"])
 

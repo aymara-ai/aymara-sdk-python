@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import Required, TypedDict
 
 from .._types import FileTypes
@@ -11,3 +12,5 @@ __all__ = ["FileUploadParams"]
 
 class FileUploadParams(TypedDict, total=False):
     file: Required[FileTypes]
+
+    workspace_uuid: Optional[str]

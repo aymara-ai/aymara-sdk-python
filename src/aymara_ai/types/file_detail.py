@@ -18,9 +18,6 @@ class FileDetail(BaseModel):
     file_type: str
     """Type of file content (text, image, video, document)."""
 
-    file_url: str
-    """Presigned URL to access the file."""
-
     file_uuid: str
     """Unique identifier for the file."""
 
@@ -35,6 +32,13 @@ class FileDetail(BaseModel):
 
     file_size_bytes: Optional[int] = None
     """Size of file in bytes, if known."""
+
+    file_url: Optional[str] = None
+    """Presigned URL to access the file.
+
+    For videos, points to raw video file. Use GET /api/v2/files/{file_uuid}/frames
+    to get frame URLs. May be null in list responses for performance.
+    """
 
     original_file_url: Optional[str] = None
     """Original file URL or path from upload."""

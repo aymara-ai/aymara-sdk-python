@@ -6,6 +6,7 @@ from .run_get_params import RunGetParams as RunGetParams
 from .eval_run_result import EvalRunResult as EvalRunResult
 from .run_list_params import RunListParams as RunListParams
 from .scored_response import ScoredResponse as ScoredResponse
+from .eval_run_example import EvalRunExample as EvalRunExample
 from .run_create_params import RunCreateParams as RunCreateParams
 from .run_delete_params import RunDeleteParams as RunDeleteParams
 from .eval_run_example_param import EvalRunExampleParam as EvalRunExampleParam
