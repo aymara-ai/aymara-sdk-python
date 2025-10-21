@@ -7,6 +7,7 @@ from ..eval import Eval
 from ..._models import BaseModel
 from ..shared.status import Status
 from .scored_response import ScoredResponse
+from .eval_run_example import EvalRunExample
 
 __all__ = ["EvalRunResult"]
 
@@ -29,6 +30,9 @@ class EvalRunResult(BaseModel):
 
     ai_description: Optional[str] = None
     """Description of the AI for this run, if any."""
+
+    eval_run_examples: Optional[List[EvalRunExample]] = None
+    """Examples that were included with the eval run, if any."""
 
     evaluation: Optional[Eval] = None
     """Schema for configuring an Eval based on a eval_type."""

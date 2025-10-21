@@ -20,6 +20,8 @@ from .._response import (
 from ..pagination import SyncOffsetPage, AsyncOffsetPage
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.file_detail import FileDetail
+from ..types.file_frames import FileFrames
+from ..types.file_status import FileStatus
 from ..types.file_upload import FileUpload
 from ..types.file_create_response import FileCreateResponse
 
@@ -58,21 +60,23 @@ class FilesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileCreateResponse:
-        """
-        Requests to upload one or more files to be used in an eval run.
+        """Request upload URLs for one or more files.
 
-        Args: upload_request (FileUploadRequest): Contains the files to upload and the
-        workspace UUID.
+        Use this for batch uploads or when
+        uploading files hosted at remote URLs.
 
-        Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
-        file. Each file is tracked in the database with a file_uuid for future
-        reference.
+        Args: upload_request (FileUploadRequest): Contains files to upload and workspace
+        UUID. - Set remote_uri to fetch files from external URLs - Set local_file_path
+        to generate an upload URL for client-side uploads
 
-        Raises: AymaraAPIError: If the organization is missing or file upload fails.
+        Returns: FileUploadResponse: For each file, includes: - file_uuid: Use this to
+        reference the file in eval runs - file_url: Upload URL (PUT your file here) or
+        download URL (for remote_uri files) - processing_status: "pending" for remote
+        files or videos, "completed" otherwise
 
         Example: POST /api/files { "workspace_uuid": "...", "files": [
-        {"local_file_path": "path/to/file1.csv"}, {"local_file_path":
-        "path/to/file2.csv"} ] }
+        {"local_file_path": "data.csv"}, {"remote_uri": "https://example.com/file.mp4"}
+        ] }
 
         Args:
           files: List of files to upload.
@@ -105,10 +109,10 @@ class FilesResource(SyncAPIResource):
     def list(
         self,
         *,
-        file_type: str | Omit = omit,
+        file_type: Optional[str] | Omit = omit,
         limit: int | Omit = omit,
         offset: int | Omit = omit,
-        workspace_uuid: str | Omit = omit,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -212,13 +216,17 @@ class FilesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileDetail:
         """
-        Retrieve a specific file by its UUID.
+        Retrieve file metadata and access URL.
 
         Args: file_uuid (str): UUID of the file to retrieve.
 
-        Returns: FileDetail: Detailed file information with a fresh presigned URL.
+        Returns: FileDetail: File metadata including: - file_url: Use this URL to
+        download/view the file (valid for 30 minutes) - file_type: "image", "video",
+        "text", or "document" - processing_status: For videos, check if "completed"
+        before accessing frames - video_metadata: Contains frame_count and other
+        video-specific info
 
-        Raises: AymaraAPIError: If the file is not found or user lacks access.
+        Note: For videos, use GET /files/{file_uuid}/frames to access individual frames.
 
         Example: GET /api/v2/files/{file_uuid}
 
@@ -241,10 +249,105 @@ class FilesResource(SyncAPIResource):
             cast_to=FileDetail,
         )
 
+    def get_frames(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FileFrames:
+        """
+        Get download URLs for all extracted frames from a video file.
+
+        Only available for video files after processing completes. Check processing
+        status with GET /files/{file_uuid}/status first.
+
+        Args: file_uuid (str): UUID of the video file.
+
+        Returns: FileFramesResponse: Contains: - frame_urls: List of URLs to access each
+        frame (sorted by frame number) - frame_count: Total number of frames available
+
+            Each frame URL is valid for 30 minutes. Use these URLs to download or display
+            individual video frames for analysis.
+
+        Raises: AymaraAPIError: - If file is not a video (use file_type field to
+        check) - If processing not complete (check processing_status first)
+
+        Example: GET /api/v2/files/{file_uuid}/frames
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        return self._get(
+            f"/v2/files/{file_uuid}/frames",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FileFrames,
+        )
+
+    def get_status(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FileStatus:
+        """Check processing status for a file.
+
+        Use this to poll video processing progress.
+
+        Args: file_uuid (str): UUID of the file to check status for.
+
+        Returns: FileStatusResponse: Contains: - processing_status: "pending",
+        "processing", "completed", or "failed" - error_message: If status is "failed",
+        contains error details - remote_file_path: Available when status is "completed"
+
+        Use this endpoint to poll until processing_status == "completed" before calling
+        GET /files/{file_uuid}/frames for video files.
+
+        Example: GET /api/v2/files/{file_uuid}/status
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        return self._get(
+            f"/v2/files/{file_uuid}/status",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FileStatus,
+        )
+
     def upload(
         self,
         *,
         file: FileTypes,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -252,9 +355,20 @@ class FilesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileUpload:
-        """
-        Receives a file and streams it to S3 using multipart upload in a single request.
-        Creates a File record in the database for tracking.
+        """Upload a file directly in the request body.
+
+        Use this for single file uploads
+        from your application.
+
+        For video files, processing happens asynchronously - use GET
+        /files/{file_uuid}/status to check processing status before accessing frames.
+
+        Args: file: The file to upload (multipart form data) workspace_uuid: Optional
+        workspace to associate the file with
+
+        Returns: FileUploadResult with file_uuid for future reference and file_url for
+        immediate access. For videos, check processing_status field - use status
+        endpoint to poll until "completed".
 
         Args:
           extra_headers: Send extra headers
@@ -276,7 +390,11 @@ class FilesResource(SyncAPIResource):
             body=maybe_transform(body, file_upload_params.FileUploadParams),
             files=files,
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"workspace_uuid": workspace_uuid}, file_upload_params.FileUploadParams),
             ),
             cast_to=FileUpload,
         )
@@ -314,21 +432,23 @@ class AsyncFilesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileCreateResponse:
-        """
-        Requests to upload one or more files to be used in an eval run.
+        """Request upload URLs for one or more files.
 
-        Args: upload_request (FileUploadRequest): Contains the files to upload and the
-        workspace UUID.
+        Use this for batch uploads or when
+        uploading files hosted at remote URLs.
 
-        Returns: FileUploadResponse: Contains presigned URLs and metadata to upload each
-        file. Each file is tracked in the database with a file_uuid for future
-        reference.
+        Args: upload_request (FileUploadRequest): Contains files to upload and workspace
+        UUID. - Set remote_uri to fetch files from external URLs - Set local_file_path
+        to generate an upload URL for client-side uploads
 
-        Raises: AymaraAPIError: If the organization is missing or file upload fails.
+        Returns: FileUploadResponse: For each file, includes: - file_uuid: Use this to
+        reference the file in eval runs - file_url: Upload URL (PUT your file here) or
+        download URL (for remote_uri files) - processing_status: "pending" for remote
+        files or videos, "completed" otherwise
 
         Example: POST /api/files { "workspace_uuid": "...", "files": [
-        {"local_file_path": "path/to/file1.csv"}, {"local_file_path":
-        "path/to/file2.csv"} ] }
+        {"local_file_path": "data.csv"}, {"remote_uri": "https://example.com/file.mp4"}
+        ] }
 
         Args:
           files: List of files to upload.
@@ -361,10 +481,10 @@ class AsyncFilesResource(AsyncAPIResource):
     def list(
         self,
         *,
-        file_type: str | Omit = omit,
+        file_type: Optional[str] | Omit = omit,
         limit: int | Omit = omit,
         offset: int | Omit = omit,
-        workspace_uuid: str | Omit = omit,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -468,13 +588,17 @@ class AsyncFilesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileDetail:
         """
-        Retrieve a specific file by its UUID.
+        Retrieve file metadata and access URL.
 
         Args: file_uuid (str): UUID of the file to retrieve.
 
-        Returns: FileDetail: Detailed file information with a fresh presigned URL.
+        Returns: FileDetail: File metadata including: - file_url: Use this URL to
+        download/view the file (valid for 30 minutes) - file_type: "image", "video",
+        "text", or "document" - processing_status: For videos, check if "completed"
+        before accessing frames - video_metadata: Contains frame_count and other
+        video-specific info
 
-        Raises: AymaraAPIError: If the file is not found or user lacks access.
+        Note: For videos, use GET /files/{file_uuid}/frames to access individual frames.
 
         Example: GET /api/v2/files/{file_uuid}
 
@@ -497,10 +621,105 @@ class AsyncFilesResource(AsyncAPIResource):
             cast_to=FileDetail,
         )
 
+    async def get_frames(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FileFrames:
+        """
+        Get download URLs for all extracted frames from a video file.
+
+        Only available for video files after processing completes. Check processing
+        status with GET /files/{file_uuid}/status first.
+
+        Args: file_uuid (str): UUID of the video file.
+
+        Returns: FileFramesResponse: Contains: - frame_urls: List of URLs to access each
+        frame (sorted by frame number) - frame_count: Total number of frames available
+
+            Each frame URL is valid for 30 minutes. Use these URLs to download or display
+            individual video frames for analysis.
+
+        Raises: AymaraAPIError: - If file is not a video (use file_type field to
+        check) - If processing not complete (check processing_status first)
+
+        Example: GET /api/v2/files/{file_uuid}/frames
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        return await self._get(
+            f"/v2/files/{file_uuid}/frames",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FileFrames,
+        )
+
+    async def get_status(
+        self,
+        file_uuid: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FileStatus:
+        """Check processing status for a file.
+
+        Use this to poll video processing progress.
+
+        Args: file_uuid (str): UUID of the file to check status for.
+
+        Returns: FileStatusResponse: Contains: - processing_status: "pending",
+        "processing", "completed", or "failed" - error_message: If status is "failed",
+        contains error details - remote_file_path: Available when status is "completed"
+
+        Use this endpoint to poll until processing_status == "completed" before calling
+        GET /files/{file_uuid}/frames for video files.
+
+        Example: GET /api/v2/files/{file_uuid}/status
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_uuid:
+            raise ValueError(f"Expected a non-empty value for `file_uuid` but received {file_uuid!r}")
+        return await self._get(
+            f"/v2/files/{file_uuid}/status",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FileStatus,
+        )
+
     async def upload(
         self,
         *,
         file: FileTypes,
+        workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -508,9 +727,20 @@ class AsyncFilesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FileUpload:
-        """
-        Receives a file and streams it to S3 using multipart upload in a single request.
-        Creates a File record in the database for tracking.
+        """Upload a file directly in the request body.
+
+        Use this for single file uploads
+        from your application.
+
+        For video files, processing happens asynchronously - use GET
+        /files/{file_uuid}/status to check processing status before accessing frames.
+
+        Args: file: The file to upload (multipart form data) workspace_uuid: Optional
+        workspace to associate the file with
+
+        Returns: FileUploadResult with file_uuid for future reference and file_url for
+        immediate access. For videos, check processing_status field - use status
+        endpoint to poll until "completed".
 
         Args:
           extra_headers: Send extra headers
@@ -532,7 +762,13 @@ class AsyncFilesResource(AsyncAPIResource):
             body=await async_maybe_transform(body, file_upload_params.FileUploadParams),
             files=files,
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"workspace_uuid": workspace_uuid}, file_upload_params.FileUploadParams
+                ),
             ),
             cast_to=FileUpload,
         )
@@ -553,6 +789,12 @@ class FilesResourceWithRawResponse:
         )
         self.get = to_raw_response_wrapper(
             files.get,
+        )
+        self.get_frames = to_raw_response_wrapper(
+            files.get_frames,
+        )
+        self.get_status = to_raw_response_wrapper(
+            files.get_status,
         )
         self.upload = to_raw_response_wrapper(
             files.upload,
@@ -575,6 +817,12 @@ class AsyncFilesResourceWithRawResponse:
         self.get = async_to_raw_response_wrapper(
             files.get,
         )
+        self.get_frames = async_to_raw_response_wrapper(
+            files.get_frames,
+        )
+        self.get_status = async_to_raw_response_wrapper(
+            files.get_status,
+        )
         self.upload = async_to_raw_response_wrapper(
             files.upload,
         )
@@ -596,6 +844,12 @@ class FilesResourceWithStreamingResponse:
         self.get = to_streamed_response_wrapper(
             files.get,
         )
+        self.get_frames = to_streamed_response_wrapper(
+            files.get_frames,
+        )
+        self.get_status = to_streamed_response_wrapper(
+            files.get_status,
+        )
         self.upload = to_streamed_response_wrapper(
             files.upload,
         )
@@ -616,6 +870,12 @@ class AsyncFilesResourceWithStreamingResponse:
         )
         self.get = async_to_streamed_response_wrapper(
             files.get,
+        )
+        self.get_frames = async_to_streamed_response_wrapper(
+            files.get_frames,
+        )
+        self.get_status = async_to_streamed_response_wrapper(
+            files.get_status,
         )
         self.upload = async_to_streamed_response_wrapper(
             files.upload,
