@@ -20,6 +20,7 @@ from ...types import (
     eval_list_params,
     eval_create_params,
     eval_delete_params,
+    eval_update_params,
     eval_list_prompts_params,
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
@@ -179,6 +180,91 @@ class EvalsResource(SyncAPIResource):
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Eval,
+        )
+
+    def update(
+        self,
+        eval_uuid: str,
+        *,
+        workspace_uuid: str | Omit = omit,
+        ai_description: Optional[str] | Omit = omit,
+        ai_instructions: Optional[str] | Omit = omit,
+        eval_instructions: Optional[str] | Omit = omit,
+        ground_truth: Optional[eval_update_params.GroundTruth] | Omit = omit,
+        name: Optional[str] | Omit = omit,
+        prompt_creates: Optional[Iterable[eval_update_params.PromptCreate]] | Omit = omit,
+        prompt_updates: Optional[Iterable[eval_update_params.PromptUpdate]] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Eval:
+        """
+        Update an existing eval's fields and prompts.
+
+        Args: eval_uuid (str): UUID of the eval to update. update_request
+        (EvalUpdateRequest): Update data including fields and prompt modifications.
+        workspace_uuid (str, optional): Optional workspace UUID for filtering.
+
+        Returns: Eval: The updated eval data.
+
+        Raises: AymaraAPIError: If the eval is not found or update is invalid.
+
+        Example: PUT /api/evals/{eval_uuid} { "name": "Updated Eval Name",
+        "ai_description": "Updated description", "prompt_updates": [ {"prompt_uuid":
+        "...", "content": "New content", "action": "update"}, {"prompt_uuid": "...",
+        "action": "delete"} ], "prompt_creates": [ {"content": "New prompt", "category":
+        "test"} ] }
+
+        Args:
+          ai_description: New description of the AI under evaluation.
+
+          ai_instructions: New instructions the AI should follow.
+
+          eval_instructions: New additional instructions for the eval.
+
+          ground_truth: New ground truth data or reference file.
+
+          name: New name for the evaluation.
+
+          prompt_creates: List of new prompts to add.
+
+          prompt_updates: List of prompt updates to apply.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not eval_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
+        return self._put(
+            f"/v2/evals/{eval_uuid}",
+            body=maybe_transform(
+                {
+                    "ai_description": ai_description,
+                    "ai_instructions": ai_instructions,
+                    "eval_instructions": eval_instructions,
+                    "ground_truth": ground_truth,
+                    "name": name,
+                    "prompt_creates": prompt_creates,
+                    "prompt_updates": prompt_updates,
+                },
+                eval_update_params.EvalUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"workspace_uuid": workspace_uuid}, eval_update_params.EvalUpdateParams),
             ),
             cast_to=Eval,
         )
@@ -531,6 +617,93 @@ class AsyncEvalsResource(AsyncAPIResource):
             cast_to=Eval,
         )
 
+    async def update(
+        self,
+        eval_uuid: str,
+        *,
+        workspace_uuid: str | Omit = omit,
+        ai_description: Optional[str] | Omit = omit,
+        ai_instructions: Optional[str] | Omit = omit,
+        eval_instructions: Optional[str] | Omit = omit,
+        ground_truth: Optional[eval_update_params.GroundTruth] | Omit = omit,
+        name: Optional[str] | Omit = omit,
+        prompt_creates: Optional[Iterable[eval_update_params.PromptCreate]] | Omit = omit,
+        prompt_updates: Optional[Iterable[eval_update_params.PromptUpdate]] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Eval:
+        """
+        Update an existing eval's fields and prompts.
+
+        Args: eval_uuid (str): UUID of the eval to update. update_request
+        (EvalUpdateRequest): Update data including fields and prompt modifications.
+        workspace_uuid (str, optional): Optional workspace UUID for filtering.
+
+        Returns: Eval: The updated eval data.
+
+        Raises: AymaraAPIError: If the eval is not found or update is invalid.
+
+        Example: PUT /api/evals/{eval_uuid} { "name": "Updated Eval Name",
+        "ai_description": "Updated description", "prompt_updates": [ {"prompt_uuid":
+        "...", "content": "New content", "action": "update"}, {"prompt_uuid": "...",
+        "action": "delete"} ], "prompt_creates": [ {"content": "New prompt", "category":
+        "test"} ] }
+
+        Args:
+          ai_description: New description of the AI under evaluation.
+
+          ai_instructions: New instructions the AI should follow.
+
+          eval_instructions: New additional instructions for the eval.
+
+          ground_truth: New ground truth data or reference file.
+
+          name: New name for the evaluation.
+
+          prompt_creates: List of new prompts to add.
+
+          prompt_updates: List of prompt updates to apply.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not eval_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
+        return await self._put(
+            f"/v2/evals/{eval_uuid}",
+            body=await async_maybe_transform(
+                {
+                    "ai_description": ai_description,
+                    "ai_instructions": ai_instructions,
+                    "eval_instructions": eval_instructions,
+                    "ground_truth": ground_truth,
+                    "name": name,
+                    "prompt_creates": prompt_creates,
+                    "prompt_updates": prompt_updates,
+                },
+                eval_update_params.EvalUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"workspace_uuid": workspace_uuid}, eval_update_params.EvalUpdateParams
+                ),
+            ),
+            cast_to=Eval,
+        )
+
     def list(
         self,
         *,
@@ -748,6 +921,9 @@ class EvalsResourceWithRawResponse:
         self.create = to_raw_response_wrapper(
             evals.create,
         )
+        self.update = to_raw_response_wrapper(
+            evals.update,
+        )
         self.list = to_raw_response_wrapper(
             evals.list,
         )
@@ -772,6 +948,9 @@ class AsyncEvalsResourceWithRawResponse:
 
         self.create = async_to_raw_response_wrapper(
             evals.create,
+        )
+        self.update = async_to_raw_response_wrapper(
+            evals.update,
         )
         self.list = async_to_raw_response_wrapper(
             evals.list,
@@ -798,6 +977,9 @@ class EvalsResourceWithStreamingResponse:
         self.create = to_streamed_response_wrapper(
             evals.create,
         )
+        self.update = to_streamed_response_wrapper(
+            evals.update,
+        )
         self.list = to_streamed_response_wrapper(
             evals.list,
         )
@@ -822,6 +1004,9 @@ class AsyncEvalsResourceWithStreamingResponse:
 
         self.create = async_to_streamed_response_wrapper(
             evals.create,
+        )
+        self.update = async_to_streamed_response_wrapper(
+            evals.update,
         )
         self.list = async_to_streamed_response_wrapper(
             evals.list,
