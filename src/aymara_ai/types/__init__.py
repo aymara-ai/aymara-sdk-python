@@ -19,6 +19,7 @@ from .eval_suite_report import EvalSuiteReport as EvalSuiteReport
 from .report_get_params import ReportGetParams as ReportGetParams
 from .eval_create_params import EvalCreateParams as EvalCreateParams
 from .eval_delete_params import EvalDeleteParams as EvalDeleteParams
+from .eval_update_params import EvalUpdateParams as EvalUpdateParams
 from .file_create_params import FileCreateParams as FileCreateParams
 from .file_upload_params import FileUploadParams as FileUploadParams
 from .report_list_params import ReportListParams as ReportListParams

@@ -15,12 +15,13 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import Eval, EvalPrompt, EvalResponse, PromptExample
+from aymara_ai.types import Eval, EvalPrompt, EvalResponse, EvalUpdate, PromptExample
 ```
 
 Methods:
 
 - <code title="post /v2/evals">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">create</a>(\*\*<a href="src/aymara_ai/types/eval_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">Eval</a></code>
+- <code title="put /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">update</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_update_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">Eval</a></code>
 - <code title="get /v2/evals">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">SyncOffsetPage[Eval]</a></code>
 - <code title="delete /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">delete</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_delete_params.py">params</a>) -> None</code>
 - <code title="get /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">get</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_get_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">Eval</a></code>
