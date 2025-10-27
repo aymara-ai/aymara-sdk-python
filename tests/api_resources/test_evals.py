@@ -12,6 +12,7 @@ from tests.utils import assert_matches_type
 from aymara_ai.types import (
     Eval,
     EvalPrompt,
+    EvalAnalyzeResponse,
 )
 from aymara_ai._utils import parse_datetime
 from aymara_ai.pagination import SyncOffsetPage, AsyncOffsetPage
@@ -249,6 +250,62 @@ class TestEvals:
             client.evals.with_raw_response.delete(
                 eval_uuid="",
             )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_analyze(self, client: AymaraAI) -> None:
+        eval = client.evals.analyze()
+        assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_analyze_with_all_params(self, client: AymaraAI) -> None:
+        eval = client.evals.analyze(
+            created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
+            created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
+            created_by="created_by",
+            eval_type="eval_type",
+            has_score_runs=True,
+            is_jailbreak=True,
+            is_sandbox=True,
+            language="language",
+            limit=1,
+            max_pass_rate=0,
+            min_pass_rate=0,
+            modality="modality",
+            name="name",
+            offset=0,
+            run_created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
+            run_created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
+            score_run_status="score_run_status",
+            sort_by="created_at",
+            sort_order="asc",
+            status="status",
+            workspace_uuid="workspace_uuid",
+        )
+        assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_raw_response_analyze(self, client: AymaraAI) -> None:
+        response = client.evals.with_raw_response.analyze()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        eval = response.parse()
+        assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_streaming_response_analyze(self, client: AymaraAI) -> None:
+        with client.evals.with_streaming_response.analyze() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            eval = response.parse()
+            assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
@@ -587,6 +644,62 @@ class TestAsyncEvals:
             await async_client.evals.with_raw_response.delete(
                 eval_uuid="",
             )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_analyze(self, async_client: AsyncAymaraAI) -> None:
+        eval = await async_client.evals.analyze()
+        assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_analyze_with_all_params(self, async_client: AsyncAymaraAI) -> None:
+        eval = await async_client.evals.analyze(
+            created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
+            created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
+            created_by="created_by",
+            eval_type="eval_type",
+            has_score_runs=True,
+            is_jailbreak=True,
+            is_sandbox=True,
+            language="language",
+            limit=1,
+            max_pass_rate=0,
+            min_pass_rate=0,
+            modality="modality",
+            name="name",
+            offset=0,
+            run_created_after=parse_datetime("2019-12-27T18:11:19.117Z"),
+            run_created_before=parse_datetime("2019-12-27T18:11:19.117Z"),
+            score_run_status="score_run_status",
+            sort_by="created_at",
+            sort_order="asc",
+            status="status",
+            workspace_uuid="workspace_uuid",
+        )
+        assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_raw_response_analyze(self, async_client: AsyncAymaraAI) -> None:
+        response = await async_client.evals.with_raw_response.analyze()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        eval = await response.parse()
+        assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_streaming_response_analyze(self, async_client: AsyncAymaraAI) -> None:
+        async with async_client.evals.with_streaming_response.analyze() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            eval = await response.parse()
+            assert_matches_type(EvalAnalyzeResponse, eval, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
