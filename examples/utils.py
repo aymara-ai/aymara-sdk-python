@@ -1,25 +1,24 @@
 from __future__ import annotations
 
-import asyncio
-import base64
-import json
 import os
+import json
+import uuid
+import base64
 import random
 import shutil
+import asyncio
 import tempfile
-import uuid
-from datetime import datetime, timezone
+from typing import Dict, List, Callable, Optional, Awaitable
 from pathlib import Path
-from typing import Awaitable, Callable, Dict, List, Optional
+from datetime import datetime, timezone
 
-import requests
 import boto3
+import requests
 from botocore.exceptions import ClientError
 
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.eval_response_param import EvalResponseParam
 from aymara_ai.types.shared_params.file_reference import FileReference
-
 
 CacheMetadata = Dict[str, Dict[str, str]]
 
@@ -362,7 +361,6 @@ async def generate_video_async_sora(
 
 
 async def upload_cached_video_async(
-    prompt_uuid: str,
     *,
     client,
 ) -> Optional[str]:
