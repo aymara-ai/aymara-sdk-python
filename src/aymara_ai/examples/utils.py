@@ -7,6 +7,7 @@ import base64
 import random
 import shutil
 import asyncio
+import logging
 import tempfile
 from typing import Dict, List, Callable, Optional, Awaitable
 from pathlib import Path
@@ -20,14 +21,14 @@ from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.eval_response_param import EvalResponseParam
 from aymara_ai.types.shared_params.file_reference import FileReference
 
+logger = logging.getLogger(__name__)
+
 CacheMetadata = Dict[str, Dict[str, str]]
 
 _DEFAULT_CACHE_DIR = Path("./video_cache")
 
 # Module-level paths that other notebooks can reference directly.
-video_cache_dir = Path(
-    os.environ.get("AYMARA_VIDEO_CACHE_DIR", _DEFAULT_CACHE_DIR)
-).expanduser()
+video_cache_dir = Path(os.environ.get("AYMARA_VIDEO_CACHE_DIR", _DEFAULT_CACHE_DIR)).expanduser()
 video_cache_videos_dir = video_cache_dir / "videos"
 video_cache_metadata_file = video_cache_dir / "metadata.json"
 VIDEO_CACHE_DIR = video_cache_dir
@@ -58,7 +59,7 @@ def ensure_cache_dir(*, verbose: bool = True) -> Path:
     if not video_cache_metadata_file.exists():
         save_cache_metadata({})
     if verbose:
-        print(f"✅ Cache directory ready: {video_cache_dir}")
+        logger.info(f"✅ Cache directory ready: {video_cache_dir}")
     return video_cache_dir
 
 
@@ -101,7 +102,7 @@ def add_to_cache(local_path: Path, *, provider: str, prompt: str, s3_uri: str, v
     save_cache_metadata(metadata)
 
     if verbose:
-        print(f"✅ Added to cache: {cache_filename} (provider: {provider})")
+        logger.info(f"✅ Added to cache: {cache_filename} (provider: {provider})")
     return cache_path
 
 
@@ -138,9 +139,9 @@ def validate_s3_bucket_configuration(
 ) -> str:
     """Validate that the configured S3 bucket exists and is accessible."""
     if default_bucket and bucket_name == default_bucket:
-        print("⚠️  Warning: Using default S3 bucket name. Consider setting S3_BUCKET_NAME.")
+        logger.info("⚠️  Warning: Using default S3 bucket name. Consider setting S3_BUCKET_NAME.")
 
-    print("Validating S3 bucket configuration...")
+    logger.info("Validating S3 bucket configuration...")
 
     if bucket_name == "your-bucket-name":
         raise ValueError(
@@ -150,17 +151,16 @@ def validate_s3_bucket_configuration(
 
     try:
         s3_client.head_bucket(Bucket=bucket_name)
-        print(f"✅ S3 bucket '{bucket_name}' is accessible")
+        logger.info(f"✅ S3 bucket '{bucket_name}' is accessible")
 
         location = s3_client.get_bucket_location(Bucket=bucket_name)
         region = location.get("LocationConstraint") or "us-east-1"
-        print(f"✅ Bucket region: {region}")
+        logger.info(f"✅ Bucket region: {region}")
     except ClientError as err:
         error_code = err.response["Error"]["Code"]
         if error_code == "404":
             raise ValueError(
-                f"S3 bucket '{bucket_name}' does not exist. "
-                "Please create the bucket or update S3_BUCKET_NAME."
+                f"S3 bucket '{bucket_name}' does not exist. " "Please create the bucket or update S3_BUCKET_NAME."
             ) from err
         if error_code == "403":
             raise ValueError(
@@ -169,7 +169,7 @@ def validate_s3_bucket_configuration(
             ) from err
         raise ValueError(f"Error accessing S3 bucket: {err}") from err
 
-    print("✅ S3 configuration validated successfully\n")
+    logger.info("✅ S3 configuration validated successfully\n")
     return region
 
 
@@ -187,8 +187,8 @@ async def generate_video_async_bedrock(
     output_s3_uri = f"s3://{bucket_name}/"
 
     try:
-        print(f"[{job_id}] Submitting video generation for: '{prompt[:50]}...' , uuid: {prompt_uuid}")
-        print(f"[{job_id}] Output S3 URI: {output_s3_uri}")
+        logger.info(f"[{job_id}] Submitting video generation for: '{prompt[:50]}...' , uuid: {prompt_uuid}")
+        logger.info(f"[{job_id}] Output S3 URI: {output_s3_uri}")
 
         model_input = {
             "taskType": "TEXT_VIDEO",
@@ -207,15 +207,18 @@ async def generate_video_async_bedrock(
             outputDataConfig=output_config,
         )
         invocation_arn = response["invocationArn"]
-        print(f"[{job_id}] Job started with ARN: {invocation_arn}")
+        logger.info(f"[{job_id}] Job started with ARN: {invocation_arn}")
     except ClientError as err:
-        if err.response["Error"]["Code"] == "ValidationException" and "blocked by our content filters" in err.response["Error"]["Message"]:
-            print(f"[{job_id}] Input moderated by Bedrock")
+        if (
+            err.response["Error"]["Code"] == "ValidationException"
+            and "blocked by our content filters" in err.response["Error"]["Message"]
+        ):
+            logger.info(f"[{job_id}] Input moderated by Bedrock")
             return None
-        print(f"[{job_id}] Error starting job: {err}")
+        logger.info(f"[{job_id}] Error starting job: {err}")
         return None
     except Exception as exc:
-        print(f"[{job_id}] Unexpected error: {exc}")
+        logger.info(f"[{job_id}] Unexpected error: {exc}")
         return None
 
     try:
@@ -224,11 +227,11 @@ async def generate_video_async_bedrock(
             await asyncio.sleep(10)
             job_details = bedrock_client.get_async_invoke(invocationArn=invocation_arn)
             status = job_details["status"]
-            print(f"[{job_id}] Status: {status}")
+            logger.info(f"[{job_id}] Status: {status}")
 
         if status == "Completed":
             source_uri = f"{job_details['outputDataConfig']['s3OutputDataConfig']['s3Uri']}/output.mp4"
-            print(f"[{job_id}] ✅ Video generated at: {source_uri}")
+            logger.info(f"[{job_id}] ✅ Video generated at: {source_uri}")
 
             try:
                 s3_path = source_uri[5:]
@@ -237,7 +240,7 @@ async def generate_video_async_bedrock(
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp_file:
                     tmp_path = Path(tmp_file.name)
                     s3_client.download_file(cache_bucket, cache_key, str(tmp_path))
-                    print(f"[{job_id}] Downloaded to temp: {tmp_path}")
+                    logger.info(f"[{job_id}] Downloaded to temp: {tmp_path}")
 
                 add_to_cache(tmp_path, provider="nova", prompt=prompt, s3_uri=source_uri)
 
@@ -246,23 +249,23 @@ async def generate_video_async_bedrock(
                 except FileNotFoundError:
                     pass
             except Exception as cache_error:
-                print(f"[{job_id}] ⚠️  Cache error (continuing): {cache_error}")
+                logger.info(f"[{job_id}] ⚠️  Cache error (continuing): {cache_error}")
 
             return source_uri
 
         if status == "Failed":
             failure_message = job_details.get("failureMessage", "")
             if "violate the safety policy" in failure_message:
-                print(f"[{job_id}] Output moderated by Bedrock")
+                logger.info(f"[{job_id}] Output moderated by Bedrock")
             else:
-                print(f"[{job_id}] Job failed: {failure_message}")
+                logger.info(f"[{job_id}] Job failed: {failure_message}")
             return None
 
-        print(f"[{job_id}] Unexpected status: {status}")
+        logger.info(f"[{job_id}] Unexpected status: {status}")
         return None
 
     except Exception as exc:
-        print(f"[{job_id}] Error during polling: {exc}")
+        logger.info(f"[{job_id}] Error during polling: {exc}")
         return None
 
 
@@ -281,22 +284,22 @@ async def generate_video_async_sora(
     job_id = str(uuid.uuid4())[:8]
     local_filename = f"{prompt_uuid}.mp4"
 
-    print(f"[{job_id}] Starting Sora generation for: '{prompt[:50]}...'")
+    logger.info(f"[{job_id}] Starting Sora generation for: '{prompt[:50]}...'")
 
     try:
-        print(f"[{job_id}] Submitting job to OpenAI Sora...")
+        logger.info(f"[{job_id}] Submitting job to OpenAI Sora...")
         job = openai_client.videos.create(
             model=model_id,
             prompt=prompt,
             seconds=str(video_duration),
         )
         job_id_openai = job.id
-        print(f"[{job_id}] Job created with ID: {job_id_openai}")
+        logger.info(f"[{job_id}] Job created with ID: {job_id_openai}")
     except Exception as exc:
-        print(f"[{job_id}] Error creating job: {exc}")
+        logger.info(f"[{job_id}] Error creating job: {exc}")
         error_msg = str(exc).lower()
         if "moderation" in error_msg or "content policy" in error_msg or "safety" in error_msg:
-            print(f"[{job_id}] Input moderated by OpenAI")
+            logger.info(f"[{job_id}] Input moderated by OpenAI")
         return None
 
     try:
@@ -305,33 +308,33 @@ async def generate_video_async_sora(
             await asyncio.sleep(10)
             job = openai_client.videos.retrieve(job_id_openai)
             status = job.status
-            print(f"[{job_id}] Status: {status}")
+            logger.info(f"[{job_id}] Status: {status}")
 
         if status == "completed":
-            print(f"[{job_id}] ✅ Video generation succeeded")
+            logger.info(f"[{job_id}] ✅ Video generation succeeded")
             video_content = openai_client.videos.download_content(job_id_openai, variant="video")
             video_content.write_to_file(local_filename)
-            print(f"[{job_id}] Downloaded video to {local_filename}")
+            logger.info(f"[{job_id}] Downloaded video to {local_filename}")
 
             try:
                 s3_key = f"{sora_output_folder}{local_filename}"
-                print(f"[{job_id}] Uploading to S3: s3://{bucket_name}/{s3_key}")
+                logger.info(f"[{job_id}] Uploading to S3: s3://{bucket_name}/{s3_key}")
                 s3_client.upload_file(local_filename, bucket_name, s3_key)
                 s3_uri = f"s3://{bucket_name}/{s3_key}"
-                print(f"[{job_id}] ✅ Uploaded to S3: {s3_uri}")
+                logger.info(f"[{job_id}] ✅ Uploaded to S3: {s3_uri}")
 
                 try:
                     local_path = Path(local_filename)
                     add_to_cache(local_path, provider="sora", prompt=prompt, s3_uri=s3_uri)
                 except Exception as cache_error:
-                    print(f"[{job_id}] ⚠️  Cache error (continuing): {cache_error}")
+                    logger.info(f"[{job_id}] ⚠️  Cache error (continuing): {cache_error}")
 
                 os.remove(local_filename)
-                print(f"[{job_id}] ✅ Cleaned up local temp file")
+                logger.info(f"[{job_id}] ✅ Cleaned up local temp file")
                 return s3_uri
 
             except Exception as s3_error:
-                print(f"[{job_id}] ❌ S3 upload failed: {s3_error}")
+                logger.info(f"[{job_id}] ❌ S3 upload failed: {s3_error}")
                 if os.path.exists(local_filename):
                     os.remove(local_filename)
                 return None
@@ -342,19 +345,19 @@ async def generate_video_async_sora(
                 error_code = getattr(failure_reason, "code", "")
                 error_message = getattr(failure_reason, "message", "")
                 if "moderation" in error_code.lower() or "moderation" in error_message.lower():
-                    print(f"[{job_id}] Output moderated by OpenAI")
+                    logger.info(f"[{job_id}] Output moderated by OpenAI")
                 else:
-                    print(f"[{job_id}] Job failed: {error_code} - {error_message}")
+                    logger.info(f"[{job_id}] Job failed: {error_code} - {error_message}")
             else:
-                print(f"[{job_id}] Job ended with status: {status}")
+                logger.info(f"[{job_id}] Job ended with status: {status}")
             return None
 
         else:
-            print(f"[{job_id}] Unexpected status: {status}")
+            logger.info(f"[{job_id}] Unexpected status: {status}")
             return None
 
     except Exception as exc:
-        print(f"[{job_id}] Error during polling/download: {exc}")
+        logger.info(f"[{job_id}] Error during polling/download: {exc}")
         if os.path.exists(local_filename):
             os.remove(local_filename)
         return None
@@ -374,30 +377,34 @@ async def upload_cached_video_async(
 
     job_id = str(uuid.uuid4())[:8]
     selected_video = random.choice(cache_videos)
-    print(f"[{job_id}] Selected cached video: {selected_video.name}")
+    logger.info(f"[{job_id}] Selected cached video: {selected_video.name}")
 
     metadata = load_cache_metadata()
     video_metadata = metadata.get(selected_video.name, {})
     if video_metadata:
-        print(f"[{job_id}] Original provider: {video_metadata.get('provider', 'unknown')}")
+        logger.info(f"[{job_id}] Original provider: {video_metadata.get('provider', 'unknown')}")
         prompt_preview = video_metadata.get("original_prompt", "unknown")[:50]
-        print(f"[{job_id}] Original prompt: {prompt_preview}...")
+        logger.info(f"[{job_id}] Original prompt: {prompt_preview}...")
 
     try:
-        print(f"[{job_id}] Requesting upload URL from Aymara SDK...")
-        upload_resp = client.files.create(files=[{
-            "local_file_path": selected_video.name,
-            "content_type": "video/mp4",
-        }])
+        logger.info(f"[{job_id}] Requesting upload URL from Aymara SDK...")
+        upload_resp = client.files.create(
+            files=[
+                {
+                    "local_file_path": selected_video.name,
+                    "content_type": "video/mp4",
+                }
+            ]
+        )
 
         file_info = upload_resp.files[0]
         file_uuid = file_info.file_uuid
         file_url = file_info.file_url
 
-        print(f"[{job_id}] Got file_uuid: {file_uuid}")
-        print(f"[{job_id}] Got upload URL: {file_url[:60]}...")
+        logger.info(f"[{job_id}] Got file_uuid: {file_uuid}")
+        logger.info(f"[{job_id}] Got upload URL: {file_url[:60]}...")
 
-        print(f"[{job_id}] Uploading cached video to signed URL...")
+        logger.info(f"[{job_id}] Uploading cached video to signed URL...")
         with open(selected_video, "rb") as cached_file:
             response = requests.put(
                 file_url,
@@ -406,11 +413,11 @@ async def upload_cached_video_async(
             )
             response.raise_for_status()
 
-        print(f"[{job_id}] ✅ Upload successful! file_uuid: {file_uuid}")
+        logger.info(f"[{job_id}] ✅ Upload successful! file_uuid: {file_uuid}")
         return file_uuid
 
     except Exception as exc:
-        print(f"[{job_id}] ❌ Upload failed: {exc}")
+        logger.info(f"[{job_id}] ❌ Upload failed: {exc}")
         return None
 
 
@@ -456,25 +463,20 @@ async def answer_prompts(
             async with semaphore:
                 return await video_gen_func(prompt_content, prompt_uuid)
 
-        print(
-            f"Starting video generation for {len(prompts)} prompts using {provider} (max 3 concurrent)..."
-        )
-        tasks = [
-            generate_with_limit(prompt.content, prompt.prompt_uuid)
-            for prompt in prompts
-        ]
+        logger.info(f"Starting video generation for {len(prompts)} prompts using {provider} (max 3 concurrent)...")
+        tasks = [generate_with_limit(prompt.content, prompt.prompt_uuid) for prompt in prompts]
     else:
-        print(f"Uploading {len(prompts)} cached videos using {provider}...")
+        logger.info(f"Uploading {len(prompts)} cached videos using {provider}...")
         tasks = [video_gen_func(prompt.prompt_uuid) for prompt in prompts]
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
-    print("All video tasks completed!")
+    logger.info("All video tasks completed!")
     responses: List[EvalResponseParam] = []
 
     for prompt, result in zip(prompts, results):
         try:
             if isinstance(result, Exception):
-                print(f"Video processing failed for {prompt.prompt_uuid}: {result}")
+                logger.info(f"Video processing failed for {prompt.prompt_uuid}: {result}")
                 responses.append(
                     EvalResponseParam(
                         prompt_uuid=prompt.prompt_uuid,
@@ -518,10 +520,12 @@ async def answer_prompts(
 
             presigned_url = generate_presigned_url_from_s3_uri(s3_uri)
             upload_resp = client.files.create(
-                files=[{
-                    "remote_uri": presigned_url,
-                    "content_type": "video/mp4",
-                }]
+                files=[
+                    {
+                        "remote_uri": presigned_url,
+                        "content_type": "video/mp4",
+                    }
+                ]
             )
 
             responses.append(
@@ -533,7 +537,7 @@ async def answer_prompts(
             )
 
         except Exception as exc:
-            print(f"Error processing prompt {prompt.prompt_uuid}: {exc}")
+            logger.info(f"Error processing prompt {prompt.prompt_uuid}: {exc}")
             responses.append(
                 EvalResponseParam(
                     prompt_uuid=prompt.prompt_uuid,
@@ -572,20 +576,20 @@ def display_eval_run_results(
     prompts_dict = {prompt.prompt_uuid: prompt for prompt in prompts}
     scored_responses = client.evals.runs.list_responses(eval_run_uuid=eval_run_uuid).items
 
-    print(f"\n{'=' * 80}")
-    print(f"Evaluation: {eval_obj.name}")
-    print(f"Pass Rate: {eval_run.pass_rate:.1%}")
-    print(f"Scored: {eval_run.num_responses_scored}/{eval_run.num_prompts}")
-    print(f"{'=' * 80}\n")
+    logger.info(f"\n{'=' * 80}")
+    logger.info(f"Evaluation: {eval_obj.name}")
+    logger.info(f"Pass Rate: {eval_run.pass_rate:.1%}")
+    logger.info(f"Scored: {eval_run.num_responses_scored}/{eval_run.num_prompts}")
+    logger.info(f"{'=' * 80}\n")
 
     for index, response in enumerate(scored_responses, start=1):
         prompt = prompts_dict.get(response.prompt_uuid)
         if not prompt:
             continue
 
-        print(f"\n--- Video {index}/{len(scored_responses)} ---")
-        print(f"Prompt: {prompt.content}")
-        print(f"Result: {'✅ PASSED' if response.is_passed else '❌ FAILED'}")
+        logger.info(f"\n--- Video {index}/{len(scored_responses)} ---")
+        logger.info(f"Prompt: {prompt.content}")
+        logger.info(f"Result: {'✅ PASSED' if response.is_passed else '❌ FAILED'}")
 
         if getattr(response, "content", None) and getattr(response.content, "file_uuid", None):
             video_url: Optional[str] = None
@@ -609,7 +613,7 @@ def display_eval_run_results(
                         status_info = status_method(response.content.file_uuid)  # type: ignore[misc]
                         remote_path = getattr(status_info, "remote_file_path", remote_path)
             except Exception as exc:
-                print(f"Could not fetch video metadata: {exc}")
+                logger.info(f"Could not fetch video metadata: {exc}")
 
             if not video_url and isinstance(remote_path, str):
                 if remote_path.startswith(("http://", "https://")):
@@ -625,7 +629,7 @@ def display_eval_run_results(
                         try:
                             video_url = generate_presigned_url_from_s3_uri(candidate_uri)
                         except Exception as exc:
-                            print(f"Could not generate presigned URL: {exc}")
+                            logger.info(f"Could not generate presigned URL: {exc}")
 
             if HTML and ipython_display and video_url:
                 rendered = False
@@ -638,9 +642,9 @@ def display_eval_run_results(
                         resp.raise_for_status()
                         data_url = "data:video/mp4;base64," + base64.b64encode(resp.content).decode("ascii")
                     except Exception as exc:
-                        print(f"Could not inline video data: {exc}")
+                        logger.info(f"Could not inline video data: {exc}")
 
-                if 'IPyVideo' in locals() and IPyVideo is not None:
+                if "IPyVideo" in locals() and IPyVideo is not None:
                     try:
                         source = data_url or embed_url
                         ipython_display(IPyVideo(source, width=640, height=360))
@@ -663,11 +667,11 @@ def display_eval_run_results(
                     """
                     ipython_display(HTML(html))
             elif video_url:
-                print(f"Video URL: {video_url}")
+                logger.info(f"Video URL: {video_url}")
             else:
                 if remote_path:
-                    print(f"Video content not available (remote path: {remote_path})")
+                    logger.info(f"Video content not available (remote path: {remote_path})")
                 else:
-                    print("Video content not available")
+                    logger.info("Video content not available")
         elif getattr(response, "ai_refused", False):
-            print("AI refused to generate content.")
+            logger.info("AI refused to generate content.")
