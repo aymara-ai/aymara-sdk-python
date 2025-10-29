@@ -9,8 +9,6 @@ __all__ = ["FileDetail"]
 
 
 class FileDetail(BaseModel):
-    """Schema for returning detailed file information."""
-
     content_type: str
     """MIME type of the file."""
 

@@ -1,5 +1,55 @@
 # Changelog
 
+## 1.1.0 (2025-10-29)
+
+Full Changelog: [v1.0.3...v1.1.0](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.3...v1.1.0)
+
+### Features
+
+* **api:** api update ([2ca0715](https://github.com/aymara-ai/aymara-sdk-python/commit/2ca07153ae47f2fd224fbac8d58ceca70a35bbe5))
+* **api:** api update ([29be9f7](https://github.com/aymara-ai/aymara-sdk-python/commit/29be9f79d74bf4c69d51183740e186844dd15a71))
+* **api:** api update ([a23c4fa](https://github.com/aymara-ai/aymara-sdk-python/commit/a23c4fad8c01ac136ca3283d4886322fcf7d5672))
+* **api:** api update ([b8a6f05](https://github.com/aymara-ai/aymara-sdk-python/commit/b8a6f05b628f00333eb5211ee8a8ee216abd51f7))
+* **api:** api update ([3b21ac4](https://github.com/aymara-ai/aymara-sdk-python/commit/3b21ac4f336785519f75b1584572e0ecf8f4d5c9))
+* **api:** api update ([f386c39](https://github.com/aymara-ai/aymara-sdk-python/commit/f386c39ed5ab703d9ae7c619241a1aea4793c92d))
+* **client:** add follow_redirects request option ([41774ca](https://github.com/aymara-ai/aymara-sdk-python/commit/41774cab90484b0d66c3a87d6b2fc423a05d34f3))
+* **client:** add support for aiohttp ([cc6487c](https://github.com/aymara-ai/aymara-sdk-python/commit/cc6487c7269ba50b84f9cecca8b74ed7dc3dfb94))
+
+
+### Bug Fixes
+
+* **ci:** correct conditional ([10dcc8c](https://github.com/aymara-ai/aymara-sdk-python/commit/10dcc8ca09a4662d5adc07a9199f46b03214c4b1))
+* **ci:** release-doctor — report correct token name ([1a905ea](https://github.com/aymara-ai/aymara-sdk-python/commit/1a905ea5d4cdf9298b230621ff3fed52f731693d))
+* **client:** correctly parse binary response | stream ([48ba460](https://github.com/aymara-ai/aymara-sdk-python/commit/48ba4602e29776e2c34e0c7f1a37f8b88e863ac1))
+* **package:** support direct resource imports ([938dd60](https://github.com/aymara-ai/aymara-sdk-python/commit/938dd60f3c970fd76aec87b7df8bb909b3f12732))
+* **tests:** fix: tests which call HTTP endpoints directly with the example parameters ([c5301a5](https://github.com/aymara-ai/aymara-sdk-python/commit/c5301a5780e15d887788f0a32079f1e8fbed4165))
+* **utils:** Fix issue with confidences showing up incorrectly for missing confidences. ([7fb32fb](https://github.com/aymara-ai/aymara-sdk-python/commit/7fb32fb0d8ac18acf994c36cae38c5074912a35a))
+
+
+### Chores
+
+* **ci:** change upload type ([9681bdc](https://github.com/aymara-ai/aymara-sdk-python/commit/9681bdc11663f6a9b3700c15092eada74bdcabe3))
+* **ci:** enable for pull requests ([d7e6731](https://github.com/aymara-ai/aymara-sdk-python/commit/d7e67314535b7d2878fe1f0353d1dd94e236d589))
+* **ci:** fix installation instructions ([8b37598](https://github.com/aymara-ai/aymara-sdk-python/commit/8b375983e8345ba10ef519cdc6b1da65055ad398))
+* **ci:** only run for pushes and fork pull requests ([80611a5](https://github.com/aymara-ai/aymara-sdk-python/commit/80611a5f806dbddcc693cca7eb008f212982757e))
+* **ci:** upload sdks to package manager ([a4d60f3](https://github.com/aymara-ai/aymara-sdk-python/commit/a4d60f3dd81f028878a7f74c048e73a09569d6b5))
+* **docs:** grammar improvements ([d49a74e](https://github.com/aymara-ai/aymara-sdk-python/commit/d49a74ef636ebabce475f7fc0e8cc505c3c978b7))
+* **docs:** remove reference to rye shell ([2cb26d1](https://github.com/aymara-ai/aymara-sdk-python/commit/2cb26d1141daf9781d7a41272e0409e100d0a823))
+* **internal:** avoid lint errors in pagination expressions ([5a3c566](https://github.com/aymara-ai/aymara-sdk-python/commit/5a3c5667e9c12a88a3f8ae7167a6402240605c75))
+* **internal:** bump pinned h11 dep ([0bf369e](https://github.com/aymara-ai/aymara-sdk-python/commit/0bf369e25a507675875522f39b2e4d43f5436498))
+* **internal:** codegen related update ([a98bd9f](https://github.com/aymara-ai/aymara-sdk-python/commit/a98bd9f33ed13ed151e0279c300fd92cc7e9b928))
+* **internal:** update conftest.py ([5b7c341](https://github.com/aymara-ai/aymara-sdk-python/commit/5b7c3418581834e07a9dfbeb4b7e4381264b241d))
+* **package:** mark python 3.13 as supported ([403512f](https://github.com/aymara-ai/aymara-sdk-python/commit/403512f5f67e5a755abf79a80d4e48d21e80fbf1))
+* **readme:** update badges ([fd2895a](https://github.com/aymara-ai/aymara-sdk-python/commit/fd2895ab11c602307e38c3805357a62338012a66))
+* **tests:** add tests for httpx client instantiation & proxies ([5aa538f](https://github.com/aymara-ai/aymara-sdk-python/commit/5aa538f111064a8385393fa6f24079cc9f0c0baf))
+* **tests:** run tests in parallel ([6d637ae](https://github.com/aymara-ai/aymara-sdk-python/commit/6d637ae0ca057a63a2988a546b8224929f23b9c3))
+* **tests:** skip some failing tests on the latest python versions ([7093c76](https://github.com/aymara-ai/aymara-sdk-python/commit/7093c76947eae3091c4050616a6add7309f9d966))
+
+
+### Documentation
+
+* **client:** fix httpx.Timeout documentation reference ([df9b5d2](https://github.com/aymara-ai/aymara-sdk-python/commit/df9b5d29b2885baedd789968cf395626ae9d15c3))
+
 ## 1.0.3 (2025-05-09)
 
 Full Changelog: [v1.1.0-beta.3...v1.0.3](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0-beta.3...v1.0.3)

@@ -1,6 +1,7 @@
 # Aymara AI Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg)](https://pypi.org/project/aymara-ai-sdk/)
+<!-- prettier-ignore -->
+[![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg?label=pypi%20(stable))](https://pypi.org/project/aymara-ai-sdk/)
 
 The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -83,6 +84,45 @@ asyncio.run(main())
 ```
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
+
+### With aiohttp
+
+By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+
+You can enable this by installing `aiohttp`:
+
+```sh
+# install from PyPI
+pip install aymara-ai-sdk[aiohttp]
+```
+
+Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+
+```python
+import asyncio
+from aymara_ai import DefaultAioHttpClient
+from aymara_ai import AsyncAymaraAI
+
+
+async def main() -> None:
+    async with AsyncAymaraAI(
+        api_key="My API Key",
+        http_client=DefaultAioHttpClient(),
+    ) as client:
+        eval_run_result = await client.evals.runs.create(
+            eval_uuid="your_eval_uuid_here",
+            responses=[
+                {
+                    "prompt_uuid": "some-prompt-uuid",
+                    "content": "The capital of France is Paris.",
+                }
+            ],
+        )
+        print(eval_run_result.eval_run_uuid)
+
+
+asyncio.run(main())
+```
 
 ## Using types
 
@@ -262,7 +302,7 @@ client.with_options(max_retries=5).evals.create(
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
 from aymara_ai import AymaraAI

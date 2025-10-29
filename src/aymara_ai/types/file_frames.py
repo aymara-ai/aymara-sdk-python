@@ -8,8 +8,6 @@ __all__ = ["FileFrames"]
 
 
 class FileFrames(BaseModel):
-    """Schema for video file frames endpoint."""
-
     file_uuid: str
     """Unique identifier for the file."""
 

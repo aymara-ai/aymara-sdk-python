@@ -15,13 +15,13 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestHealth:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_check(self, client: AymaraAI) -> None:
         health = client.health.check()
         assert health is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_check(self, client: AymaraAI) -> None:
         response = client.health.with_raw_response.check()
@@ -31,7 +31,7 @@ class TestHealth:
         health = response.parse()
         assert health is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_check(self, client: AymaraAI) -> None:
         with client.health.with_streaming_response.check() as response:
@@ -45,15 +45,17 @@ class TestHealth:
 
 
 class TestAsyncHealth:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_check(self, async_client: AsyncAymaraAI) -> None:
         health = await async_client.health.check()
         assert health is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_check(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.health.with_raw_response.check()
@@ -63,7 +65,7 @@ class TestAsyncHealth:
         health = await response.parse()
         assert health is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_check(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.health.with_streaming_response.check() as response:

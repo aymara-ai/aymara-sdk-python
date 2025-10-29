@@ -17,5 +17,14 @@ class FileCreateParams(TypedDict, total=False):
 
 
 class File(TypedDict, total=False):
+    content_type: Optional[str]
+    """MIME type of the file (e.g., 'video/mp4').
+
+    If not provided, will be inferred from file extension.
+    """
+
     local_file_path: Optional[str]
     """Local file path of the uploaded file, if available."""
+
+    remote_uri: Optional[str]
+    """Remote URI to fetch the file from, if available."""

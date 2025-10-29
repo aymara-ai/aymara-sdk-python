@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
 from typing_extensions import Required, TypedDict
+
+from .._types import SequenceNotStr
 
 __all__ = ["ReportCreateParams"]
 
 
 class ReportCreateParams(TypedDict, total=False):
-    eval_run_uuids: Required[List[str]]
+    eval_run_uuids: Required[SequenceNotStr[str]]
     """List of eval run UUIDs to include in the suite summary."""
-
-    is_sandbox: Optional[bool]
 
     workspace_uuid: str

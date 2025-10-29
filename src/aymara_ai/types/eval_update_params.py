@@ -6,10 +6,8 @@ from typing import Union, Iterable, Optional
 from typing_extensions import Required, TypeAlias, TypedDict
 
 from .shared_params.file_reference import FileReference
-from .shared_params.agent_instructions import AgentInstructions
-from .shared_params.workflow_instructions import WorkflowInstructions
 
-__all__ = ["EvalUpdateParams", "AIInstructions", "GroundTruth", "PromptCreate", "PromptUpdate"]
+__all__ = ["EvalUpdateParams", "GroundTruth", "PromptCreate", "PromptUpdate"]
 
 
 class EvalUpdateParams(TypedDict, total=False):
@@ -18,12 +16,8 @@ class EvalUpdateParams(TypedDict, total=False):
     ai_description: Optional[str]
     """New description of the AI under evaluation."""
 
-    ai_instructions: Optional[AIInstructions]
-    """New instructions the AI should follow.
-
-    String for normal evals, AgentInstructions for single-agent evals,
-    WorkflowInstructions for multi-agent workflows.
-    """
+    ai_instructions: Optional[str]
+    """New instructions the AI should follow."""
 
     eval_instructions: Optional[str]
     """New additional instructions for the eval."""
@@ -41,14 +35,10 @@ class EvalUpdateParams(TypedDict, total=False):
     """List of prompt updates to apply."""
 
 
-AIInstructions: TypeAlias = Union[str, AgentInstructions, WorkflowInstructions]
-
 GroundTruth: TypeAlias = Union[str, FileReference]
 
 
 class PromptCreate(TypedDict, total=False):
-    """Schema for creating new prompts."""
-
     content: Required[str]
     """Content of the new prompt."""
 
@@ -57,8 +47,6 @@ class PromptCreate(TypedDict, total=False):
 
 
 class PromptUpdate(TypedDict, total=False):
-    """Schema for updating existing prompts."""
-
     prompt_uuid: Required[str]
     """UUID of the prompt to update or delete."""
 

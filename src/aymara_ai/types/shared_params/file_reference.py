@@ -9,4 +9,6 @@ __all__ = ["FileReference"]
 
 
 class FileReference(TypedDict, total=False):
+    file_uuid: Optional[str]
+
     remote_file_path: Optional[str]

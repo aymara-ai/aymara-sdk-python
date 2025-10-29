@@ -10,8 +10,6 @@ __all__ = ["EvalAnalyzeResponse", "Result", "ResultStats"]
 
 
 class ResultStats(BaseModel):
-    """Aggregated statistics for this eval"""
-
     total_responses_scored: int
     """Total number of responses scored across all runs"""
 
@@ -32,8 +30,6 @@ class ResultStats(BaseModel):
 
 
 class Result(BaseModel):
-    """Schema for a single eval result in analysis response."""
-
     eval: Eval
     """The eval data"""
 
@@ -42,8 +38,6 @@ class Result(BaseModel):
 
 
 class EvalAnalyzeResponse(BaseModel):
-    """Schema for eval analysis response."""
-
     has_more: bool
     """Whether there are more results available"""
 
