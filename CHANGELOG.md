@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 (2025-10-29)
+
+Full Changelog: [v1.1.0...v1.1.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0...v1.1.1)
+
+### Bug Fixes
+
+* **examples_utils:** resolve bug preventing sora generations and fix logging visibility ([#34](https://github.com/aymara-ai/aymara-sdk-python/issues/34)) ([80dedbf](https://github.com/aymara-ai/aymara-sdk-python/commit/80dedbfc9d36235ec68cd74ecd09e3f47da8ed03))
+
 ## 1.1.0 (2025-10-29)
 
 Full Changelog: [v1.0.3...v1.1.0](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.0.3...v1.1.0)
