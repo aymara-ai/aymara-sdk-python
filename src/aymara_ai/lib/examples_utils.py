@@ -14,9 +14,9 @@ from typing import Any, Dict, List, Callable, Optional, Awaitable, cast
 from pathlib import Path
 from datetime import datetime, timezone
 
-import boto3  # pyright: ignore[reportMissingTypeStubs]
+import boto3  # type: ignore[import-untyped]
 import requests
-from botocore.exceptions import ClientError  # pyright: ignore[reportMissingTypeStubs]
+from botocore.exceptions import ClientError  # type: ignore[import-untyped]
 
 from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.eval_response_param import EvalResponseParam
@@ -75,7 +75,7 @@ def load_cache_metadata() -> CacheMetadata:
     if not video_cache_metadata_file.exists():
         return {}
     with video_cache_metadata_file.open("r", encoding="utf-8") as metadata_file:
-        return json.load(metadata_file)
+        return cast(CacheMetadata, json.load(metadata_file))
 
 
 def save_cache_metadata(metadata: CacheMetadata) -> None:
@@ -407,7 +407,7 @@ async def upload_cached_video_async(
         )
 
         file_info = upload_resp.files[0]
-        file_uuid = file_info.file_uuid
+        file_uuid = str(file_info.file_uuid)
         file_url = file_info.file_url
 
         logger.info(f"[{job_id}] Got file_uuid: {file_uuid}")
@@ -468,12 +468,15 @@ async def answer_prompts(
     if use_concurrency_limit:
         semaphore = asyncio.Semaphore(3)
 
-        async def generate_with_limit(prompt_content: str, prompt_uuid: str):
+        async def generate_with_limit(prompt_content: str, prompt_uuid: str) -> Optional[str]:
             async with semaphore:
                 return await video_gen_func(prompt_content, prompt_uuid)
 
         logger.info(f"Starting video generation for {len(prompts)} prompts using {provider} (max 3 concurrent)...")
-        tasks = [generate_with_limit(prompt.content, prompt.prompt_uuid) for prompt in prompts]
+        tasks: List[Awaitable[Optional[str]]] = [
+            generate_with_limit(prompt.content, prompt.prompt_uuid)
+            for prompt in prompts
+        ]
     else:
         logger.info(f"Uploading {len(prompts)} cached videos using {provider}...")
         tasks = [video_gen_func(prompt.prompt_uuid) for prompt in prompts]
@@ -566,12 +569,17 @@ def display_eval_run_results(
     fallback_s3_bucket: Optional[str] = None,
 ) -> None:
     """Pretty-print scored responses for an evaluation run and embed videos when available."""
+    ipy_html: Optional[Callable[[str], Any]] = None
+    ipy_video: Optional[Callable[..., Any]] = None
+    display_fn: Optional[Callable[..., Any]] = None
     try:
-        from IPython.display import HTML as IPyHTML, Video as IPyVideo, display as ipython_display
+        from IPython.display import HTML as html_cls, Video as video_cls, display as display_func
     except ImportError:
-        IPyHTML = None
-        IPyVideo = None
-        ipython_display = None
+        pass
+    else:
+        ipy_html = cast(Callable[[str], Any], html_cls)
+        ipy_video = cast(Callable[..., Any], video_cls)
+        display_fn = cast(Callable[..., Any], display_func)
 
     eval_run = client.evals.runs.get(eval_run_uuid=eval_run_uuid)
     eval_obj = client.evals.get(eval_uuid=eval_run.eval_uuid)
@@ -625,7 +633,7 @@ def display_eval_run_results(
             except Exception as exc:
                 logger.info(f"Could not fetch video metadata: {exc}")
 
-            if not video_url and remote_path:
+            if not video_url and remote_path is not None:
                 if remote_path.startswith(("http://", "https://")):
                     video_url = remote_path
                 else:
@@ -641,7 +649,7 @@ def display_eval_run_results(
                         except Exception as exc:
                             logger.info(f"Could not generate presigned URL: {exc}")
 
-            if IPyHTML and ipython_display and video_url:
+            if video_url and ipy_html is not None and ipy_video is not None and display_fn is not None:
                 rendered = False
                 embed_url = f"{video_url}#t=0.001" if "#" not in video_url else video_url
 
@@ -654,10 +662,10 @@ def display_eval_run_results(
                     except Exception as exc:
                         logger.info(f"Could not inline video data: {exc}")
 
-                if "IPyVideo" in locals() and IPyVideo is not None:
+                if ipy_video is not None:
                     try:
                         source = data_url or embed_url
-                        ipython_display(IPyVideo(source, width=640, height=360))
+                        display_fn(ipy_video(source, width=640, height=360))
                         rendered = True
                     except Exception:
                         rendered = False
@@ -675,8 +683,9 @@ def display_eval_run_results(
                         <p><strong>Explanation:</strong> {getattr(response_obj, 'explanation', None) or 'N/A'}</p>
                     </div>
                     """
-                    ipython_display(IPyHTML(html))
-            elif video_url:
+                    display_fn(ipy_html(html))
+
+            if video_url:
                 logger.info(f"Video URL: {video_url}")
             else:
                 if remote_path:
