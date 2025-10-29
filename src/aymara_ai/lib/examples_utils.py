@@ -37,6 +37,24 @@ VIDEO_CACHE_VIDEOS_DIR = video_cache_videos_dir
 VIDEO_CACHE_METADATA_FILE = video_cache_metadata_file
 
 
+def configure_examples_logging(
+    *,
+    level: int = logging.INFO,
+    formatter: Optional[logging.Formatter] = None,
+    stream: Optional[Any] = None,
+) -> logging.Logger:
+    """Ensure the module logger is ready for notebook use."""
+    logger.setLevel(level)
+    logger.propagate = False
+
+    if not logger.handlers:
+        handler = logging.StreamHandler(stream)
+        handler.setFormatter(formatter or logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+        logger.addHandler(handler)
+
+    return logger
+
+
 def configure_video_cache(path: str | Path | None = None) -> Path:
     """Override the cache directory location and return the resolved path."""
     global video_cache_dir, video_cache_videos_dir, video_cache_metadata_file
@@ -685,8 +703,6 @@ def display_eval_run_results(
                     """
                     display_fn(ipy_html(html))
 
-            if video_url:
-                logger.info(f"Video URL: {video_url}")
             else:
                 if remote_path:
                     logger.info(f"Video content not available (remote path: {remote_path})")
