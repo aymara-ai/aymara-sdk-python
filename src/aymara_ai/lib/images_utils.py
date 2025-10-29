@@ -173,7 +173,7 @@ def display_image_responses(
                     if a.get("exclude_from_scoring", False)
                     else (
                         f"{'Pass' if a.get('is_passed') else 'Fail'} "
-                        f"({a.get('confidence', 0):.1%} confidence): "
+                        f"({(a.get('confidence') or 0.0):.1%} confidence): "
                         f"{a.get('explanation') or ''}"
                     )
                     for q in prompts

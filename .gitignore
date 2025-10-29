@@ -1,5 +1,4 @@
 .prism.log
-.vscode
 _dev
 
 __pycache__
@@ -15,3 +14,5 @@ dist
 codegen.log
 Brewfile.lock.json
 uv.lock
+.claude/
+examples/video_cache/

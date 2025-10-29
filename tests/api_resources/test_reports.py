@@ -20,7 +20,7 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestReports:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_create(self, client: AymaraAI) -> None:
         report = client.reports.create(
@@ -28,17 +28,16 @@ class TestReports:
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: AymaraAI) -> None:
         report = client.reports.create(
             eval_run_uuids=["string"],
-            is_sandbox=True,
             workspace_uuid="workspace_uuid",
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: AymaraAI) -> None:
         response = client.reports.with_raw_response.create(
@@ -50,7 +49,7 @@ class TestReports:
         report = response.parse()
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: AymaraAI) -> None:
         with client.reports.with_streaming_response.create(
@@ -64,13 +63,13 @@ class TestReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_list(self, client: AymaraAI) -> None:
         report = client.reports.list()
         assert_matches_type(SyncOffsetPage[EvalSuiteReport], report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: AymaraAI) -> None:
         report = client.reports.list(
@@ -80,7 +79,7 @@ class TestReports:
         )
         assert_matches_type(SyncOffsetPage[EvalSuiteReport], report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: AymaraAI) -> None:
         response = client.reports.with_raw_response.list()
@@ -90,7 +89,7 @@ class TestReports:
         report = response.parse()
         assert_matches_type(SyncOffsetPage[EvalSuiteReport], report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: AymaraAI) -> None:
         with client.reports.with_streaming_response.list() as response:
@@ -102,7 +101,7 @@ class TestReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_delete(self, client: AymaraAI) -> None:
         report = client.reports.delete(
@@ -110,7 +109,7 @@ class TestReports:
         )
         assert report is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_delete_with_all_params(self, client: AymaraAI) -> None:
         report = client.reports.delete(
@@ -119,7 +118,7 @@ class TestReports:
         )
         assert report is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_delete(self, client: AymaraAI) -> None:
         response = client.reports.with_raw_response.delete(
@@ -131,7 +130,7 @@ class TestReports:
         report = response.parse()
         assert report is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_delete(self, client: AymaraAI) -> None:
         with client.reports.with_streaming_response.delete(
@@ -145,7 +144,7 @@ class TestReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_delete(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
@@ -153,7 +152,7 @@ class TestReports:
                 report_uuid="",
             )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_get(self, client: AymaraAI) -> None:
         report = client.reports.get(
@@ -161,7 +160,7 @@ class TestReports:
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_get_with_all_params(self, client: AymaraAI) -> None:
         report = client.reports.get(
@@ -170,7 +169,7 @@ class TestReports:
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_get(self, client: AymaraAI) -> None:
         response = client.reports.with_raw_response.get(
@@ -182,7 +181,7 @@ class TestReports:
         report = response.parse()
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_get(self, client: AymaraAI) -> None:
         with client.reports.with_streaming_response.get(
@@ -196,7 +195,7 @@ class TestReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_get(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
@@ -206,9 +205,11 @@ class TestReports:
 
 
 class TestAsyncReports:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.create(
@@ -216,17 +217,16 @@ class TestAsyncReports:
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.create(
             eval_run_uuids=["string"],
-            is_sandbox=True,
             workspace_uuid="workspace_uuid",
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.reports.with_raw_response.create(
@@ -238,7 +238,7 @@ class TestAsyncReports:
         report = await response.parse()
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.reports.with_streaming_response.create(
@@ -252,13 +252,13 @@ class TestAsyncReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.list()
         assert_matches_type(AsyncOffsetPage[EvalSuiteReport], report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.list(
@@ -268,7 +268,7 @@ class TestAsyncReports:
         )
         assert_matches_type(AsyncOffsetPage[EvalSuiteReport], report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.reports.with_raw_response.list()
@@ -278,7 +278,7 @@ class TestAsyncReports:
         report = await response.parse()
         assert_matches_type(AsyncOffsetPage[EvalSuiteReport], report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.reports.with_streaming_response.list() as response:
@@ -290,7 +290,7 @@ class TestAsyncReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_delete(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.delete(
@@ -298,7 +298,7 @@ class TestAsyncReports:
         )
         assert report is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_delete_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.delete(
@@ -307,7 +307,7 @@ class TestAsyncReports:
         )
         assert report is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.reports.with_raw_response.delete(
@@ -319,7 +319,7 @@ class TestAsyncReports:
         report = await response.parse()
         assert report is None
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.reports.with_streaming_response.delete(
@@ -333,7 +333,7 @@ class TestAsyncReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_delete(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):
@@ -341,7 +341,7 @@ class TestAsyncReports:
                 report_uuid="",
             )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_get(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.get(
@@ -349,7 +349,7 @@ class TestAsyncReports:
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_get_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         report = await async_client.reports.get(
@@ -358,7 +358,7 @@ class TestAsyncReports:
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_get(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.reports.with_raw_response.get(
@@ -370,7 +370,7 @@ class TestAsyncReports:
         report = await response.parse()
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_get(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.reports.with_streaming_response.get(
@@ -384,7 +384,7 @@ class TestAsyncReports:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_get(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `report_uuid` but received ''"):

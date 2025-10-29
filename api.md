@@ -15,14 +15,24 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import Eval, EvalPrompt, EvalResponse, PromptExample
+from aymara_ai.types import (
+    Eval,
+    EvalAnalysisRequest,
+    EvalPrompt,
+    EvalResponse,
+    EvalUpdate,
+    PromptExample,
+    EvalAnalyzeResponse,
+)
 ```
 
 Methods:
 
 - <code title="post /v2/evals">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">create</a>(\*\*<a href="src/aymara_ai/types/eval_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">Eval</a></code>
+- <code title="put /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">update</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_update_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">Eval</a></code>
 - <code title="get /v2/evals">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">list</a>(\*\*<a href="src/aymara_ai/types/eval_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">SyncOffsetPage[Eval]</a></code>
 - <code title="delete /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">delete</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_delete_params.py">params</a>) -> None</code>
+- <code title="post /v2/eval-analysis">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">analyze</a>(\*\*<a href="src/aymara_ai/types/eval_analyze_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_analyze_response.py">EvalAnalyzeResponse</a></code>
 - <code title="get /v2/evals/{eval_uuid}">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">get</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_get_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval.py">Eval</a></code>
 - <code title="get /v2/evals/{eval_uuid}/prompts">client.evals.<a href="./src/aymara_ai/resources/evals/evals.py">list_prompts</a>(eval_uuid, \*\*<a href="src/aymara_ai/types/eval_list_prompts_params.py">params</a>) -> <a href="./src/aymara_ai/types/eval_prompt.py">SyncOffsetPage[EvalPrompt]</a></code>
 
@@ -78,10 +88,15 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types import FileUpload, FileCreateResponse
+from aymara_ai.types import FileDetail, FileFrames, FileStatus, FileUpload, FileCreateResponse
 ```
 
 Methods:
 
 - <code title="post /v2/files">client.files.<a href="./src/aymara_ai/resources/files.py">create</a>(\*\*<a href="src/aymara_ai/types/file_create_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_create_response.py">FileCreateResponse</a></code>
+- <code title="get /v2/files">client.files.<a href="./src/aymara_ai/resources/files.py">list</a>(\*\*<a href="src/aymara_ai/types/file_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_detail.py">SyncOffsetPage[FileDetail]</a></code>
+- <code title="delete /v2/files/{file_uuid}">client.files.<a href="./src/aymara_ai/resources/files.py">delete</a>(file_uuid) -> None</code>
+- <code title="get /v2/files/{file_uuid}">client.files.<a href="./src/aymara_ai/resources/files.py">get</a>(file_uuid) -> <a href="./src/aymara_ai/types/file_detail.py">FileDetail</a></code>
+- <code title="get /v2/files/{file_uuid}/frames">client.files.<a href="./src/aymara_ai/resources/files.py">get_frames</a>(file_uuid) -> <a href="./src/aymara_ai/types/file_frames.py">FileFrames</a></code>
+- <code title="get /v2/files/{file_uuid}/status">client.files.<a href="./src/aymara_ai/resources/files.py">get_status</a>(file_uuid) -> <a href="./src/aymara_ai/types/file_status.py">FileStatus</a></code>
 - <code title="post /v2/files/-/uploads">client.files.<a href="./src/aymara_ai/resources/files.py">upload</a>(\*\*<a href="src/aymara_ai/types/file_upload_params.py">params</a>) -> <a href="./src/aymara_ai/types/file_upload.py">FileUpload</a></code>
