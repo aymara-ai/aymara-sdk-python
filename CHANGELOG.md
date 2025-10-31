@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.2 (2025-10-31)
+
+Full Changelog: [v1.1.1...v1.1.2](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.1...v1.1.2)
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([35363e9](https://github.com/aymara-ai/aymara-sdk-python/commit/35363e901fa9f057bf8ad2f8beed728bf490bbd6))
+
+
+### Chores
+
+* **internal/tests:** avoid race condition with implicit client cleanup ([b2238f8](https://github.com/aymara-ai/aymara-sdk-python/commit/b2238f875d2e70863ca5b26eeea38ab9863e9d4b))
+
 ## 1.1.1 (2025-10-29)
 
 Full Changelog: [v1.1.0...v1.1.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0...v1.1.1)
