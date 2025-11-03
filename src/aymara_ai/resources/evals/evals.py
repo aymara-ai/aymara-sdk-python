@@ -76,7 +76,7 @@ class EvalsResource(SyncAPIResource):
         *,
         ai_description: str,
         eval_type: str,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_create_params.AIInstructions] | Omit = omit,
         created_at: Union[str, datetime, None] | Omit = omit,
         created_by: Optional[str] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
@@ -116,7 +116,8 @@ class EvalsResource(SyncAPIResource):
 
           eval_type: Type of the eval (safety, accuracy, etc.)
 
-          ai_instructions: Instructions the AI should follow.
+          ai_instructions: Instructions the AI should follow. String for normal evals, AgentInstructions
+              for agent evals.
 
           created_at: Timestamp when the eval was created.
 
@@ -193,7 +194,7 @@ class EvalsResource(SyncAPIResource):
         *,
         workspace_uuid: str | Omit = omit,
         ai_description: Optional[str] | Omit = omit,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_update_params.AIInstructions] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
         ground_truth: Optional[eval_update_params.GroundTruth] | Omit = omit,
         name: Optional[str] | Omit = omit,
@@ -226,7 +227,8 @@ class EvalsResource(SyncAPIResource):
         Args:
           ai_description: New description of the AI under evaluation.
 
-          ai_instructions: New instructions the AI should follow.
+          ai_instructions: New instructions the AI should follow. String for normal evals,
+              AgentInstructions for agent evals.
 
           eval_instructions: New additional instructions for the eval.
 
@@ -648,7 +650,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         *,
         ai_description: str,
         eval_type: str,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_create_params.AIInstructions] | Omit = omit,
         created_at: Union[str, datetime, None] | Omit = omit,
         created_by: Optional[str] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
@@ -688,7 +690,8 @@ class AsyncEvalsResource(AsyncAPIResource):
 
           eval_type: Type of the eval (safety, accuracy, etc.)
 
-          ai_instructions: Instructions the AI should follow.
+          ai_instructions: Instructions the AI should follow. String for normal evals, AgentInstructions
+              for agent evals.
 
           created_at: Timestamp when the eval was created.
 
@@ -765,7 +768,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         *,
         workspace_uuid: str | Omit = omit,
         ai_description: Optional[str] | Omit = omit,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_update_params.AIInstructions] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
         ground_truth: Optional[eval_update_params.GroundTruth] | Omit = omit,
         name: Optional[str] | Omit = omit,
@@ -798,7 +801,8 @@ class AsyncEvalsResource(AsyncAPIResource):
         Args:
           ai_description: New description of the AI under evaluation.
 
-          ai_instructions: New instructions the AI should follow.
+          ai_instructions: New instructions the AI should follow. String for normal evals,
+              AgentInstructions for agent evals.
 
           eval_instructions: New additional instructions for the eval.
 

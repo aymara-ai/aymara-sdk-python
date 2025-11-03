@@ -12,7 +12,13 @@ from .shared.content_type import ContentType
 from .prompt_example_param import PromptExampleParam
 from .shared_params.file_reference import FileReference
 
-__all__ = ["EvalCreateParams", "GroundTruth"]
+__all__ = [
+    "EvalCreateParams",
+    "AIInstructions",
+    "AIInstructionsAgentInstructions",
+    "AIInstructionsAgentInstructionsToolsUnionMember0",
+    "GroundTruth",
+]
 
 
 class EvalCreateParams(TypedDict, total=False):
@@ -22,8 +28,11 @@ class EvalCreateParams(TypedDict, total=False):
     eval_type: Required[str]
     """Type of the eval (safety, accuracy, etc.)"""
 
-    ai_instructions: Optional[str]
-    """Instructions the AI should follow."""
+    ai_instructions: Optional[AIInstructions]
+    """Instructions the AI should follow.
+
+    String for normal evals, AgentInstructions for agent evals.
+    """
 
     created_at: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
     """Timestamp when the eval was created."""
@@ -70,5 +79,22 @@ class EvalCreateParams(TypedDict, total=False):
     workspace_uuid: Optional[str]
     """UUID of the associated workspace, if any."""
 
+
+class AIInstructionsAgentInstructionsToolsUnionMember0(TypedDict, total=False):
+    id: Required[str]
+
+    content: Required[Union[str, object, None]]
+
+    name: Required[str]
+
+
+class AIInstructionsAgentInstructions(TypedDict, total=False):
+    system_prompt: Required[str]
+
+    tools: Union[Iterable[AIInstructionsAgentInstructionsToolsUnionMember0], str, object]
+    """Instructions for the agent, can be a string or a list/dict of tools."""
+
+
+AIInstructions: TypeAlias = Union[str, AIInstructionsAgentInstructions]
 
 GroundTruth: TypeAlias = Union[str, FileReference]

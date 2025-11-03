@@ -7,7 +7,15 @@ from typing_extensions import Required, TypeAlias, TypedDict
 
 from .shared_params.file_reference import FileReference
 
-__all__ = ["EvalUpdateParams", "GroundTruth", "PromptCreate", "PromptUpdate"]
+__all__ = [
+    "EvalUpdateParams",
+    "AIInstructions",
+    "AIInstructionsAgentInstructions",
+    "AIInstructionsAgentInstructionsToolsUnionMember0",
+    "GroundTruth",
+    "PromptCreate",
+    "PromptUpdate",
+]
 
 
 class EvalUpdateParams(TypedDict, total=False):
@@ -16,8 +24,11 @@ class EvalUpdateParams(TypedDict, total=False):
     ai_description: Optional[str]
     """New description of the AI under evaluation."""
 
-    ai_instructions: Optional[str]
-    """New instructions the AI should follow."""
+    ai_instructions: Optional[AIInstructions]
+    """New instructions the AI should follow.
+
+    String for normal evals, AgentInstructions for agent evals.
+    """
 
     eval_instructions: Optional[str]
     """New additional instructions for the eval."""
@@ -34,6 +45,23 @@ class EvalUpdateParams(TypedDict, total=False):
     prompt_updates: Optional[Iterable[PromptUpdate]]
     """List of prompt updates to apply."""
 
+
+class AIInstructionsAgentInstructionsToolsUnionMember0(TypedDict, total=False):
+    id: Required[str]
+
+    content: Required[Union[str, object, None]]
+
+    name: Required[str]
+
+
+class AIInstructionsAgentInstructions(TypedDict, total=False):
+    system_prompt: Required[str]
+
+    tools: Union[Iterable[AIInstructionsAgentInstructionsToolsUnionMember0], str, object]
+    """Instructions for the agent, can be a string or a list/dict of tools."""
+
+
+AIInstructions: TypeAlias = Union[str, AIInstructionsAgentInstructions]
 
 GroundTruth: TypeAlias = Union[str, FileReference]
 
