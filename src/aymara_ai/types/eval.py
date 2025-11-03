@@ -10,7 +10,31 @@ from .prompt_example import PromptExample
 from .shared.content_type import ContentType
 from .shared.file_reference import FileReference
 
-__all__ = ["Eval", "GroundTruth"]
+__all__ = [
+    "Eval",
+    "AIInstructions",
+    "AIInstructionsAgentInstructions",
+    "AIInstructionsAgentInstructionsToolsUnionMember0",
+    "GroundTruth",
+]
+
+
+class AIInstructionsAgentInstructionsToolsUnionMember0(BaseModel):
+    id: str
+
+    content: Union[str, object, None] = None
+
+    name: str
+
+
+class AIInstructionsAgentInstructions(BaseModel):
+    system_prompt: str
+
+    tools: Union[List[AIInstructionsAgentInstructionsToolsUnionMember0], str, object, None] = None
+    """Instructions for the agent, can be a string or a list/dict of tools."""
+
+
+AIInstructions: TypeAlias = Union[str, AIInstructionsAgentInstructions, None]
 
 GroundTruth: TypeAlias = Union[str, FileReference, None]
 
@@ -22,8 +46,11 @@ class Eval(BaseModel):
     eval_type: str
     """Type of the eval (safety, accuracy, etc.)"""
 
-    ai_instructions: Optional[str] = None
-    """Instructions the AI should follow."""
+    ai_instructions: Optional[AIInstructions] = None
+    """Instructions the AI should follow.
+
+    String for normal evals, AgentInstructions for agent evals.
+    """
 
     created_at: Optional[datetime] = None
     """Timestamp when the eval was created."""
