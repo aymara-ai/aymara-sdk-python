@@ -24,12 +24,15 @@ from ...types.evals import (
     run_delete_params,
     run_list_responses_params,
     run_score_responses_params,
+    run_update_response_params,
+    run_get_response_history_params,
 )
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.eval_response_param import EvalResponseParam
 from ...types.evals.eval_run_result import EvalRunResult
 from ...types.evals.scored_response import ScoredResponse
 from ...types.evals.eval_run_example_param import EvalRunExampleParam
+from ...types.evals.run_get_response_history_response import RunGetResponseHistoryResponse
 
 __all__ = ["RunsResource", "AsyncRunsResource"]
 
@@ -295,6 +298,59 @@ class RunsResource(SyncAPIResource):
             cast_to=EvalRunResult,
         )
 
+    def get_response_history(
+        self,
+        response_uuid: str,
+        *,
+        eval_run_uuid: str,
+        workspace_uuid: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> RunGetResponseHistoryResponse:
+        """
+        Get the update history for a specific response.
+
+        Args: eval_run_uuid (str): UUID of the eval run. response_uuid (str): UUID of
+        the response. workspace_uuid (str, optional): UUID of the workspace. Defaults to
+        None.
+
+        Returns: list[AnswerHistoryOut]: List of history entries for the response.
+
+        Raises: AymaraAPIError: If the response is not found.
+
+        Example: GET /api/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not eval_run_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
+        if not response_uuid:
+            raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
+        return self._get(
+            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {"workspace_uuid": workspace_uuid}, run_get_response_history_params.RunGetResponseHistoryParams
+                ),
+            ),
+            cast_to=RunGetResponseHistoryResponse,
+        )
+
     def list_responses(
         self,
         eval_run_uuid: str,
@@ -439,6 +495,77 @@ class RunsResource(SyncAPIResource):
                 ),
             ),
             cast_to=EvalRunResult,
+        )
+
+    def update_response(
+        self,
+        response_uuid: str,
+        *,
+        eval_run_uuid: str,
+        workspace_uuid: str | Omit = omit,
+        confidence: Optional[float] | Omit = omit,
+        explanation: Optional[str] | Omit = omit,
+        is_passed: Optional[bool] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ScoredResponse:
+        """
+        Update the score, confidence, or explanation for a specific response.
+
+        Args: eval_run_uuid (str): UUID of the eval run. response_uuid (str): UUID of
+        the response to update. update_request (AnswerUpdateRequest): The update data.
+        workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: EvalScoredResponse: The updated response.
+
+        Raises: AymaraAPIError: If the response is not found or the request is invalid.
+
+        Example: PATCH /api/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid} {
+        "is_passed": true, "confidence": 0.95, "explanation": "Updated explanation" }
+
+        Args:
+          confidence: Confidence score for the response.
+
+          explanation: Explanation for the response.
+
+          is_passed: Whether the response passed the evaluation.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not eval_run_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
+        if not response_uuid:
+            raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
+        return self._patch(
+            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}",
+            body=maybe_transform(
+                {
+                    "confidence": confidence,
+                    "explanation": explanation,
+                    "is_passed": is_passed,
+                },
+                run_update_response_params.RunUpdateResponseParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {"workspace_uuid": workspace_uuid}, run_update_response_params.RunUpdateResponseParams
+                ),
+            ),
+            cast_to=ScoredResponse,
         )
 
 
@@ -705,6 +832,59 @@ class AsyncRunsResource(AsyncAPIResource):
             cast_to=EvalRunResult,
         )
 
+    async def get_response_history(
+        self,
+        response_uuid: str,
+        *,
+        eval_run_uuid: str,
+        workspace_uuid: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> RunGetResponseHistoryResponse:
+        """
+        Get the update history for a specific response.
+
+        Args: eval_run_uuid (str): UUID of the eval run. response_uuid (str): UUID of
+        the response. workspace_uuid (str, optional): UUID of the workspace. Defaults to
+        None.
+
+        Returns: list[AnswerHistoryOut]: List of history entries for the response.
+
+        Raises: AymaraAPIError: If the response is not found.
+
+        Example: GET /api/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not eval_run_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
+        if not response_uuid:
+            raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
+        return await self._get(
+            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"workspace_uuid": workspace_uuid}, run_get_response_history_params.RunGetResponseHistoryParams
+                ),
+            ),
+            cast_to=RunGetResponseHistoryResponse,
+        )
+
     def list_responses(
         self,
         eval_run_uuid: str,
@@ -851,6 +1031,77 @@ class AsyncRunsResource(AsyncAPIResource):
             cast_to=EvalRunResult,
         )
 
+    async def update_response(
+        self,
+        response_uuid: str,
+        *,
+        eval_run_uuid: str,
+        workspace_uuid: str | Omit = omit,
+        confidence: Optional[float] | Omit = omit,
+        explanation: Optional[str] | Omit = omit,
+        is_passed: Optional[bool] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ScoredResponse:
+        """
+        Update the score, confidence, or explanation for a specific response.
+
+        Args: eval_run_uuid (str): UUID of the eval run. response_uuid (str): UUID of
+        the response to update. update_request (AnswerUpdateRequest): The update data.
+        workspace_uuid (str, optional): UUID of the workspace. Defaults to None.
+
+        Returns: EvalScoredResponse: The updated response.
+
+        Raises: AymaraAPIError: If the response is not found or the request is invalid.
+
+        Example: PATCH /api/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid} {
+        "is_passed": true, "confidence": 0.95, "explanation": "Updated explanation" }
+
+        Args:
+          confidence: Confidence score for the response.
+
+          explanation: Explanation for the response.
+
+          is_passed: Whether the response passed the evaluation.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not eval_run_uuid:
+            raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
+        if not response_uuid:
+            raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
+        return await self._patch(
+            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}",
+            body=await async_maybe_transform(
+                {
+                    "confidence": confidence,
+                    "explanation": explanation,
+                    "is_passed": is_passed,
+                },
+                run_update_response_params.RunUpdateResponseParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"workspace_uuid": workspace_uuid}, run_update_response_params.RunUpdateResponseParams
+                ),
+            ),
+            cast_to=ScoredResponse,
+        )
+
 
 class RunsResourceWithRawResponse:
     def __init__(self, runs: RunsResource) -> None:
@@ -868,11 +1119,17 @@ class RunsResourceWithRawResponse:
         self.get = to_raw_response_wrapper(
             runs.get,
         )
+        self.get_response_history = to_raw_response_wrapper(
+            runs.get_response_history,
+        )
         self.list_responses = to_raw_response_wrapper(
             runs.list_responses,
         )
         self.score_responses = to_raw_response_wrapper(
             runs.score_responses,
+        )
+        self.update_response = to_raw_response_wrapper(
+            runs.update_response,
         )
 
 
@@ -892,11 +1149,17 @@ class AsyncRunsResourceWithRawResponse:
         self.get = async_to_raw_response_wrapper(
             runs.get,
         )
+        self.get_response_history = async_to_raw_response_wrapper(
+            runs.get_response_history,
+        )
         self.list_responses = async_to_raw_response_wrapper(
             runs.list_responses,
         )
         self.score_responses = async_to_raw_response_wrapper(
             runs.score_responses,
+        )
+        self.update_response = async_to_raw_response_wrapper(
+            runs.update_response,
         )
 
 
@@ -916,11 +1179,17 @@ class RunsResourceWithStreamingResponse:
         self.get = to_streamed_response_wrapper(
             runs.get,
         )
+        self.get_response_history = to_streamed_response_wrapper(
+            runs.get_response_history,
+        )
         self.list_responses = to_streamed_response_wrapper(
             runs.list_responses,
         )
         self.score_responses = to_streamed_response_wrapper(
             runs.score_responses,
+        )
+        self.update_response = to_streamed_response_wrapper(
+            runs.update_response,
         )
 
 
@@ -940,9 +1209,15 @@ class AsyncRunsResourceWithStreamingResponse:
         self.get = async_to_streamed_response_wrapper(
             runs.get,
         )
+        self.get_response_history = async_to_streamed_response_wrapper(
+            runs.get_response_history,
+        )
         self.list_responses = async_to_streamed_response_wrapper(
             runs.list_responses,
         )
         self.score_responses = async_to_streamed_response_wrapper(
             runs.score_responses,
+        )
+        self.update_response = async_to_streamed_response_wrapper(
+            runs.update_response,
         )

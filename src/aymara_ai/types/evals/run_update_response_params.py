@@ -11,13 +11,13 @@ __all__ = ["RunUpdateResponseParams"]
 class RunUpdateResponseParams(TypedDict, total=False):
     eval_run_uuid: Required[str]
 
-    confidence: Required[float]
-    """Confidence score between 0 and 1"""
-
-    explanation: Required[str]
-    """Explanation for the response."""
-
     workspace_uuid: str
+
+    confidence: Optional[float]
+    """Confidence score for the response."""
+
+    explanation: Optional[str]
+    """Explanation for the response."""
 
     is_passed: Optional[bool]
     """Whether the response passed the evaluation."""

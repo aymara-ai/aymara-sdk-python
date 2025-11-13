@@ -29,8 +29,6 @@ class UpdatedByWorkspace(BaseModel):
 
 
 class UpdatedBy(BaseModel):
-    """User who made the update."""
-
     email: str
 
     feature_flags: UpdatedByFeatureFlags
@@ -47,8 +45,6 @@ class UpdatedBy(BaseModel):
 
 
 class AnswerHistory(BaseModel):
-    """Schema for answer history entries."""
-
     answer_history_uuid: str
     """Unique identifier for the history entry."""
 
