@@ -14,12 +14,12 @@ __all__ = [
     "Eval",
     "AIInstructions",
     "AIInstructionsAgentInstructions",
-    "AIInstructionsAgentInstructionsToolsUnionMember0",
+    "AIInstructionsAgentInstructionsToolsToolsList",
     "GroundTruth",
 ]
 
 
-class AIInstructionsAgentInstructionsToolsUnionMember0(BaseModel):
+class AIInstructionsAgentInstructionsToolsToolsList(BaseModel):
     id: str
 
     content: Union[str, object, None] = None
@@ -30,7 +30,7 @@ class AIInstructionsAgentInstructionsToolsUnionMember0(BaseModel):
 class AIInstructionsAgentInstructions(BaseModel):
     system_prompt: str
 
-    tools: Union[List[AIInstructionsAgentInstructionsToolsUnionMember0], str, object, None] = None
+    tools: Union[List[AIInstructionsAgentInstructionsToolsToolsList], str, object, None] = None
     """Instructions for the agent, can be a string or a list/dict of tools."""
 
 
