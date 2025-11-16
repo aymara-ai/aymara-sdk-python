@@ -11,7 +11,7 @@ __all__ = [
     "EvalUpdateParams",
     "AIInstructions",
     "AIInstructionsAgentInstructions",
-    "AIInstructionsAgentInstructionsToolsUnionMember0",
+    "AIInstructionsAgentInstructionsToolsToolsList",
     "GroundTruth",
     "PromptCreate",
     "PromptUpdate",
@@ -46,7 +46,7 @@ class EvalUpdateParams(TypedDict, total=False):
     """List of prompt updates to apply."""
 
 
-class AIInstructionsAgentInstructionsToolsUnionMember0(TypedDict, total=False):
+class AIInstructionsAgentInstructionsToolsToolsList(TypedDict, total=False):
     id: Required[str]
 
     content: Required[Union[str, object, None]]
@@ -57,7 +57,7 @@ class AIInstructionsAgentInstructionsToolsUnionMember0(TypedDict, total=False):
 class AIInstructionsAgentInstructions(TypedDict, total=False):
     system_prompt: Required[str]
 
-    tools: Union[Iterable[AIInstructionsAgentInstructionsToolsUnionMember0], str, object]
+    tools: Union[Iterable[AIInstructionsAgentInstructionsToolsToolsList], str, object]
     """Instructions for the agent, can be a string or a list/dict of tools."""
 
 
