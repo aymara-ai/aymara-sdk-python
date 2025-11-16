@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Union, Iterable, Optional
+from typing import Dict, Union, Iterable, Optional
 from typing_extensions import Required, TypeAlias, TypedDict
 
 from .shared_params.file_reference import FileReference
@@ -57,7 +57,7 @@ class AIInstructionsAgentInstructionsToolsToolsList(TypedDict, total=False):
 class AIInstructionsAgentInstructions(TypedDict, total=False):
     system_prompt: Required[str]
 
-    tools: Union[Iterable[AIInstructionsAgentInstructionsToolsToolsList], str, object]
+    tools: Union[Iterable[AIInstructionsAgentInstructionsToolsToolsList], Dict[str, object], str]
     """Instructions for the agent, can be a string or a list/dict of tools."""
 
 
