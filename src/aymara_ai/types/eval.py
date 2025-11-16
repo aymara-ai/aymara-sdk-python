@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Union, Optional
+from typing import Dict, List, Union, Optional
 from datetime import datetime
 from typing_extensions import TypeAlias
 
@@ -30,7 +30,7 @@ class AIInstructionsAgentInstructionsToolsToolsList(BaseModel):
 class AIInstructionsAgentInstructions(BaseModel):
     system_prompt: str
 
-    tools: Union[List[AIInstructionsAgentInstructionsToolsToolsList], str, object, None] = None
+    tools: Union[List[AIInstructionsAgentInstructionsToolsToolsList], Dict[str, object], str, None] = None
     """Instructions for the agent, can be a string or a list/dict of tools."""
 
 
