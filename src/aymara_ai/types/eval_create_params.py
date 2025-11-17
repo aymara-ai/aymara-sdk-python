@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Dict, Union, Iterable, Optional
 from datetime import datetime
-from typing_extensions import Required, Annotated, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 
 from .._utils import PropertyInfo
 from .shared.status import Status
@@ -16,7 +16,11 @@ __all__ = [
     "EvalCreateParams",
     "AIInstructions",
     "AIInstructionsAgentInstructions",
-    "AIInstructionsAgentInstructionsToolsToolsList",
+    "AIInstructionsAgentInstructionsTools",
+    "AIInstructionsAgentInstructionsToolsToolArray",
+    "AIInstructionsAgentInstructionsToolsToolArrayValue",
+    "AIInstructionsAgentInstructionsToolsToolDict",
+    "AIInstructionsAgentInstructionsToolsToolString",
     "GroundTruth",
 ]
 
@@ -80,7 +84,7 @@ class EvalCreateParams(TypedDict, total=False):
     """UUID of the associated workspace, if any."""
 
 
-class AIInstructionsAgentInstructionsToolsToolsList(TypedDict, total=False):
+class AIInstructionsAgentInstructionsToolsToolArrayValue(TypedDict, total=False):
     id: Required[str]
 
     content: Required[Union[str, object, None]]
@@ -88,10 +92,40 @@ class AIInstructionsAgentInstructionsToolsToolsList(TypedDict, total=False):
     name: Required[str]
 
 
+class AIInstructionsAgentInstructionsToolsToolArray(TypedDict, total=False):
+    value: Required[Iterable[AIInstructionsAgentInstructionsToolsToolArrayValue]]
+
+    type: Literal["array"]
+
+
+class AIInstructionsAgentInstructionsToolsToolDictTyped(TypedDict, total=False):
+    value: Required[object]
+
+    type: Literal["dict"]
+
+
+AIInstructionsAgentInstructionsToolsToolDict: TypeAlias = Union[
+    AIInstructionsAgentInstructionsToolsToolDictTyped, Dict[str, object]
+]
+
+
+class AIInstructionsAgentInstructionsToolsToolString(TypedDict, total=False):
+    value: Required[str]
+
+    type: Literal["string"]
+
+
+AIInstructionsAgentInstructionsTools: TypeAlias = Union[
+    AIInstructionsAgentInstructionsToolsToolArray,
+    AIInstructionsAgentInstructionsToolsToolDict,
+    AIInstructionsAgentInstructionsToolsToolString,
+]
+
+
 class AIInstructionsAgentInstructions(TypedDict, total=False):
     system_prompt: Required[str]
 
-    tools: Union[Iterable[AIInstructionsAgentInstructionsToolsToolsList], Dict[str, object], str]
+    tools: AIInstructionsAgentInstructionsTools
     """Instructions for the agent, can be a string or a list/dict of tools."""
 
 
