@@ -1,9 +1,12 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Union, Optional
+from typing import TYPE_CHECKING, Dict, List, Union, Optional
 from datetime import datetime
-from typing_extensions import TypeAlias
+from typing_extensions import Literal, Annotated, TypeAlias
 
+from pydantic import Field as FieldInfo
+
+from .._utils import PropertyInfo
 from .._models import BaseModel
 from .shared.status import Status
 from .prompt_example import PromptExample
@@ -14,12 +17,16 @@ __all__ = [
     "Eval",
     "AIInstructions",
     "AIInstructionsAgentInstructions",
-    "AIInstructionsAgentInstructionsToolsToolsList",
+    "AIInstructionsAgentInstructionsTools",
+    "AIInstructionsAgentInstructionsToolsToolArray",
+    "AIInstructionsAgentInstructionsToolsToolArrayValue",
+    "AIInstructionsAgentInstructionsToolsToolDict",
+    "AIInstructionsAgentInstructionsToolsToolString",
     "GroundTruth",
 ]
 
 
-class AIInstructionsAgentInstructionsToolsToolsList(BaseModel):
+class AIInstructionsAgentInstructionsToolsToolArrayValue(BaseModel):
     id: str
 
     content: Union[str, object, None] = None
@@ -27,10 +34,50 @@ class AIInstructionsAgentInstructionsToolsToolsList(BaseModel):
     name: str
 
 
+class AIInstructionsAgentInstructionsToolsToolArray(BaseModel):
+    value: List[AIInstructionsAgentInstructionsToolsToolArrayValue]
+
+    type: Optional[Literal["array"]] = None
+
+
+class AIInstructionsAgentInstructionsToolsToolDict(BaseModel):
+    value: object
+
+    type: Optional[Literal["dict"]] = None
+
+    if TYPE_CHECKING:
+        # Some versions of Pydantic <2.8.0 have a bug and don’t allow assigning a
+        # value to this field, so for compatibility we avoid doing it at runtime.
+        __pydantic_extra__: Dict[str, object] = FieldInfo(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
+
+        # Stub to indicate that arbitrary properties are accepted.
+        # To access properties that are not valid identifiers you can use `getattr`, e.g.
+        # `getattr(obj, '$type')`
+        def __getattr__(self, attr: str) -> object: ...
+    else:
+        __pydantic_extra__: Dict[str, object]
+
+
+class AIInstructionsAgentInstructionsToolsToolString(BaseModel):
+    value: str
+
+    type: Optional[Literal["string"]] = None
+
+
+AIInstructionsAgentInstructionsTools: TypeAlias = Annotated[
+    Union[
+        AIInstructionsAgentInstructionsToolsToolArray,
+        AIInstructionsAgentInstructionsToolsToolDict,
+        AIInstructionsAgentInstructionsToolsToolString,
+    ],
+    PropertyInfo(discriminator="type"),
+]
+
+
 class AIInstructionsAgentInstructions(BaseModel):
     system_prompt: str
 
-    tools: Union[List[AIInstructionsAgentInstructionsToolsToolsList], Dict[str, object], str, None] = None
+    tools: Optional[AIInstructionsAgentInstructionsTools] = None
     """Instructions for the agent, can be a string or a list/dict of tools."""
 
 
