@@ -11,7 +11,5 @@ __all__ = ["WorkflowInstructions"]
 
 
 class WorkflowInstructions(TypedDict, total=False):
-    """Workflow instructions for multi-agent workflows."""
-
     instructions: Required[Iterable[AgentInstructions]]
     """List of agent instructions for the workflow. Must contain at least one agent."""

@@ -11,8 +11,6 @@ __all__ = ["ToolArray"]
 
 
 class ToolArray(TypedDict, total=False):
-    """Container for an array of tools"""
-
     value: Required[Iterable[Tool]]
 
     type: Literal["array"]

@@ -9,7 +9,5 @@ __all__ = ["WorkflowInstructions"]
 
 
 class WorkflowInstructions(BaseModel):
-    """Workflow instructions for multi-agent workflows."""
-
     instructions: List[AgentInstructions]
     """List of agent instructions for the workflow. Must contain at least one agent."""

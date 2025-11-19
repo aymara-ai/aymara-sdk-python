@@ -8,7 +8,7 @@ __all__ = ["Tool"]
 
 
 class Tool(BaseModel):
-    """Tools the agent has access to."""
+    id: str
 
     content: Union[str, object, None] = None
 

@@ -8,8 +8,6 @@ __all__ = ["ToolString"]
 
 
 class ToolString(TypedDict, total=False):
-    """Container for string-based tool instructions"""
-
     value: Required[str]
 
     type: Literal["string"]

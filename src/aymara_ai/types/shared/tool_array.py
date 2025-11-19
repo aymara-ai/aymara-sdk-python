@@ -10,8 +10,6 @@ __all__ = ["ToolArray"]
 
 
 class ToolArray(BaseModel):
-    """Container for an array of tools"""
-
     value: List[Tool]
 
     type: Optional[Literal["array"]] = None

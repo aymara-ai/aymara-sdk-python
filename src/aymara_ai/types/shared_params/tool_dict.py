@@ -9,8 +9,6 @@ __all__ = ["ToolDict"]
 
 
 class ToolDictTyped(TypedDict, total=False):
-    """Container for a tool dictionary"""
-
     value: Required[object]
 
     type: Literal["dict"]
