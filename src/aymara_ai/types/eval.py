@@ -1,158 +1,20 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import TYPE_CHECKING, Dict, List, Union, Optional
+from typing import List, Union, Optional
 from datetime import datetime
-from typing_extensions import Literal, Annotated, TypeAlias
+from typing_extensions import TypeAlias
 
-from pydantic import Field as FieldInfo
-
-from .._utils import PropertyInfo
 from .._models import BaseModel
 from .shared.status import Status
 from .prompt_example import PromptExample
 from .shared.content_type import ContentType
 from .shared.file_reference import FileReference
+from .shared.agent_instructions import AgentInstructions
+from .shared.workflow_instructions import WorkflowInstructions
 
-__all__ = [
-    "Eval",
-    "AIInstructions",
-    "AIInstructionsAgentInstructions",
-    "AIInstructionsAgentInstructionsTools",
-    "AIInstructionsAgentInstructionsToolsToolArray",
-    "AIInstructionsAgentInstructionsToolsToolArrayValue",
-    "AIInstructionsAgentInstructionsToolsToolDict",
-    "AIInstructionsAgentInstructionsToolsToolString",
-    "AIInstructionsWorkflowInstructions",
-    "AIInstructionsWorkflowInstructionsInstruction",
-    "AIInstructionsWorkflowInstructionsInstructionTools",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolArray",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolDict",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolString",
-    "GroundTruth",
-]
+__all__ = ["Eval", "AIInstructions", "GroundTruth"]
 
-
-class AIInstructionsAgentInstructionsToolsToolArrayValue(BaseModel):
-    id: str
-
-    content: Union[str, object, None] = None
-
-    name: str
-
-
-class AIInstructionsAgentInstructionsToolsToolArray(BaseModel):
-    value: List[AIInstructionsAgentInstructionsToolsToolArrayValue]
-
-    type: Optional[Literal["array"]] = None
-
-
-class AIInstructionsAgentInstructionsToolsToolDict(BaseModel):
-    value: object
-
-    type: Optional[Literal["dict"]] = None
-
-    if TYPE_CHECKING:
-        # Some versions of Pydantic <2.8.0 have a bug and don’t allow assigning a
-        # value to this field, so for compatibility we avoid doing it at runtime.
-        __pydantic_extra__: Dict[str, object] = FieldInfo(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
-
-        # Stub to indicate that arbitrary properties are accepted.
-        # To access properties that are not valid identifiers you can use `getattr`, e.g.
-        # `getattr(obj, '$type')`
-        def __getattr__(self, attr: str) -> object: ...
-    else:
-        __pydantic_extra__: Dict[str, object]
-
-
-class AIInstructionsAgentInstructionsToolsToolString(BaseModel):
-    value: str
-
-    type: Optional[Literal["string"]] = None
-
-
-AIInstructionsAgentInstructionsTools: TypeAlias = Annotated[
-    Union[
-        AIInstructionsAgentInstructionsToolsToolArray,
-        AIInstructionsAgentInstructionsToolsToolDict,
-        AIInstructionsAgentInstructionsToolsToolString,
-    ],
-    PropertyInfo(discriminator="type"),
-]
-
-
-class AIInstructionsAgentInstructions(BaseModel):
-    system_prompt: str
-
-    agent_name: Optional[str] = None
-
-    tools: Optional[AIInstructionsAgentInstructionsTools] = None
-    """Instructions for the agent, can be a string or a list/dict of tools."""
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue(BaseModel):
-    id: str
-
-    content: Union[str, object, None] = None
-
-    name: str
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolArray(BaseModel):
-    value: List[AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue]
-
-    type: Optional[Literal["array"]] = None
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolDict(BaseModel):
-    value: object
-
-    type: Optional[Literal["dict"]] = None
-
-    if TYPE_CHECKING:
-        # Some versions of Pydantic <2.8.0 have a bug and don’t allow assigning a
-        # value to this field, so for compatibility we avoid doing it at runtime.
-        __pydantic_extra__: Dict[str, object] = FieldInfo(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
-
-        # Stub to indicate that arbitrary properties are accepted.
-        # To access properties that are not valid identifiers you can use `getattr`, e.g.
-        # `getattr(obj, '$type')`
-        def __getattr__(self, attr: str) -> object: ...
-    else:
-        __pydantic_extra__: Dict[str, object]
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolString(BaseModel):
-    value: str
-
-    type: Optional[Literal["string"]] = None
-
-
-AIInstructionsWorkflowInstructionsInstructionTools: TypeAlias = Annotated[
-    Union[
-        AIInstructionsWorkflowInstructionsInstructionToolsToolArray,
-        AIInstructionsWorkflowInstructionsInstructionToolsToolDict,
-        AIInstructionsWorkflowInstructionsInstructionToolsToolString,
-    ],
-    PropertyInfo(discriminator="type"),
-]
-
-
-class AIInstructionsWorkflowInstructionsInstruction(BaseModel):
-    system_prompt: str
-
-    agent_name: Optional[str] = None
-
-    tools: Optional[AIInstructionsWorkflowInstructionsInstructionTools] = None
-    """Instructions for the agent, can be a string or a list/dict of tools."""
-
-
-class AIInstructionsWorkflowInstructions(BaseModel):
-    instructions: List[AIInstructionsWorkflowInstructionsInstruction]
-    """List of agent instructions for the workflow. Must contain at least one agent."""
-
-
-AIInstructions: TypeAlias = Union[str, AIInstructionsAgentInstructions, AIInstructionsWorkflowInstructions, None]
+AIInstructions: TypeAlias = Union[str, AgentInstructions, WorkflowInstructions, None]
 
 GroundTruth: TypeAlias = Union[str, FileReference, None]
 

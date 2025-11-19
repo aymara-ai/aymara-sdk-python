@@ -1,7 +1,17 @@
 # Shared Types
 
 ```python
-from aymara_ai.types import ContentType, FileReference, Status
+from aymara_ai.types import (
+    AgentInstructions,
+    ContentType,
+    FileReference,
+    Status,
+    Tool,
+    ToolArray,
+    ToolDict,
+    ToolString,
+    WorkflowInstructions,
+)
 ```
 
 # Health
