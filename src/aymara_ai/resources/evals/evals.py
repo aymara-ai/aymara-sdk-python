@@ -117,7 +117,7 @@ class EvalsResource(SyncAPIResource):
           eval_type: Type of the eval (safety, accuracy, etc.)
 
           ai_instructions: Instructions the AI should follow. String for normal evals, AgentInstructions
-              for agent evals.
+              for single-agent evals, WorkflowInstructions for multi-agent workflows.
 
           created_at: Timestamp when the eval was created.
 
@@ -228,7 +228,8 @@ class EvalsResource(SyncAPIResource):
           ai_description: New description of the AI under evaluation.
 
           ai_instructions: New instructions the AI should follow. String for normal evals,
-              AgentInstructions for agent evals.
+              AgentInstructions for single-agent evals, WorkflowInstructions for multi-agent
+              workflows.
 
           eval_instructions: New additional instructions for the eval.
 
@@ -691,7 +692,7 @@ class AsyncEvalsResource(AsyncAPIResource):
           eval_type: Type of the eval (safety, accuracy, etc.)
 
           ai_instructions: Instructions the AI should follow. String for normal evals, AgentInstructions
-              for agent evals.
+              for single-agent evals, WorkflowInstructions for multi-agent workflows.
 
           created_at: Timestamp when the eval was created.
 
@@ -802,7 +803,8 @@ class AsyncEvalsResource(AsyncAPIResource):
           ai_description: New description of the AI under evaluation.
 
           ai_instructions: New instructions the AI should follow. String for normal evals,
-              AgentInstructions for agent evals.
+              AgentInstructions for single-agent evals, WorkflowInstructions for multi-agent
+              workflows.
 
           eval_instructions: New additional instructions for the eval.
 

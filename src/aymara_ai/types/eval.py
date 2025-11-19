@@ -22,6 +22,13 @@ __all__ = [
     "AIInstructionsAgentInstructionsToolsToolArrayValue",
     "AIInstructionsAgentInstructionsToolsToolDict",
     "AIInstructionsAgentInstructionsToolsToolString",
+    "AIInstructionsWorkflowInstructions",
+    "AIInstructionsWorkflowInstructionsInstruction",
+    "AIInstructionsWorkflowInstructionsInstructionTools",
+    "AIInstructionsWorkflowInstructionsInstructionToolsToolArray",
+    "AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue",
+    "AIInstructionsWorkflowInstructionsInstructionToolsToolDict",
+    "AIInstructionsWorkflowInstructionsInstructionToolsToolString",
     "GroundTruth",
 ]
 
@@ -77,11 +84,75 @@ AIInstructionsAgentInstructionsTools: TypeAlias = Annotated[
 class AIInstructionsAgentInstructions(BaseModel):
     system_prompt: str
 
+    agent_name: Optional[str] = None
+
     tools: Optional[AIInstructionsAgentInstructionsTools] = None
     """Instructions for the agent, can be a string or a list/dict of tools."""
 
 
-AIInstructions: TypeAlias = Union[str, AIInstructionsAgentInstructions, None]
+class AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue(BaseModel):
+    id: str
+
+    content: Union[str, object, None] = None
+
+    name: str
+
+
+class AIInstructionsWorkflowInstructionsInstructionToolsToolArray(BaseModel):
+    value: List[AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue]
+
+    type: Optional[Literal["array"]] = None
+
+
+class AIInstructionsWorkflowInstructionsInstructionToolsToolDict(BaseModel):
+    value: object
+
+    type: Optional[Literal["dict"]] = None
+
+    if TYPE_CHECKING:
+        # Some versions of Pydantic <2.8.0 have a bug and don’t allow assigning a
+        # value to this field, so for compatibility we avoid doing it at runtime.
+        __pydantic_extra__: Dict[str, object] = FieldInfo(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
+
+        # Stub to indicate that arbitrary properties are accepted.
+        # To access properties that are not valid identifiers you can use `getattr`, e.g.
+        # `getattr(obj, '$type')`
+        def __getattr__(self, attr: str) -> object: ...
+    else:
+        __pydantic_extra__: Dict[str, object]
+
+
+class AIInstructionsWorkflowInstructionsInstructionToolsToolString(BaseModel):
+    value: str
+
+    type: Optional[Literal["string"]] = None
+
+
+AIInstructionsWorkflowInstructionsInstructionTools: TypeAlias = Annotated[
+    Union[
+        AIInstructionsWorkflowInstructionsInstructionToolsToolArray,
+        AIInstructionsWorkflowInstructionsInstructionToolsToolDict,
+        AIInstructionsWorkflowInstructionsInstructionToolsToolString,
+    ],
+    PropertyInfo(discriminator="type"),
+]
+
+
+class AIInstructionsWorkflowInstructionsInstruction(BaseModel):
+    system_prompt: str
+
+    agent_name: Optional[str] = None
+
+    tools: Optional[AIInstructionsWorkflowInstructionsInstructionTools] = None
+    """Instructions for the agent, can be a string or a list/dict of tools."""
+
+
+class AIInstructionsWorkflowInstructions(BaseModel):
+    instructions: List[AIInstructionsWorkflowInstructionsInstruction]
+    """List of agent instructions for the workflow. Must contain at least one agent."""
+
+
+AIInstructions: TypeAlias = Union[str, AIInstructionsAgentInstructions, AIInstructionsWorkflowInstructions, None]
 
 GroundTruth: TypeAlias = Union[str, FileReference, None]
 
@@ -96,7 +167,8 @@ class Eval(BaseModel):
     ai_instructions: Optional[AIInstructions] = None
     """Instructions the AI should follow.
 
-    String for normal evals, AgentInstructions for agent evals.
+    String for normal evals, AgentInstructions for single-agent evals,
+    WorkflowInstructions for multi-agent workflows.
     """
 
     created_at: Optional[datetime] = None
