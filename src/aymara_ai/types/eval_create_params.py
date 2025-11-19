@@ -2,34 +2,19 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable, Optional
+from typing import Union, Iterable, Optional
 from datetime import datetime
-from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
+from typing_extensions import Required, Annotated, TypeAlias, TypedDict
 
 from .._utils import PropertyInfo
 from .shared.status import Status
 from .shared.content_type import ContentType
 from .prompt_example_param import PromptExampleParam
 from .shared_params.file_reference import FileReference
+from .shared_params.agent_instructions import AgentInstructions
+from .shared_params.workflow_instructions import WorkflowInstructions
 
-__all__ = [
-    "EvalCreateParams",
-    "AIInstructions",
-    "AIInstructionsAgentInstructions",
-    "AIInstructionsAgentInstructionsTools",
-    "AIInstructionsAgentInstructionsToolsToolArray",
-    "AIInstructionsAgentInstructionsToolsToolArrayValue",
-    "AIInstructionsAgentInstructionsToolsToolDict",
-    "AIInstructionsAgentInstructionsToolsToolString",
-    "AIInstructionsWorkflowInstructions",
-    "AIInstructionsWorkflowInstructionsInstruction",
-    "AIInstructionsWorkflowInstructionsInstructionTools",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolArray",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolDict",
-    "AIInstructionsWorkflowInstructionsInstructionToolsToolString",
-    "GroundTruth",
-]
+__all__ = ["EvalCreateParams", "AIInstructions", "GroundTruth"]
 
 
 class EvalCreateParams(TypedDict, total=False):
@@ -92,105 +77,6 @@ class EvalCreateParams(TypedDict, total=False):
     """UUID of the associated workspace, if any."""
 
 
-class AIInstructionsAgentInstructionsToolsToolArrayValue(TypedDict, total=False):
-    id: Required[str]
-
-    content: Required[Union[str, object, None]]
-
-    name: Required[str]
-
-
-class AIInstructionsAgentInstructionsToolsToolArray(TypedDict, total=False):
-    value: Required[Iterable[AIInstructionsAgentInstructionsToolsToolArrayValue]]
-
-    type: Literal["array"]
-
-
-class AIInstructionsAgentInstructionsToolsToolDictTyped(TypedDict, total=False):
-    value: Required[object]
-
-    type: Literal["dict"]
-
-
-AIInstructionsAgentInstructionsToolsToolDict: TypeAlias = Union[
-    AIInstructionsAgentInstructionsToolsToolDictTyped, Dict[str, object]
-]
-
-
-class AIInstructionsAgentInstructionsToolsToolString(TypedDict, total=False):
-    value: Required[str]
-
-    type: Literal["string"]
-
-
-AIInstructionsAgentInstructionsTools: TypeAlias = Union[
-    AIInstructionsAgentInstructionsToolsToolArray,
-    AIInstructionsAgentInstructionsToolsToolDict,
-    AIInstructionsAgentInstructionsToolsToolString,
-]
-
-
-class AIInstructionsAgentInstructions(TypedDict, total=False):
-    system_prompt: Required[str]
-
-    agent_name: Optional[str]
-
-    tools: AIInstructionsAgentInstructionsTools
-    """Instructions for the agent, can be a string or a list/dict of tools."""
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue(TypedDict, total=False):
-    id: Required[str]
-
-    content: Required[Union[str, object, None]]
-
-    name: Required[str]
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolArray(TypedDict, total=False):
-    value: Required[Iterable[AIInstructionsWorkflowInstructionsInstructionToolsToolArrayValue]]
-
-    type: Literal["array"]
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolDictTyped(TypedDict, total=False):
-    value: Required[object]
-
-    type: Literal["dict"]
-
-
-AIInstructionsWorkflowInstructionsInstructionToolsToolDict: TypeAlias = Union[
-    AIInstructionsWorkflowInstructionsInstructionToolsToolDictTyped, Dict[str, object]
-]
-
-
-class AIInstructionsWorkflowInstructionsInstructionToolsToolString(TypedDict, total=False):
-    value: Required[str]
-
-    type: Literal["string"]
-
-
-AIInstructionsWorkflowInstructionsInstructionTools: TypeAlias = Union[
-    AIInstructionsWorkflowInstructionsInstructionToolsToolArray,
-    AIInstructionsWorkflowInstructionsInstructionToolsToolDict,
-    AIInstructionsWorkflowInstructionsInstructionToolsToolString,
-]
-
-
-class AIInstructionsWorkflowInstructionsInstruction(TypedDict, total=False):
-    system_prompt: Required[str]
-
-    agent_name: Optional[str]
-
-    tools: AIInstructionsWorkflowInstructionsInstructionTools
-    """Instructions for the agent, can be a string or a list/dict of tools."""
-
-
-class AIInstructionsWorkflowInstructions(TypedDict, total=False):
-    instructions: Required[Iterable[AIInstructionsWorkflowInstructionsInstruction]]
-    """List of agent instructions for the workflow. Must contain at least one agent."""
-
-
-AIInstructions: TypeAlias = Union[str, AIInstructionsAgentInstructions, AIInstructionsWorkflowInstructions]
+AIInstructions: TypeAlias = Union[str, AgentInstructions, WorkflowInstructions]
 
 GroundTruth: TypeAlias = Union[str, FileReference]
