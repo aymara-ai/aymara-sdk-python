@@ -9,8 +9,6 @@ __all__ = ["Tool"]
 
 
 class Tool(TypedDict, total=False):
-    id: Required[str]
-
     content: Required[Union[str, object, None]]
 
     name: Required[str]
