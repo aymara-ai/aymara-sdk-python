@@ -8,8 +8,6 @@ __all__ = ["Tool"]
 
 
 class Tool(BaseModel):
-    id: str
-
     content: Union[str, object, None] = None
 
     name: str
