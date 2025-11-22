@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 [![PyPI version](https://img.shields.io/pypi/v/aymara-ai-sdk.svg?label=pypi%20(stable))](https://pypi.org/project/aymara-ai-sdk/)
 
-The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.8+
+The Aymara AI Python library provides convenient access to the Aymara AI REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -503,7 +503,7 @@ print(aymara_ai.__version__)
 
 ## Requirements
 
-Python 3.8 or higher.
+Python 3.9 or higher.
 
 ## Contributing
 

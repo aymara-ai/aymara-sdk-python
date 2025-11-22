@@ -3,7 +3,17 @@
 from __future__ import annotations
 
 from .eval import Eval as Eval
-from .shared import Status as Status, ContentType as ContentType, FileReference as FileReference
+from .shared import (
+    Tool as Tool,
+    Status as Status,
+    ToolDict as ToolDict,
+    ToolArray as ToolArray,
+    ToolString as ToolString,
+    ContentType as ContentType,
+    FileReference as FileReference,
+    AgentInstructions as AgentInstructions,
+    WorkflowInstructions as WorkflowInstructions,
+)
 from .eval_type import EvalType as EvalType
 from .eval_prompt import EvalPrompt as EvalPrompt
 from .file_detail import FileDetail as FileDetail

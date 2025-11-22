@@ -1,16 +1,61 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Union, Optional
+from typing import List, Union, Optional
+from datetime import datetime
 from typing_extensions import TypeAlias
 
 from ..._models import BaseModel
 from ..eval_prompt import EvalPrompt
+from .answer_history import AnswerHistory
 from ..shared.content_type import ContentType
 from ..shared.file_reference import FileReference
 
-__all__ = ["ScoredResponse", "Content"]
+__all__ = [
+    "ScoredResponse",
+    "Content",
+    "ManuallyUpdatedBy",
+    "ManuallyUpdatedByFeatureFlags",
+    "ManuallyUpdatedByOrganization",
+    "ManuallyUpdatedByWorkspace",
+]
 
 Content: TypeAlias = Union[str, FileReference, None]
+
+
+class ManuallyUpdatedByFeatureFlags(BaseModel):
+    enable_dashboard: bool
+
+
+class ManuallyUpdatedByOrganization(BaseModel):
+    name: str
+
+    org_uuid: str
+
+
+class ManuallyUpdatedByWorkspace(BaseModel):
+    name: Optional[str] = None
+
+    organization_name: Optional[str] = None
+
+    organization_uuid: Optional[str] = None
+
+    workspace_uuid: Optional[str] = None
+
+
+class ManuallyUpdatedBy(BaseModel):
+    email: str
+
+    feature_flags: ManuallyUpdatedByFeatureFlags
+
+    is_admin: bool
+
+    is_impersonating: bool
+
+    org_admin_emails: Optional[List[str]] = None
+
+    organization: Optional[ManuallyUpdatedByOrganization] = None
+
+    workspace: Optional[ManuallyUpdatedByWorkspace] = None
 
 
 class ScoredResponse(BaseModel):
@@ -41,6 +86,15 @@ class ScoredResponse(BaseModel):
     is_passed: Optional[bool] = None
     """Whether the response passed the evaluation, if any."""
 
+    manually_updated: Optional[bool] = None
+    """Whether this response was manually updated."""
+
+    manually_updated_at: Optional[datetime] = None
+    """Timestamp when this response was last manually updated."""
+
+    manually_updated_by: Optional[ManuallyUpdatedBy] = None
+    """User who last manually updated this response."""
+
     next_prompt: Optional[EvalPrompt] = None
     """Next prompt in the evaluation, if any."""
 
@@ -52,3 +106,6 @@ class ScoredResponse(BaseModel):
 
     turn_number: Optional[int] = None
     """Turn number in the conversation (default: 1)."""
+
+    update_history: Optional[List[AnswerHistory]] = None
+    """History of manual updates, if requested."""
