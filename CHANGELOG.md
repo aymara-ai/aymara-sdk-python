@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.2.0 (2025-11-28)
+
+Full Changelog: [v1.1.1...v1.2.0](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.1...v1.2.0)
+
+### Features
+
+* **api:** api update ([220cdd0](https://github.com/aymara-ai/aymara-sdk-python/commit/220cdd08f961d4baa7366ca976176fbc3a0387c5))
+* **api:** api update ([7ad63fe](https://github.com/aymara-ai/aymara-sdk-python/commit/7ad63fedcc40615e48d868b9dcbaf6009ad187b3))
+* **api:** api update ([1cb47dd](https://github.com/aymara-ai/aymara-sdk-python/commit/1cb47dd19c2852cec9f128cddcf89e90c38ff4b8))
+* **api:** api update ([b228992](https://github.com/aymara-ai/aymara-sdk-python/commit/b228992af44ee917d433d2f127f4fe6608f74855))
+* **api:** api update ([b53007b](https://github.com/aymara-ai/aymara-sdk-python/commit/b53007bf7e05476212b7383b8bdb359b07024e3e))
+* **api:** api update ([7dfc056](https://github.com/aymara-ai/aymara-sdk-python/commit/7dfc056c8ed52c2a0df33f3a649615fd349863e9))
+* **api:** api update ([f125418](https://github.com/aymara-ai/aymara-sdk-python/commit/f1254187576e5af08c8dce9d12d07810eb63b405))
+* **api:** api update ([f4822b3](https://github.com/aymara-ai/aymara-sdk-python/commit/f4822b36bdfb60fb40c14ef3ef64b439c44775b5))
+
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([35363e9](https://github.com/aymara-ai/aymara-sdk-python/commit/35363e901fa9f057bf8ad2f8beed728bf490bbd6))
+* compat with Python 3.14 ([115b25a](https://github.com/aymara-ai/aymara-sdk-python/commit/115b25acbb3f57cf1596aa4fce76658759e26bf1))
+* **compat:** update signatures of `model_dump` and `model_dump_json` for Pydantic v1 ([92bf3d7](https://github.com/aymara-ai/aymara-sdk-python/commit/92bf3d7ff27e645e31b737101719695f49638eb9))
+* ensure streams are always closed ([1e240df](https://github.com/aymara-ai/aymara-sdk-python/commit/1e240df7e11f3efc71ded5c356cc9c601536e4ea))
+
+
+### Chores
+
+* add Python 3.14 classifier and testing ([6566bb7](https://github.com/aymara-ai/aymara-sdk-python/commit/6566bb77ccbdcdb284a833cec7d2adcff26c420f))
+* **internal/tests:** avoid race condition with implicit client cleanup ([b2238f8](https://github.com/aymara-ai/aymara-sdk-python/commit/b2238f875d2e70863ca5b26eeea38ab9863e9d4b))
+* **internal:** grammar fix (it's -&gt; its) ([4cf564e](https://github.com/aymara-ai/aymara-sdk-python/commit/4cf564ee1ba3c0edf6604695a8272cb78423e0c3))
+* **package:** drop Python 3.8 support ([45428d3](https://github.com/aymara-ai/aymara-sdk-python/commit/45428d3ee306dec747e4176fb7d9416055185581))
+
 ## 1.1.1 (2025-10-29)
 
 Full Changelog: [v1.1.0...v1.1.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.0...v1.1.1)
