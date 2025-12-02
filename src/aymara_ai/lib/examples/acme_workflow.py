@@ -8,12 +8,12 @@ from typing import Any, Literal
 try:
     from agents import (
         Agent,
-        ModelSettings,
-        RunConfig,
         Runner,
+        RunConfig,
+        ModelSettings,
         TResponseInputItem,
-        function_tool,
         trace,
+        function_tool,
     )
 except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error for notebooks
     raise ModuleNotFoundError(
@@ -22,10 +22,9 @@ except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error f
         "before importing `aymara_ai.examples.acme_workflow`."
     ) from exc
 from openai import AsyncOpenAI
-from openai.types.shared.reasoning import Reasoning
 from pydantic import BaseModel
-
-from guardrails.runtime import instantiate_guardrails, load_config_bundle, run_guardrails
+from guardrails.runtime import run_guardrails, load_config_bundle, instantiate_guardrails
+from openai.types.shared.reasoning import Reasoning
 
 
 class ClassificationAgentSchema(BaseModel):
@@ -187,7 +186,7 @@ information_agent = Agent(
 APPROVAL_MESSAGE = "Does this work for you?"
 
 
-def approval_request(message: str) -> bool:
+def approval_request(_message: str) -> bool:
     # TODO: Implement real approval logic
     return True
 

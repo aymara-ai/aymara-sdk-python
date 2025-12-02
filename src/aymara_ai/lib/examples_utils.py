@@ -24,11 +24,11 @@ from aymara_ai.types.shared_params.file_reference import FileReference
 
 from .examples.acme_workflow import (
     WorkflowInput,
-    classification_agent,
-    information_agent,
-    retention_agent,
     return_agent,
     run_workflow,
+    retention_agent,
+    information_agent,
+    classification_agent,
 )
 
 logger = logging.getLogger(__name__)
