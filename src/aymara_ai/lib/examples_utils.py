@@ -22,6 +22,15 @@ from aymara_ai.types.eval_prompt import EvalPrompt
 from aymara_ai.types.eval_response_param import EvalResponseParam
 from aymara_ai.types.shared_params.file_reference import FileReference
 
+from .examples.acme_workflow import (
+    WorkflowInput,
+    classification_agent,
+    information_agent,
+    retention_agent,
+    return_agent,
+    run_workflow,
+)
+
 logger = logging.getLogger(__name__)
 
 CacheMetadata = Dict[str, Dict[str, str]]
@@ -710,3 +719,13 @@ def display_eval_run_results(
                     logger.info("Video content not available")
         elif getattr(response_obj, "ai_refused", False):
             logger.info("AI refused to generate content.")
+
+
+__all__ = [
+    "WorkflowInput",
+    "run_workflow",
+    "classification_agent",
+    "return_agent",
+    "retention_agent",
+    "information_agent",
+]

@@ -49,6 +49,11 @@ Repository = "https://github.com/aymara-ai/aymara-sdk-python"
 
 [project.optional-dependencies]
 aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.9"]
+examples = [
+    "agents",
+    "guardrails-ai",
+    "openai>=2.5.0",
+]
 
 [tool.rye]
 managed = true
