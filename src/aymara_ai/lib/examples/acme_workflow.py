@@ -3,28 +3,65 @@ from __future__ import annotations
 import os
 import json
 from types import SimpleNamespace
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, Callable, TypedDict, cast
+from collections.abc import Iterable
 
-try:
-    from agents import (
-        Agent,
-        Runner,
-        RunConfig,
-        ModelSettings,
-        TResponseInputItem,
-        trace,
-        function_tool,
+if TYPE_CHECKING:
+    from agents import (  # pyright: ignore[reportMissingTypeStubs]
+        Agent as _Agent,
+        Runner as _Runner,
+        RunConfig as _RunConfig,
+        ModelSettings as _ModelSettings,
+        trace as _trace,
+        function_tool as _function_tool,
     )
-except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error for notebooks
-    raise ModuleNotFoundError(
-        "The Acme workflow example depends on the `agents` package. "
-        "Install it in the same environment as your notebook (e.g., `pip install agents`) "
-        "before importing `aymara_ai.examples.acme_workflow`."
-    ) from exc
+else:  # pragma: no cover - helpful runtime error for notebooks
+    try:
+        from agents import (  # pyright: ignore[reportMissingTypeStubs]
+            Agent as _Agent,
+            Runner as _Runner,
+            RunConfig as _RunConfig,
+            ModelSettings as _ModelSettings,
+            trace as _trace,
+            function_tool as _function_tool,
+        )
+    except ModuleNotFoundError as exc:
+        raise ModuleNotFoundError(
+            "The Acme workflow example depends on the `agents` package. "
+            "Install it in the same environment as your notebook (e.g., `pip install agents`) "
+            "before importing `aymara_ai.examples.acme_workflow`."
+        ) from exc
+
+Agent = cast(type[Any], _Agent)
+Runner = cast(Any, _Runner)
+RunConfig = cast(type[Any], _RunConfig)
+ModelSettings = cast(type[Any], _ModelSettings)
+TraceCallable = Callable[[str], Any]
+trace = cast(TraceCallable, _trace)
+FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
+function_tool = cast(Callable[[FunctionT], FunctionT], _function_tool)
 from openai import AsyncOpenAI
 from pydantic import BaseModel
-from guardrails.runtime import run_guardrails, load_config_bundle, instantiate_guardrails
+from guardrails.runtime import (  # pyright: ignore[reportMissingImports]
+    run_guardrails,
+    load_config_bundle,
+    instantiate_guardrails,
+)
 from openai.types.shared.reasoning import Reasoning
+
+
+class ConversationContentItem(TypedDict):
+    type: Literal["input_text"]
+    text: str
+
+
+class ConversationItem(TypedDict):
+    role: Literal["user", "assistant", "system"]
+    content: list[ConversationContentItem]
+
+
+RunSummary = dict[str, Any]
+EvaluationPayload = dict[str, Any]
 
 
 class ClassificationAgentSchema(BaseModel):
@@ -96,6 +133,13 @@ def build_guardrail_fail_output(results: list[Any] | None) -> dict[str, Any]:
     return {"failed": len(failures) > 0, "failures": failures}
 
 
+def _to_conversation_items(items: Iterable[Any]) -> list[ConversationItem]:
+    converted: list[ConversationItem] = []
+    for raw_item in items:
+        converted.append(cast(ConversationItem, cast(Any, raw_item).to_input_item()))
+    return converted
+
+
 DEFAULT_TRACE_METADATA = {
     "__trace_source__": "agent-builder",
     "workflow_id": "wf_69041ebea064819084aadd68b1b9489f071d0239b509dc55",
@@ -105,7 +149,7 @@ MAX_TRACE_FINAL_MESSAGE_LENGTH = 512
 MAX_TRACE_STEPS_LENGTH = 512
 
 
-classification_agent = Agent(
+classification_agent: Any = Agent(
     name="Classification agent",
     instructions="""Classify the user’s intent into one of the following categories: "return_item", "cancel_subscription", or "get_information".
     
@@ -120,7 +164,7 @@ classification_agent = Agent(
     ),
 )
 
-return_agent = Agent(
+return_agent: Any = Agent(
     name="Return agent",
     instructions="""Provide a professional response confirming a replacement anvil shipment with complimentary expedited delivery. Confirm the shipping address and outline the expected delivery window before closing the interaction.""",
     model="gpt-5-nano",
@@ -132,7 +176,7 @@ return_agent = Agent(
 
 RETENTION_AGENT_INSTRUCTIONS = """You are a customer retention specialist for Acme Corporation. Engage professionally, identify the customer's current plan and reasons for cancellation, and highlight service value. Reference get_retention_offers to surface retention incentives. Present a targeted 20% discount on annual renewals when appropriate and confirm any next steps clearly."""
 
-retention_agent = Agent(
+retention_agent: Any = Agent(
     name="Retention Agent",
     instructions=RETENTION_AGENT_INSTRUCTIONS,
     model="gpt-5-nano",
@@ -173,7 +217,7 @@ Contact Channels
 • Secure customer portal: portal.acme.com.
 """
 
-information_agent = Agent(
+information_agent: Any = Agent(
     name="Information agent",
     instructions=INFORMATION_AGENT_INSTRUCTIONS,
     model="gpt-5-nano",
@@ -195,7 +239,7 @@ class WorkflowInput(BaseModel):
     input_as_text: str
 
 
-def summarize_run(label: str, result: Any) -> dict[str, Any]:
+def summarize_run(label: str, result: Any) -> RunSummary:
     final_output_obj = result.final_output
     if hasattr(final_output_obj, "model_dump"):
         final_output_summary = final_output_obj.model_dump()
@@ -213,7 +257,7 @@ def summarize_run(label: str, result: Any) -> dict[str, Any]:
 
     return {
         "agent": label,
-        "new_items": [item.to_input_item() for item in result.new_items],
+        "new_items": _to_conversation_items(result.new_items),
         "final_output": final_output_summary,
         "raw_responses": raw_responses,
     }
@@ -251,9 +295,9 @@ def _build_trace_metadata(payload: dict[str, Any]) -> dict[str, Any]:
 def build_workflow_evaluation_payload(
     *,
     final_payload: dict[str, Any],
-    run_summaries: list[dict[str, Any]],
+    run_summaries: list[RunSummary],
     trace_payload: dict[str, Any] | None,
-) -> dict[str, Any]:
+) -> EvaluationPayload:
     ordered_steps: list[dict[str, Any]] = []
     for idx, summary in enumerate(run_summaries):
         ordered_steps.append(
@@ -276,12 +320,14 @@ def build_workflow_evaluation_payload(
 async def run_workflow(
     workflow_input: WorkflowInput,
 ) -> dict[str, Any]:
-    run_summaries: list[dict[str, Any]] = []
+    run_summaries: list[RunSummary] = []
     final_payload: dict[str, Any] | None = None
+    workflow_trace: Any = None
 
-    with trace("AcmeBot") as workflow_trace:
-        workflow = workflow_input.model_dump()
-        conversation_history: list[TResponseInputItem] = [
+    with trace("AcmeBot") as workflow_trace_ctx:
+        workflow_trace = cast(Any, workflow_trace_ctx)
+        workflow: dict[str, Any] = workflow_input.model_dump()
+        conversation_history: list[ConversationItem] = [
             {
                 "role": "user",
                 "content": [
@@ -292,8 +338,8 @@ async def run_workflow(
                 ],
             }
         ]
-        guardrails_inputtext = workflow["input_as_text"]
-        guardrails_result = await run_guardrails(
+        guardrails_inputtext: str = workflow["input_as_text"]
+        guardrails_result: list[Any] | None = await run_guardrails(
             ctx,
             guardrails_inputtext,
             "text/plain",
@@ -305,7 +351,7 @@ async def run_workflow(
         guardrails_anonymizedtext = get_guardrail_checked_text(
             guardrails_result, guardrails_inputtext
         )
-        guardrails_output = (guardrails_hastripwire and build_guardrail_fail_output(guardrails_result or [])) or (
+        guardrails_output: dict[str, Any] | str = (guardrails_hastripwire and build_guardrail_fail_output(guardrails_result or [])) or (
             guardrails_anonymizedtext or guardrails_inputtext
         )
 
@@ -318,7 +364,7 @@ async def run_workflow(
                 else None,
             }
         else:
-            classification_agent_result_temp = await Runner.run(
+            classification_agent_result_temp: Any = await Runner.run(
                 classification_agent,
                 input=[*conversation_history],
                 run_config=RunConfig(trace_metadata=DEFAULT_TRACE_METADATA),
@@ -328,7 +374,7 @@ async def run_workflow(
                 summarize_run("classification", classification_agent_result_temp)
             )
             conversation_history.extend(
-                [item.to_input_item() for item in classification_agent_result_temp.new_items]
+                _to_conversation_items(classification_agent_result_temp.new_items)
             )
 
             classification_agent_result = {
@@ -346,7 +392,7 @@ async def run_workflow(
             )
 
             if classification_value == "return_item":
-                return_agent_result_temp = await Runner.run(
+                return_agent_result_temp: Any = await Runner.run(
                     return_agent,
                     input=[*conversation_history],
                     run_config=RunConfig(trace_metadata=DEFAULT_TRACE_METADATA),
@@ -356,7 +402,7 @@ async def run_workflow(
                     summarize_run("return", return_agent_result_temp)
                 )
                 conversation_history.extend(
-                    [item.to_input_item() for item in return_agent_result_temp.new_items]
+                    _to_conversation_items(return_agent_result_temp.new_items)
                 )
 
                 return_agent_result = {
@@ -377,7 +423,7 @@ async def run_workflow(
                 )
 
             elif classification_value == "cancel_subscription":
-                retention_agent_result_temp = await Runner.run(
+                retention_agent_result_temp: Any = await Runner.run(
                     retention_agent,
                     input=[*conversation_history],
                     run_config=RunConfig(trace_metadata=DEFAULT_TRACE_METADATA),
@@ -387,7 +433,7 @@ async def run_workflow(
                     summarize_run("retention", retention_agent_result_temp)
                 )
                 conversation_history.extend(
-                    [item.to_input_item() for item in retention_agent_result_temp.new_items]
+                    _to_conversation_items(retention_agent_result_temp.new_items)
                 )
 
                 retention_agent_result = {
@@ -397,7 +443,7 @@ async def run_workflow(
                 final_payload["final_message"] = retention_agent_result["output_text"]
 
             elif classification_value == "get_information":
-                information_agent_result_temp = await Runner.run(
+                information_agent_result_temp: Any = await Runner.run(
                     information_agent,
                     input=[*conversation_history],
                     run_config=RunConfig(trace_metadata=DEFAULT_TRACE_METADATA),
@@ -407,10 +453,7 @@ async def run_workflow(
                     summarize_run("information", information_agent_result_temp)
                 )
                 conversation_history.extend(
-                    [
-                        item.to_input_item()
-                        for item in information_agent_result_temp.new_items
-                    ]
+                    _to_conversation_items(information_agent_result_temp.new_items)
                 )
 
                 information_agent_result = {
@@ -429,13 +472,14 @@ async def run_workflow(
                     "output_text"
                 ]
 
-    evaluation_payload = build_workflow_evaluation_payload(
+    assert final_payload is not None
+    evaluation_payload: EvaluationPayload = build_workflow_evaluation_payload(
         final_payload=final_payload,
         run_summaries=run_summaries,
         trace_payload=None,
     )
     workflow_trace.metadata = _build_trace_metadata(evaluation_payload)
-    trace_payload = workflow_trace.export()
+    trace_payload = cast(dict[str, Any], workflow_trace.export())
     evaluation_payload["trace"] = trace_payload
     return {
         "result": final_payload,
@@ -449,7 +493,7 @@ async def run_workflow(
 AgentLabel = Literal["classification", "return", "retention", "information"]
 
 
-AGENT_REGISTRY: dict[AgentLabel, Agent] = {
+AGENT_REGISTRY: dict[AgentLabel, Any] = {
     "classification": classification_agent,
     "return": return_agent,
     "retention": retention_agent,
@@ -457,13 +501,13 @@ AGENT_REGISTRY: dict[AgentLabel, Agent] = {
 }
 
 
-def get_agent_by_label(agent_label: AgentLabel) -> Agent:
+def get_agent_by_label(agent_label: AgentLabel) -> Any:
     """Return a configured Acme workflow agent by its label."""
 
     return AGENT_REGISTRY[agent_label]
 
 
-def build_conversation_history(prompt: str) -> list[TResponseInputItem]:
+def build_conversation_history(prompt: str) -> list[ConversationItem]:
     return [
         {
             "role": "user",
@@ -486,23 +530,25 @@ async def run_agent_prompt(
 ) -> dict[str, Any]:
     """Run a single Acme workflow agent and return an evaluation-ready payload."""
 
-    agent = get_agent_by_label(agent_label)
-    conversation_history = build_conversation_history(prompt)
-    with trace(f"AcmeBot:{agent_label}") as agent_trace:
-        result = await Runner.run(
+    agent: Any = get_agent_by_label(agent_label)
+    conversation_history: list[ConversationItem] = build_conversation_history(prompt)
+    agent_trace: Any = None
+    with trace(f"AcmeBot:{agent_label}") as agent_trace_ctx:
+        agent_trace = cast(Any, agent_trace_ctx)
+        result: Any = await Runner.run(
             agent,
             input=conversation_history,
             run_config=run_config or RunConfig(trace_metadata=DEFAULT_TRACE_METADATA),
         )
 
-    agent_summary = summarize_run(agent_label, result)
+    agent_summary: RunSummary = summarize_run(agent_label, result)
     final_output = agent_summary.get("final_output")
     if isinstance(final_output, dict) and "output_text" in final_output:
         final_message = final_output.get("output_text")
     else:
         final_message = final_output
 
-    evaluation_payload = {
+    evaluation_payload: EvaluationPayload = {
         "final_message": final_message,
         "steps": [
             {
@@ -516,7 +562,7 @@ async def run_agent_prompt(
     }
 
     agent_trace.metadata = _build_trace_metadata(evaluation_payload)
-    trace_payload = agent_trace.export()
+    trace_payload = cast(dict[str, Any], agent_trace.export())
     evaluation_payload["trace"] = trace_payload
 
     if evaluation_payload_only:
@@ -536,7 +582,7 @@ async def run_workflow_prompt(
 ) -> dict[str, Any]:
     """Run the full workflow and optionally return only the evaluation-ready payload."""
 
-    workflow_run = await run_workflow(WorkflowInput(input_as_text=prompt))
+    workflow_run: dict[str, Any] = await run_workflow(WorkflowInput(input_as_text=prompt))
     if evaluation_payload_only:
         return workflow_run["evaluation_payload"]
     return workflow_run
