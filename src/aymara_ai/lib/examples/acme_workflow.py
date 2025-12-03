@@ -542,9 +542,9 @@ async def run_agent_prompt(
         )
 
     agent_summary: RunSummary = summarize_run(agent_label, result)
-    final_output = agent_summary.get("final_output")
+    final_output: Any = agent_summary.get("final_output")
     if isinstance(final_output, dict) and "output_text" in final_output:
-        final_message = final_output.get("output_text")
+        final_message: Any = final_output.get("output_text")
     else:
         final_message = final_output
 

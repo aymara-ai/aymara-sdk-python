@@ -16,7 +16,6 @@ from typing_extensions import (
     TypedDict,
     TypeGuard,
     final,
-    override,
     runtime_checkable,
 )
 
@@ -66,7 +65,12 @@ from ._compat import (
 from ._constants import RAW_RESPONSE_HEADER
 
 if TYPE_CHECKING:
-    from pydantic_core.core_schema import ModelField, ModelSchema, LiteralSchema, ModelFieldsSchema
+    from pydantic_core.core_schema import (  # pyright: ignore[reportMissingImports]
+        ModelField,
+        ModelSchema,
+        LiteralSchema,
+        ModelFieldsSchema,
+    )
 
 __all__ = ["BaseModel", "GenericModel"]
 
@@ -85,7 +89,6 @@ class BaseModel(pydantic.BaseModel):
     if PYDANTIC_V1:
 
         @property
-        @override
         def model_fields_set(self) -> set[str]:
             # a forwards-compat shim for pydantic v2
             return self.__fields_set__  # type: ignore
@@ -170,7 +173,6 @@ class BaseModel(pydantic.BaseModel):
             warnings=warnings,
         )
 
-    @override
     def __str__(self) -> str:
         # mypy complains about an invalid self arg
         return f"{self.__repr_name__()}({self.__repr_str__(', ')})"  # type: ignore[misc]
@@ -178,7 +180,6 @@ class BaseModel(pydantic.BaseModel):
     # Override the 'construct' method in a way that supports recursive parsing without validation.
     # Based on https://github.com/samuelcolvin/pydantic/issues/1168#issuecomment-817742836.
     @classmethod
-    @override
     def construct(  # pyright: ignore[reportIncompatibleMethodOverride]
         __cls: Type[ModelT],
         _fields_set: set[str] | None = None,
@@ -250,7 +251,6 @@ class BaseModel(pydantic.BaseModel):
         # a specific pydantic version as some users may not know which
         # pydantic version they are currently using
 
-        @override
         def model_dump(
             self,
             *,
@@ -311,8 +311,8 @@ class BaseModel(pydantic.BaseModel):
             if exclude_computed_fields != False:
                 raise ValueError("exclude_computed_fields is only supported in Pydantic v2")
             dumped = super().dict(  # pyright: ignore[reportDeprecated]
-                include=include,
-                exclude=exclude,
+                include=cast(Any, include),
+                exclude=cast(Any, exclude),
                 by_alias=by_alias if by_alias is not None else False,
                 exclude_unset=exclude_unset,
                 exclude_defaults=exclude_defaults,
@@ -321,7 +321,6 @@ class BaseModel(pydantic.BaseModel):
 
             return cast("dict[str, Any]", json_safe(dumped)) if mode == "json" else dumped
 
-        @override
         def model_dump_json(
             self,
             *,
@@ -374,8 +373,8 @@ class BaseModel(pydantic.BaseModel):
                 raise ValueError("exclude_computed_fields is only supported in Pydantic v2")
             return super().json(  # type: ignore[reportDeprecated]
                 indent=indent,
-                include=include,
-                exclude=exclude,
+                include=cast(Any, include),
+                exclude=cast(Any, exclude),
                 by_alias=by_alias if by_alias is not None else False,
                 exclude_unset=exclude_unset,
                 exclude_defaults=exclude_defaults,
@@ -743,12 +742,12 @@ else:
 
 
 if not PYDANTIC_V1:
-    from pydantic import TypeAdapter as _TypeAdapter
+    from pydantic import TypeAdapter as _TypeAdapter  # type: ignore[attr-defined]
 
     _CachedTypeAdapter = cast("TypeAdapter[object]", lru_cache(maxsize=None)(_TypeAdapter))
 
     if TYPE_CHECKING:
-        from pydantic import TypeAdapter
+        from pydantic import TypeAdapter  # type: ignore[attr-defined]
     else:
         TypeAdapter = _CachedTypeAdapter
 

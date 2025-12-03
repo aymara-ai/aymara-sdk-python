@@ -80,21 +80,23 @@ else:
 def parse_obj(model: type[_ModelT], value: object) -> _ModelT:
     if PYDANTIC_V1:
         return cast(_ModelT, model.parse_obj(value))  # pyright: ignore[reportDeprecated, reportUnnecessaryCast]
-    else:
-        return model.model_validate(value)
+    model_any = cast(Any, model)
+    return cast(_ModelT, model_any.model_validate(value))
 
 
 def field_is_required(field: FieldInfo) -> bool:
     if PYDANTIC_V1:
         return field.required  # type: ignore
-    return field.is_required()
+    field_any = cast(Any, field)
+    return bool(field_any.is_required())
 
 
 def field_get_default(field: FieldInfo) -> Any:
-    value = field.get_default()
+    field_any = cast(Any, field)
+    value = field_any.get_default()
     if PYDANTIC_V1:
         return value
-    from pydantic_core import PydanticUndefined
+    from pydantic_core import PydanticUndefined  # pyright: ignore[reportMissingImports]
 
     if value == PydanticUndefined:
         return None
@@ -104,31 +106,31 @@ def field_get_default(field: FieldInfo) -> Any:
 def field_outer_type(field: FieldInfo) -> Any:
     if PYDANTIC_V1:
         return field.outer_type_  # type: ignore
-    return field.annotation
+    return cast(Any, field).annotation
 
 
 def get_model_config(model: type[pydantic.BaseModel]) -> Any:
     if PYDANTIC_V1:
         return model.__config__  # type: ignore
-    return model.model_config
+    return cast(Any, model).model_config
 
 
 def get_model_fields(model: type[pydantic.BaseModel]) -> dict[str, FieldInfo]:
     if PYDANTIC_V1:
         return model.__fields__  # type: ignore
-    return model.model_fields
+    return cast(Any, model).model_fields
 
 
 def model_copy(model: _ModelT, *, deep: bool = False) -> _ModelT:
     if PYDANTIC_V1:
         return model.copy(deep=deep)  # type: ignore
-    return model.model_copy(deep=deep)
+    return cast(_ModelT, cast(Any, model).model_copy(deep=deep))
 
 
 def model_json(model: pydantic.BaseModel, *, indent: int | None = None) -> str:
     if PYDANTIC_V1:
         return model.json(indent=indent)  # type: ignore
-    return model.model_dump_json(indent=indent)
+    return cast(str, cast(Any, model).model_dump_json(indent=indent))
 
 
 def model_dump(
@@ -141,7 +143,8 @@ def model_dump(
     mode: Literal["json", "python"] = "python",
 ) -> dict[str, Any]:
     if (not PYDANTIC_V1) or hasattr(model, "model_dump"):
-        return model.model_dump(
+        model_any = cast(Any, model)
+        return model_any.model_dump(
             mode=mode,
             exclude=exclude,
             exclude_unset=exclude_unset,
@@ -152,7 +155,7 @@ def model_dump(
     return cast(
         "dict[str, Any]",
         model.dict(  # pyright: ignore[reportDeprecated, reportUnnecessaryCast]
-            exclude=exclude,
+            exclude=cast(Any, exclude),
             exclude_unset=exclude_unset,
             exclude_defaults=exclude_defaults,
         ),
@@ -162,7 +165,8 @@ def model_dump(
 def model_parse(model: type[_ModelT], data: Any) -> _ModelT:
     if PYDANTIC_V1:
         return model.parse_obj(data)  # pyright: ignore[reportDeprecated]
-    return model.model_validate(data)
+    model_any = cast(Any, model)
+    return cast(_ModelT, model_any.model_validate(data))
 
 
 # generic models
