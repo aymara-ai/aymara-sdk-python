@@ -7,16 +7,23 @@ license = "Apache-2.0"
 authors = [
 { name = "Aymara AI", email = "support@aymara.ai" },
 ]
-
 dependencies = [
-  "httpx>=0.23.0, <1",
-  "pydantic>=1.9.0, <3",
-  "typing-extensions>=4.10, <5",
-  "anyio>=3.5.0, <5",
-  "distro>=1.7.0, <2",
-  "sniffio",
+    "httpx>=0.23.0, <1",
+    "pydantic>=1.9.0, <3",
+    "typing-extensions>=4.10, <5",
+    "anyio>=3.5.0, <5",
+    "distro>=1.7.0, <2",
+    "sniffio",
+    "boto3>=1.37.37",
+    "matplotlib>=3.9.4",
+    "pandas>=2.2.3",
+    "aiofiles>=24.1.0",
+    "jupyter>=1.1.0",
+    "ipykernel>=6.29.5",
+    "ipywidgets>=8.1.5",
+    "colorama>=0.4.6",
+    "tqdm>=4.67.1",
 ]
-
 requires-python = ">= 3.9"
 classifiers = [
   "Typing :: Typed",
@@ -48,7 +55,7 @@ managed = true
 # version pins are in requirements-dev.lock
 dev-dependencies = [
     "pyright==1.1.399",
-    "mypy==1.17",
+    "mypy",
     "respx",
     "pytest",
     "pytest-asyncio",
@@ -59,6 +66,13 @@ dev-dependencies = [
     "importlib-metadata>=6.7.0",
     "rich>=13.7.1",
     "pytest-xdist>=3.6.1",
+    "openai>=2.5.0",
+    "python-dotenv>=1.1.0",
+    "requests>=2.32.3",
+    "pillow>=11.2.1",
+    "types-aiofiles>=24.1.0.20250326",
+    "types-colorama>=0.4.15.20240311",
+    "types-tqdm>=4.67.0.20250417",
 ]
 
 [tool.rye.scripts]
@@ -93,6 +107,14 @@ typecheck = { chain = [
 [build-system]
 requires = ["hatchling==1.26.3", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "boto3>=1.38.6",
+    "ipykernel>=6.29.5",
+    "python-dotenv>=1.1.0",
+    "requests>=2.32.3",
+]
 
 [tool.hatch.build]
 include = [
@@ -236,7 +258,7 @@ select = [
   "T201",
   "T203",
   # misuse of typing.TYPE_CHECKING
-  "TC004",
+  "TCH004",
   # import rules
   "TID251",
 ]
