@@ -9,6 +9,16 @@ from pydantic.fields import FieldInfo
 
 from ._types import IncEx, StrBytesIntFloat
 
+if TYPE_CHECKING:
+    from pydantic_core import PydanticUndefined as _PydanticUndefined  # pyright: ignore[reportMissingImports]
+else:  # pragma: no cover - optional dependency
+    try:
+        from pydantic_core import PydanticUndefined as _PydanticUndefined  # pyright: ignore[reportMissingImports]
+    except ModuleNotFoundError:  # pragma: no cover
+        _PydanticUndefined = object()
+
+PydanticUndefined = cast(Any, _PydanticUndefined)
+
 _T = TypeVar("_T")
 _ModelT = TypeVar("_ModelT", bound=pydantic.BaseModel)
 
@@ -96,8 +106,6 @@ def field_get_default(field: FieldInfo) -> Any:
     value = field_any.get_default()
     if PYDANTIC_V1:
         return value
-    from pydantic_core import PydanticUndefined  # pyright: ignore[reportMissingImports]
-
     if value == PydanticUndefined:
         return None
     return value

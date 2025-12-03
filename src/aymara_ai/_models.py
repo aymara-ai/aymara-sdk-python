@@ -16,6 +16,7 @@ from typing_extensions import (
     TypedDict,
     TypeGuard,
     final,
+    override,
     runtime_checkable,
 )
 
@@ -71,6 +72,8 @@ if TYPE_CHECKING:
         LiteralSchema,
         ModelFieldsSchema,
     )
+else:  # pragma: no cover - fallback when pydantic_core stubs unavailable
+    ModelField = ModelSchema = LiteralSchema = ModelFieldsSchema = Any
 
 __all__ = ["BaseModel", "GenericModel"]
 
@@ -96,9 +99,10 @@ class BaseModel(pydantic.BaseModel):
         class Config(pydantic.BaseConfig):  # pyright: ignore[reportDeprecated]
             extra: Any = pydantic.Extra.allow  # type: ignore
     else:
-        model_config: ClassVar[ConfigDict] = ConfigDict(
-            extra="allow", defer_build=coerce_boolean(os.environ.get("DEFER_PYDANTIC_BUILD", "true"))
-        )
+        model_config: ClassVar[ConfigDict] = {
+            "extra": "allow",
+            "defer_build": coerce_boolean(os.environ.get("DEFER_PYDANTIC_BUILD", "true")),
+        }
 
     def to_dict(
         self,
@@ -173,6 +177,7 @@ class BaseModel(pydantic.BaseModel):
             warnings=warnings,
         )
 
+    @override
     def __str__(self) -> str:
         # mypy complains about an invalid self arg
         return f"{self.__repr_name__()}({self.__repr_str__(', ')})"  # type: ignore[misc]
@@ -180,6 +185,7 @@ class BaseModel(pydantic.BaseModel):
     # Override the 'construct' method in a way that supports recursive parsing without validation.
     # Based on https://github.com/samuelcolvin/pydantic/issues/1168#issuecomment-817742836.
     @classmethod
+    @override
     def construct(  # pyright: ignore[reportIncompatibleMethodOverride]
         __cls: Type[ModelT],
         _fields_set: set[str] | None = None,
@@ -402,7 +408,9 @@ def _get_extra_fields_type(cls: type[pydantic.BaseModel]) -> type | None:
         # TODO
         return None
 
-    schema = cls.__pydantic_core_schema__
+    schema = cast(Any, getattr(cls, "__pydantic_core_schema__", None))
+    if schema is None:
+        return None
     if schema["type"] == "model":
         fields = schema["schema"]
         if fields["type"] == "model-fields":
@@ -695,7 +703,9 @@ def _build_discriminated_union_meta(*, union: type, meta_annotations: tuple[Any,
 
 
 def _extract_field_schema_pv2(model: type[BaseModel], field_name: str) -> ModelField | None:
-    schema = model.__pydantic_core_schema__
+    schema: Any = getattr(model, "__pydantic_core_schema__", None)
+    if schema is None:
+        return None
     if schema["type"] == "definitions":
         schema = schema["schema"]
 
@@ -744,7 +754,7 @@ else:
 if not PYDANTIC_V1:
     from pydantic import TypeAdapter as _TypeAdapter  # type: ignore[attr-defined]
 
-    _CachedTypeAdapter = cast("TypeAdapter[object]", lru_cache(maxsize=None)(_TypeAdapter))
+    _CachedTypeAdapter = cast(Any, lru_cache(maxsize=None)(_TypeAdapter))
 
     if TYPE_CHECKING:
         from pydantic import TypeAdapter  # type: ignore[attr-defined]
@@ -752,7 +762,8 @@ if not PYDANTIC_V1:
         TypeAdapter = _CachedTypeAdapter
 
     def _validate_non_model_type(*, type_: type[_T], value: object) -> _T:
-        return TypeAdapter(type_).validate_python(value)
+        adapter = cast(Any, TypeAdapter)(type_)
+        return cast(_T, adapter.validate_python(value))
 
 elif not TYPE_CHECKING:  # TODO: condition is weird
 

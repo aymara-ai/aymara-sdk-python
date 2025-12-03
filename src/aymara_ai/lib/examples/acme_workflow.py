@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import json
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Any, Literal, TypeVar, Callable, TypedDict, cast
+from typing import TYPE_CHECKING, Any, Type, Literal, Callable, TypedDict, cast
 from collections.abc import Iterable
 
 if TYPE_CHECKING:
@@ -32,14 +32,18 @@ else:  # pragma: no cover - helpful runtime error for notebooks
             "before importing `aymara_ai.examples.acme_workflow`."
         ) from exc
 
-Agent = cast(type[Any], _Agent)
+AgentType = Type[Any]
+RunConfigType = Type[Any]
+ModelSettingsType = Type[Any]
+
+Agent = cast(AgentType, _Agent)
 Runner = cast(Any, _Runner)
-RunConfig = cast(type[Any], _RunConfig)
-ModelSettings = cast(type[Any], _ModelSettings)
+RunConfig = cast(RunConfigType, _RunConfig)
+ModelSettings = cast(ModelSettingsType, _ModelSettings)
 TraceCallable = Callable[[str], Any]
 trace = cast(TraceCallable, _trace)
-FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
-function_tool = cast(Callable[[FunctionT], FunctionT], _function_tool)
+FunctionDecorator = Callable[[Callable[..., Any]], Callable[..., Any]]
+function_tool = cast(FunctionDecorator, _function_tool)
 from openai import AsyncOpenAI
 from pydantic import BaseModel
 from guardrails.runtime import (  # pyright: ignore[reportMissingImports]
@@ -325,8 +329,8 @@ async def run_workflow(
     workflow_trace: Any = None
 
     with trace("AcmeBot") as workflow_trace_ctx:
-        workflow_trace = cast(Any, workflow_trace_ctx)
-        workflow: dict[str, Any] = workflow_input.model_dump()
+        workflow_trace = workflow_trace_ctx
+        workflow: dict[str, Any] = cast(dict[str, Any], workflow_input.model_dump())
         conversation_history: list[ConversationItem] = [
             {
                 "role": "user",
@@ -339,21 +343,25 @@ async def run_workflow(
             }
         ]
         guardrails_inputtext: str = workflow["input_as_text"]
-        guardrails_result: list[Any] | None = await run_guardrails(
-            ctx,
-            guardrails_inputtext,
-            "text/plain",
-            instantiate_guardrails(load_config_bundle(jailbreak_guardrail_config)),
-            suppress_tripwire=True,
-            raise_guardrail_errors=True,
+        guardrails_result = cast(
+            list[Any] | None,
+            await run_guardrails(
+                ctx,
+                guardrails_inputtext,
+                "text/plain",
+                instantiate_guardrails(load_config_bundle(jailbreak_guardrail_config)),
+                suppress_tripwire=True,
+                raise_guardrail_errors=True,
+            ),
         )
         guardrails_hastripwire = guardrails_has_tripwire(guardrails_result)
         guardrails_anonymizedtext = get_guardrail_checked_text(
             guardrails_result, guardrails_inputtext
         )
-        guardrails_output: dict[str, Any] | str = (guardrails_hastripwire and build_guardrail_fail_output(guardrails_result or [])) or (
-            guardrails_anonymizedtext or guardrails_inputtext
-        )
+        if guardrails_hastripwire:
+            guardrails_output: dict[str, Any] | str = build_guardrail_fail_output(guardrails_result or [])
+        else:
+            guardrails_output = guardrails_anonymizedtext or guardrails_inputtext
 
         if guardrails_hastripwire:
             final_payload = {
@@ -493,7 +501,7 @@ async def run_workflow(
 AgentLabel = Literal["classification", "return", "retention", "information"]
 
 
-AGENT_REGISTRY: dict[AgentLabel, Any] = {
+AGENT_REGISTRY: dict[AgentLabel, AgentType] = {
     "classification": classification_agent,
     "return": return_agent,
     "retention": retention_agent,
@@ -501,7 +509,7 @@ AGENT_REGISTRY: dict[AgentLabel, Any] = {
 }
 
 
-def get_agent_by_label(agent_label: AgentLabel) -> Any:
+def get_agent_by_label(agent_label: AgentLabel) -> AgentType:
     """Return a configured Acme workflow agent by its label."""
 
     return AGENT_REGISTRY[agent_label]
@@ -525,7 +533,7 @@ async def run_agent_prompt(
     *,
     agent_label: AgentLabel,
     prompt: str,
-    run_config: RunConfig | None = None,
+    run_config: RunConfigType | None = None,
     evaluation_payload_only: bool = True,
 ) -> dict[str, Any]:
     """Run a single Acme workflow agent and return an evaluation-ready payload."""
@@ -534,7 +542,7 @@ async def run_agent_prompt(
     conversation_history: list[ConversationItem] = build_conversation_history(prompt)
     agent_trace: Any = None
     with trace(f"AcmeBot:{agent_label}") as agent_trace_ctx:
-        agent_trace = cast(Any, agent_trace_ctx)
+        agent_trace = agent_trace_ctx
         result: Any = await Runner.run(
             agent,
             input=conversation_history,
@@ -543,10 +551,11 @@ async def run_agent_prompt(
 
     agent_summary: RunSummary = summarize_run(agent_label, result)
     final_output: Any = agent_summary.get("final_output")
+    final_message: Any | None
     if isinstance(final_output, dict) and "output_text" in final_output:
-        final_message: Any = final_output.get("output_text")
+        final_message = final_output.get("output_text")
     else:
-        final_message = final_output
+        final_message = cast(Any | None, final_output)
 
     evaluation_payload: EvaluationPayload = {
         "final_message": final_message,
