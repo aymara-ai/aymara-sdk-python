@@ -17,7 +17,8 @@ else:  # pragma: no cover - optional dependency
     except ModuleNotFoundError:  # pragma: no cover
         _PydanticUndefined = object()
 
-PydanticUndefined = cast(Any, _PydanticUndefined)
+_PydanticUndefined = cast(Any, _PydanticUndefined)
+PydanticUndefined: Any = _PydanticUndefined
 
 _T = TypeVar("_T")
 _ModelT = TypeVar("_ModelT", bound=pydantic.BaseModel)

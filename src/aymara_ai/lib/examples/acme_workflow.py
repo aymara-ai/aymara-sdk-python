@@ -3,54 +3,51 @@ from __future__ import annotations
 import os
 import json
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Any, Type, Literal, Callable, TypedDict, cast
+from typing import Any, Literal, Callable, Awaitable, TypedDict, cast
 from collections.abc import Iterable
 
-if TYPE_CHECKING:
+AgentImport: Any
+RunnerImport: Any
+RunConfigImport: Any
+ModelSettingsImport: Any
+trace_import: Any
+function_tool_import: Any
+
+try:
     from agents import (  # pyright: ignore[reportMissingTypeStubs]
-        Agent as _Agent,
-        Runner as _Runner,
-        RunConfig as _RunConfig,
-        ModelSettings as _ModelSettings,
-        trace as _trace,
-        function_tool as _function_tool,
+        Agent as AgentImport,
+        Runner as RunnerImport,
+        RunConfig as RunConfigImport,
+        ModelSettings as ModelSettingsImport,
+        trace as trace_import,
+        function_tool as function_tool_import,
     )
-else:  # pragma: no cover - helpful runtime error for notebooks
-    try:
-        from agents import (  # pyright: ignore[reportMissingTypeStubs]
-            Agent as _Agent,
-            Runner as _Runner,
-            RunConfig as _RunConfig,
-            ModelSettings as _ModelSettings,
-            trace as _trace,
-            function_tool as _function_tool,
-        )
-    except ModuleNotFoundError as exc:
-        raise ModuleNotFoundError(
-            "The Acme workflow example depends on the `agents` package. "
-            "Install it in the same environment as your notebook (e.g., `pip install agents`) "
-            "before importing `aymara_ai.examples.acme_workflow`."
-        ) from exc
+except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error for notebooks
+    raise ModuleNotFoundError(
+        "The Acme workflow example depends on the `agents` package. "
+        "Install it in the same environment as your notebook (e.g., `pip install agents`) "
+        "before importing `aymara_ai.examples.acme_workflow`."
+    ) from exc
 
-AgentType = Type[Any]
-RunConfigType = Type[Any]
-ModelSettingsType = Type[Any]
-
-Agent = cast(AgentType, _Agent)
-Runner = cast(Any, _Runner)
-RunConfig = cast(RunConfigType, _RunConfig)
-ModelSettings = cast(ModelSettingsType, _ModelSettings)
+Agent = cast(Any, AgentImport)
+Runner = cast(Any, RunnerImport)
+RunConfig = cast(Any, RunConfigImport)
+ModelSettings = cast(Any, ModelSettingsImport)
 TraceCallable = Callable[[str], Any]
-trace = cast(TraceCallable, _trace)
+trace = cast(TraceCallable, trace_import)
 FunctionDecorator = Callable[[Callable[..., Any]], Callable[..., Any]]
-function_tool = cast(FunctionDecorator, _function_tool)
+function_tool = cast(FunctionDecorator, function_tool_import)
+from guardrails.runtime import (  # pyright: ignore[reportMissingImports]
+    run_guardrails as _run_guardrails,
+    load_config_bundle as _load_config_bundle,
+    instantiate_guardrails as _instantiate_guardrails,
+)
+
+run_guardrails = cast(Callable[..., Awaitable[Any]], _run_guardrails)
+load_config_bundle = cast(Callable[..., Any], _load_config_bundle)
+instantiate_guardrails = cast(Callable[..., Any], _instantiate_guardrails)
 from openai import AsyncOpenAI
 from pydantic import BaseModel
-from guardrails.runtime import (  # pyright: ignore[reportMissingImports]
-    run_guardrails,
-    load_config_bundle,
-    instantiate_guardrails,
-)
 from openai.types.shared.reasoning import Reasoning
 
 
@@ -111,9 +108,12 @@ def guardrails_has_tripwire(results: list[Any] | None) -> bool:
 
 def get_guardrail_checked_text(results: list[Any] | None, fallback_text: str) -> str:
     for r in (results or []):
-        info = getattr(r, "info", None) or {}
-        if isinstance(info, dict) and ("checked_text" in info):
-            return info.get("checked_text") or fallback_text
+        info_raw = getattr(r, "info", None)
+        info: dict[str, Any] = info_raw if isinstance(info_raw, dict) else {}
+        if "checked_text" in info:
+            checked = info.get("checked_text")
+            if isinstance(checked, str) and checked:
+                return checked
     return fallback_text
 
 
@@ -121,7 +121,8 @@ def build_guardrail_fail_output(results: list[Any] | None) -> dict[str, Any]:
     failures: list[dict[str, Any]] = []
     for r in (results or []):
         if getattr(r, "tripwire_triggered", False):
-            info = getattr(r, "info", None) or {}
+            info_raw = getattr(r, "info", None)
+            info: dict[str, Any] = info_raw if isinstance(info_raw, dict) else {}
             failure: dict[str, Any] = {"guardrail_name": info.get("guardrail_name")}
             for key in (
                 "flagged",
@@ -131,7 +132,7 @@ def build_guardrail_fail_output(results: list[Any] | None) -> dict[str, Any]:
                 "hallucinated_statements",
                 "verified_statements",
             ):
-                if key in (info or {}):
+                if key in info:
                     failure[key] = info.get(key)
             failures.append(failure)
     return {"failed": len(failures) > 0, "failures": failures}
@@ -140,7 +141,8 @@ def build_guardrail_fail_output(results: list[Any] | None) -> dict[str, Any]:
 def _to_conversation_items(items: Iterable[Any]) -> list[ConversationItem]:
     converted: list[ConversationItem] = []
     for raw_item in items:
-        converted.append(cast(ConversationItem, cast(Any, raw_item).to_input_item()))
+        item_any = cast(Any, raw_item)
+        converted.append(cast(ConversationItem, item_any.to_input_item()))
     return converted
 
 
@@ -533,7 +535,7 @@ async def run_agent_prompt(
     *,
     agent_label: AgentLabel,
     prompt: str,
-    run_config: RunConfigType | None = None,
+    run_config: Any | None = None,
     evaluation_payload_only: bool = True,
 ) -> dict[str, Any]:
     """Run a single Acme workflow agent and return an evaluation-ready payload."""
@@ -555,7 +557,7 @@ async def run_agent_prompt(
     if isinstance(final_output, dict) and "output_text" in final_output:
         final_message = final_output.get("output_text")
     else:
-        final_message = cast(Any | None, final_output)
+        final_message = final_output
 
     evaluation_payload: EvaluationPayload = {
         "final_message": final_message,
