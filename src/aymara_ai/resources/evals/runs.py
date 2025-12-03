@@ -502,9 +502,9 @@ class RunsResource(SyncAPIResource):
         response_uuid: str,
         *,
         eval_run_uuid: str,
+        confidence: float,
+        explanation: str,
         workspace_uuid: str | Omit = omit,
-        confidence: Optional[float] | Omit = omit,
-        explanation: Optional[str] | Omit = omit,
         is_passed: Optional[bool] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -514,7 +514,7 @@ class RunsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ScoredResponse:
         """
-        Update the score, confidence, or explanation for a specific response.
+        Update the score, confidence, and explanation for this response.
 
         Args: eval_run_uuid (str): UUID of the eval run. response_uuid (str): UUID of
         the response to update. update_request (AnswerUpdateRequest): The update data.
@@ -528,7 +528,7 @@ class RunsResource(SyncAPIResource):
         "is_passed": true, "confidence": 0.95, "explanation": "Updated explanation" }
 
         Args:
-          confidence: Confidence score for the response.
+          confidence: Confidence score between 0 and 1
 
           explanation: Explanation for the response.
 
@@ -1036,9 +1036,9 @@ class AsyncRunsResource(AsyncAPIResource):
         response_uuid: str,
         *,
         eval_run_uuid: str,
+        confidence: float,
+        explanation: str,
         workspace_uuid: str | Omit = omit,
-        confidence: Optional[float] | Omit = omit,
-        explanation: Optional[str] | Omit = omit,
         is_passed: Optional[bool] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1048,7 +1048,7 @@ class AsyncRunsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ScoredResponse:
         """
-        Update the score, confidence, or explanation for a specific response.
+        Update the score, confidence, and explanation for this response.
 
         Args: eval_run_uuid (str): UUID of the eval run. response_uuid (str): UUID of
         the response to update. update_request (AnswerUpdateRequest): The update data.
@@ -1062,7 +1062,7 @@ class AsyncRunsResource(AsyncAPIResource):
         "is_passed": true, "confidence": 0.95, "explanation": "Updated explanation" }
 
         Args:
-          confidence: Confidence score for the response.
+          confidence: Confidence score between 0 and 1
 
           explanation: Explanation for the response.
 
