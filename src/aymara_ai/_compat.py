@@ -10,15 +10,14 @@ from pydantic.fields import FieldInfo
 from ._types import IncEx, StrBytesIntFloat
 
 if TYPE_CHECKING:
-    from pydantic_core import PydanticUndefined as _PydanticUndefined  # pyright: ignore[reportMissingImports]
+    from pydantic_core import PydanticUndefined as _RealPydanticUndefined  # pyright: ignore[reportMissingImports]
 else:  # pragma: no cover - optional dependency
     try:
-        from pydantic_core import PydanticUndefined as _PydanticUndefined  # pyright: ignore[reportMissingImports]
+        from pydantic_core import PydanticUndefined as _RealPydanticUndefined  # pyright: ignore[reportMissingImports]
     except ModuleNotFoundError:  # pragma: no cover
-        _PydanticUndefined = object()
+        _RealPydanticUndefined = object()
 
-_PydanticUndefined = cast(Any, _PydanticUndefined)
-PydanticUndefined: Any = _PydanticUndefined
+PydanticUndefined: Any = cast(Any, _RealPydanticUndefined)
 
 _T = TypeVar("_T")
 _ModelT = TypeVar("_ModelT", bound=pydantic.BaseModel)

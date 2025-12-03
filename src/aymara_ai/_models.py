@@ -21,6 +21,7 @@ from typing_extensions import (
 )
 
 import pydantic
+from pydantic import Extra
 from pydantic.fields import FieldInfo
 
 from ._types import (
@@ -65,16 +66,6 @@ from ._compat import (
 )
 from ._constants import RAW_RESPONSE_HEADER
 
-try:
-    from pydantic_core.core_schema import (  # pyright: ignore[reportMissingImports]
-        ModelField,
-        ModelSchema,
-        LiteralSchema,
-        ModelFieldsSchema,
-    )
-except ModuleNotFoundError:  # pragma: no cover
-    ModelField = ModelSchema = LiteralSchema = ModelFieldsSchema = Any
-
 __all__ = ["BaseModel", "GenericModel"]
 
 _T = TypeVar("_T")
@@ -100,7 +91,7 @@ class BaseModel(pydantic.BaseModel):
             extra: Any = pydantic.Extra.allow  # type: ignore
     else:
         model_config: ClassVar[ConfigDict] = ConfigDict(
-            extra="allow",
+            extra=Extra.allow,
             defer_build=coerce_boolean(os.environ.get("DEFER_PYDANTIC_BUILD", "true")),
         )
 
@@ -684,10 +675,10 @@ def _build_discriminated_union_meta(*, union: type, meta_annotations: tuple[Any,
                 # Note: if one variant defines an alias then they all should
                 discriminator_alias = cast(str | None, field.get("serialization_alias"))
 
-                field_schema = cast(dict[str, Any], field["schema"])
+                field_schema = cast(dict[str, Any], field.get("schema"))
 
-                if field_schema["type"] == "literal":
-                    for entry in cast("LiteralSchema", field_schema)["expected"]:
+                if field_schema and field_schema.get("type") == "literal":
+                    for entry in cast(list[Any], field_schema.get("expected", [])):
                         if isinstance(entry, str):
                             mapping[entry] = variant
 
@@ -713,13 +704,13 @@ def _extract_field_schema_pv2(model: type[BaseModel], field_name: str) -> dict[s
     if schema["type"] != "model":
         return None
 
-    schema = cast("ModelSchema", schema)
-    fields_schema = schema["schema"]
-    if fields_schema["type"] != "model-fields":
+    schema = cast(dict[str, Any], schema)
+    fields_schema = schema.get("schema")
+    if not isinstance(fields_schema, dict) or fields_schema.get("type") != "model-fields":
         return None
 
-    fields_schema = cast("ModelFieldsSchema", fields_schema)
-    field = cast(dict[str, Any] | None, fields_schema["fields"].get(field_name))
+    field_map = cast(dict[str, Any], fields_schema.get("fields", {}))
+    field = cast(dict[str, Any] | None, field_map.get(field_name))
     if not field:
         return None
 

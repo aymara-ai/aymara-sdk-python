@@ -2,26 +2,13 @@ from __future__ import annotations
 
 import os
 import json
+import importlib
 from types import SimpleNamespace
 from typing import Any, Literal, Callable, Awaitable, TypedDict, cast
 from collections.abc import Iterable
 
-AgentImport: Any
-RunnerImport: Any
-RunConfigImport: Any
-ModelSettingsImport: Any
-trace_import: Any
-function_tool_import: Any
-
 try:
-    from agents import (  # pyright: ignore[reportMissingTypeStubs]
-        Agent as AgentImport,
-        Runner as RunnerImport,
-        RunConfig as RunConfigImport,
-        ModelSettings as ModelSettingsImport,
-        trace as trace_import,
-        function_tool as function_tool_import,
-    )
+    agents_module = importlib.import_module("agents")
 except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error for notebooks
     raise ModuleNotFoundError(
         "The Acme workflow example depends on the `agents` package. "
@@ -29,14 +16,14 @@ except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error f
         "before importing `aymara_ai.examples.acme_workflow`."
     ) from exc
 
-Agent = cast(Any, AgentImport)
-Runner = cast(Any, RunnerImport)
-RunConfig = cast(Any, RunConfigImport)
-ModelSettings = cast(Any, ModelSettingsImport)
+Agent = cast(type[Any], agents_module.Agent)
+Runner = cast(Any, agents_module.Runner)
+RunConfig = cast(type[Any], agents_module.RunConfig)
+ModelSettings = cast(type[Any], agents_module.ModelSettings)
 TraceCallable = Callable[[str], Any]
-trace = cast(TraceCallable, trace_import)
+trace = cast(TraceCallable, agents_module.trace)
 FunctionDecorator = Callable[[Callable[..., Any]], Callable[..., Any]]
-function_tool = cast(FunctionDecorator, function_tool_import)
+function_tool = cast(FunctionDecorator, agents_module.function_tool)
 from guardrails.runtime import (  # pyright: ignore[reportMissingImports]
     run_guardrails as _run_guardrails,
     load_config_bundle as _load_config_bundle,
@@ -61,6 +48,7 @@ class ConversationItem(TypedDict):
     content: list[ConversationContentItem]
 
 
+AgentType = type[Any]
 RunSummary = dict[str, Any]
 EvaluationPayload = dict[str, Any]
 
@@ -109,8 +97,8 @@ def guardrails_has_tripwire(results: list[Any] | None) -> bool:
 def get_guardrail_checked_text(results: list[Any] | None, fallback_text: str) -> str:
     for r in (results or []):
         info_raw = getattr(r, "info", None)
-        info: dict[str, Any] = info_raw if isinstance(info_raw, dict) else {}
-        if "checked_text" in info:
+        if isinstance(info_raw, dict):
+            info: dict[str, Any] = info_raw
             checked = info.get("checked_text")
             if isinstance(checked, str) and checked:
                 return checked
@@ -141,8 +129,7 @@ def build_guardrail_fail_output(results: list[Any] | None) -> dict[str, Any]:
 def _to_conversation_items(items: Iterable[Any]) -> list[ConversationItem]:
     converted: list[ConversationItem] = []
     for raw_item in items:
-        item_any = cast(Any, raw_item)
-        converted.append(cast(ConversationItem, item_any.to_input_item()))
+        converted.append(cast(ConversationItem, raw_item.to_input_item()))
     return converted
 
 
@@ -332,7 +319,9 @@ async def run_workflow(
 
     with trace("AcmeBot") as workflow_trace_ctx:
         workflow_trace = workflow_trace_ctx
-        workflow: dict[str, Any] = cast(dict[str, Any], workflow_input.model_dump())
+        workflow: dict[str, Any] = cast(
+            dict[str, Any], workflow_input.model_dump()  # pyright: ignore[reportAttributeAccessIssue]
+        )
         conversation_history: list[ConversationItem] = [
             {
                 "role": "user",
@@ -540,7 +529,7 @@ async def run_agent_prompt(
 ) -> dict[str, Any]:
     """Run a single Acme workflow agent and return an evaluation-ready payload."""
 
-    agent: Any = get_agent_by_label(agent_label)
+    agent: AgentType = get_agent_by_label(agent_label)
     conversation_history: list[ConversationItem] = build_conversation_history(prompt)
     agent_trace: Any = None
     with trace(f"AcmeBot:{agent_label}") as agent_trace_ctx:
@@ -553,7 +542,7 @@ async def run_agent_prompt(
 
     agent_summary: RunSummary = summarize_run(agent_label, result)
     final_output: Any = agent_summary.get("final_output")
-    final_message: Any | None
+    final_message: Any | None = None
     if isinstance(final_output, dict) and "output_text" in final_output:
         final_message = final_output.get("output_text")
     else:
