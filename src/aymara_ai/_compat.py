@@ -9,15 +9,17 @@ from pydantic.fields import FieldInfo
 
 from ._types import IncEx, StrBytesIntFloat
 
+_RealPydanticUndefined: Any
 if TYPE_CHECKING:
     from pydantic_core import PydanticUndefined as _RealPydanticUndefined  # pyright: ignore[reportMissingImports]
+    _RealPydanticUndefined = cast(Any, _RealPydanticUndefined)
 else:  # pragma: no cover - optional dependency
     try:
         from pydantic_core import PydanticUndefined as _RealPydanticUndefined  # pyright: ignore[reportMissingImports]
     except ModuleNotFoundError:  # pragma: no cover
         _RealPydanticUndefined = object()
 
-PydanticUndefined: Any = cast(Any, _RealPydanticUndefined)
+PydanticUndefined: Any = _RealPydanticUndefined
 
 _T = TypeVar("_T")
 _ModelT = TypeVar("_ModelT", bound=pydantic.BaseModel)

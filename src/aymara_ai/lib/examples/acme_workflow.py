@@ -8,7 +8,7 @@ from typing import Any, Literal, Callable, Awaitable, TypedDict, cast
 from collections.abc import Iterable
 
 try:
-    agents_module = importlib.import_module("agents")
+    agents_module: Any = importlib.import_module("agents")
 except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error for notebooks
     raise ModuleNotFoundError(
         "The Acme workflow example depends on the `agents` package. "
@@ -30,9 +30,10 @@ from guardrails.runtime import (  # pyright: ignore[reportMissingImports]
     instantiate_guardrails as _instantiate_guardrails,
 )
 
-run_guardrails = cast(Callable[..., Awaitable[Any]], _run_guardrails)
-load_config_bundle = cast(Callable[..., Any], _load_config_bundle)
-instantiate_guardrails = cast(Callable[..., Any], _instantiate_guardrails)
+GuardrailsRunCallable = Callable[..., Awaitable[Any]]
+run_guardrails: GuardrailsRunCallable = cast(GuardrailsRunCallable, _run_guardrails)
+load_config_bundle: Callable[..., Any] = cast(Callable[..., Any], _load_config_bundle)
+instantiate_guardrails: Callable[..., Any] = cast(Callable[..., Any], _instantiate_guardrails)
 from openai import AsyncOpenAI
 from pydantic import BaseModel
 from openai.types.shared.reasoning import Reasoning
