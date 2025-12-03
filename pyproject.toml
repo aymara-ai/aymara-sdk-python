@@ -177,6 +177,8 @@ exclude = [
     ".venv",
     ".nox",
     ".git",
+    "python3.11",
+    "video_cache",
 ]
 
 reportImplicitOverride = true
@@ -195,7 +197,7 @@ show_error_codes = true
 #
 # We also exclude our `tests` as mypy doesn't always infer
 # types correctly and Pyright will still catch any type errors.
-exclude = ['src/aymara_ai/_files.py', '_dev/.*.py', 'tests/.*']
+exclude = "(src/aymara_ai/_files\\.py|_dev/.*\\.py|tests/.*|python3\\.11/.*)"
 
 strict_equality = true
 implicit_reexport = true

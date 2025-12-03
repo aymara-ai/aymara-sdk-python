@@ -89,9 +89,12 @@ class BaseModel(pydantic.BaseModel):
         class Config(pydantic.BaseConfig):  # pyright: ignore[reportDeprecated]
             extra: Any = pydantic.Extra.allow  # type: ignore
     else:
-        model_config: ClassVar[ConfigDict] = ConfigDict(
-            extra="allow",
-            defer_build=coerce_boolean(os.environ.get("DEFER_PYDANTIC_BUILD", "true")),
+        model_config: ClassVar[ConfigDict] = cast(
+            ConfigDict,
+            {
+                "extra": "allow",
+                "defer_build": coerce_boolean(os.environ.get("DEFER_PYDANTIC_BUILD", "true")),
+            },
         )
 
     def to_dict(
@@ -672,7 +675,7 @@ def _build_discriminated_union_meta(*, union: type, meta_annotations: tuple[Any,
                     continue
 
                 # Note: if one variant defines an alias then they all should
-                discriminator_alias = cast(str | None, field.get("serialization_alias"))
+                discriminator_alias = cast("str | None", field.get("serialization_alias"))
 
                 field_schema = cast(dict[str, Any], field.get("schema") or {})
 
@@ -709,7 +712,7 @@ def _extract_field_schema_pv2(model: type[BaseModel], field_name: str) -> dict[s
         return None
 
     field_map = cast(dict[str, Any], fields_schema.get("fields") or {})
-    field = cast(dict[str, Any] | None, field_map.get(field_name))
+    field = cast("dict[str, Any] | None", field_map.get(field_name))
     if not field:
         return None
 
@@ -749,21 +752,17 @@ if not PYDANTIC_V1:
         def validate_python(self, value: object) -> Any: ...
 
     if TYPE_CHECKING:
-        from pydantic import TypeAdapter  # type: ignore[attr-defined]
 
-        def _validate_non_model_type(*, type_: type[_T], value: object) -> _T:
-            adapter: _TypeAdapterProtocol = TypeAdapter(type_)
-            return cast(_T, adapter.validate_python(value))
+        def _validate_non_model_type(*, type_: type[_T], value: object) -> _T: ...
 
     else:
 
+        @lru_cache(maxsize=None)
         def _cached_type_adapter(type_: type[Any]) -> _TypeAdapterProtocol:
             return cast(_TypeAdapterProtocol, _TypeAdapter(type_))
 
-        _cached_type_adapter = lru_cache(maxsize=None)(_cached_type_adapter)
-
         def _validate_non_model_type(*, type_: type[_T], value: object) -> _T:
-            adapter = _cached_type_adapter(type_)
+            adapter = cast(_TypeAdapterProtocol, _cached_type_adapter(type_))
             return cast(_T, adapter.validate_python(value))
 
 elif not TYPE_CHECKING:  # TODO: condition is weird

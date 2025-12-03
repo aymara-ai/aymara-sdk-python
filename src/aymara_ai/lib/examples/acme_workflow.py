@@ -16,24 +16,28 @@ except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error f
         "before importing `aymara_ai.examples.acme_workflow`."
     ) from exc
 
-Agent = cast(type[Any], agents_module.Agent)
-Runner = cast(Any, agents_module.Runner)
-RunConfig = cast(type[Any], agents_module.RunConfig)
-ModelSettings = cast(type[Any], agents_module.ModelSettings)
+Agent: type[Any] = agents_module.Agent
+Runner = agents_module.Runner
+RunConfig: type[Any] = agents_module.RunConfig
+ModelSettings: type[Any] = agents_module.ModelSettings
 TraceCallable = Callable[[str], Any]
-trace = cast(TraceCallable, agents_module.trace)
+trace: TraceCallable = agents_module.trace
 FunctionDecorator = Callable[[Callable[..., Any]], Callable[..., Any]]
-function_tool = cast(FunctionDecorator, agents_module.function_tool)
-from guardrails.runtime import (  # pyright: ignore[reportMissingImports]
-    run_guardrails as _run_guardrails,
-    load_config_bundle as _load_config_bundle,
-    instantiate_guardrails as _instantiate_guardrails,
-)
+function_tool: FunctionDecorator = agents_module.function_tool
+
+try:
+    guardrails_runtime = importlib.import_module("guardrails.runtime")
+except ModuleNotFoundError as exc:  # pragma: no cover - helpful runtime error for notebooks
+    raise ModuleNotFoundError(
+        "The Acme workflow example depends on the `guardrails-ai` package. "
+        "Install it in the same environment as your notebook (e.g., `pip install guardrails-ai`) "
+        "before importing `aymara_ai.examples.acme_workflow`."
+    ) from exc
 
 GuardrailsRunCallable = Callable[..., Awaitable[Any]]
-run_guardrails: GuardrailsRunCallable = cast(GuardrailsRunCallable, _run_guardrails)
-load_config_bundle: Callable[..., Any] = cast(Callable[..., Any], _load_config_bundle)
-instantiate_guardrails: Callable[..., Any] = cast(Callable[..., Any], _instantiate_guardrails)
+run_guardrails: GuardrailsRunCallable = cast(GuardrailsRunCallable, guardrails_runtime.run_guardrails)
+load_config_bundle: Callable[..., Any] = cast(Callable[..., Any], guardrails_runtime.load_config_bundle)
+instantiate_guardrails: Callable[..., Any] = cast(Callable[..., Any], guardrails_runtime.instantiate_guardrails)
 from openai import AsyncOpenAI
 from pydantic import BaseModel
 from openai.types.shared.reasoning import Reasoning
@@ -98,8 +102,8 @@ def guardrails_has_tripwire(results: list[Any] | None) -> bool:
 def get_guardrail_checked_text(results: list[Any] | None, fallback_text: str) -> str:
     for r in (results or []):
         info_raw = getattr(r, "info", None)
-        if isinstance(info_raw, dict):
-            info: dict[str, Any] = info_raw
+        info = cast(dict[str, Any], info_raw) if isinstance(info_raw, dict) else None
+        if info is not None:
             checked = info.get("checked_text")
             if isinstance(checked, str) and checked:
                 return checked
@@ -111,7 +115,7 @@ def build_guardrail_fail_output(results: list[Any] | None) -> dict[str, Any]:
     for r in (results or []):
         if getattr(r, "tripwire_triggered", False):
             info_raw = getattr(r, "info", None)
-            info: dict[str, Any] = info_raw if isinstance(info_raw, dict) else {}
+            info = cast(dict[str, Any], info_raw) if isinstance(info_raw, dict) else {}
             failure: dict[str, Any] = {"guardrail_name": info.get("guardrail_name")}
             for key in (
                 "flagged",
@@ -233,6 +237,14 @@ class WorkflowInput(BaseModel):
     input_as_text: str
 
 
+def _model_to_payload(model: BaseModel) -> dict[str, Any]:
+    """Return a dict representation that works across Pydantic versions."""
+    model_dump = getattr(model, "model_dump", None)
+    if callable(model_dump):
+        return cast(dict[str, Any], model_dump())
+    return model.dict()
+
+
 def summarize_run(label: str, result: Any) -> RunSummary:
     final_output_obj = result.final_output
     if hasattr(final_output_obj, "model_dump"):
@@ -315,14 +327,12 @@ async def run_workflow(
     workflow_input: WorkflowInput,
 ) -> dict[str, Any]:
     run_summaries: list[RunSummary] = []
-    final_payload: dict[str, Any] | None = None
+    final_payload: dict[str, Any] = {}
     workflow_trace: Any = None
 
     with trace("AcmeBot") as workflow_trace_ctx:
         workflow_trace = workflow_trace_ctx
-        workflow: dict[str, Any] = cast(
-            dict[str, Any], workflow_input.model_dump()  # pyright: ignore[reportAttributeAccessIssue]
-        )
+        workflow = _model_to_payload(workflow_input)
         conversation_history: list[ConversationItem] = [
             {
                 "role": "user",
@@ -336,7 +346,7 @@ async def run_workflow(
         ]
         guardrails_inputtext: str = workflow["input_as_text"]
         guardrails_result = cast(
-            list[Any] | None,
+            "list[Any] | None",
             await run_guardrails(
                 ctx,
                 guardrails_inputtext,
@@ -472,7 +482,6 @@ async def run_workflow(
                     "output_text"
                 ]
 
-    assert final_payload is not None
     evaluation_payload: EvaluationPayload = build_workflow_evaluation_payload(
         final_payload=final_payload,
         run_summaries=run_summaries,
@@ -543,11 +552,16 @@ async def run_agent_prompt(
 
     agent_summary: RunSummary = summarize_run(agent_label, result)
     final_output: Any = agent_summary.get("final_output")
-    final_message: Any | None = None
-    if isinstance(final_output, dict) and "output_text" in final_output:
-        final_message = final_output.get("output_text")
-    else:
+    final_message: str | None = None
+    if isinstance(final_output, dict):
+        final_output_dict = cast(dict[str, Any], final_output)
+        output_text = final_output_dict.get("output_text")
+        if isinstance(output_text, str):
+            final_message = output_text
+    elif isinstance(final_output, str):
         final_message = final_output
+    elif final_output is not None:
+        final_message = str(final_output)
 
     evaluation_payload: EvaluationPayload = {
         "final_message": final_message,
@@ -585,7 +599,7 @@ async def run_workflow_prompt(
 
     workflow_run: dict[str, Any] = await run_workflow(WorkflowInput(input_as_text=prompt))
     if evaluation_payload_only:
-        return workflow_run["evaluation_payload"]
+        return cast(dict[str, Any], workflow_run["evaluation_payload"])
     return workflow_run
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 from typing import TYPE_CHECKING, Any, Union, Generic, TypeVar, Callable, cast, overload
 from datetime import date, datetime
 from typing_extensions import Self, Literal
@@ -9,17 +10,12 @@ from pydantic.fields import FieldInfo
 
 from ._types import IncEx, StrBytesIntFloat
 
-_RealPydanticUndefined: Any
-if TYPE_CHECKING:
-    from pydantic_core import PydanticUndefined as _RealPydanticUndefined  # pyright: ignore[reportMissingImports]
-    _RealPydanticUndefined = cast(Any, _RealPydanticUndefined)
-else:  # pragma: no cover - optional dependency
-    try:
-        from pydantic_core import PydanticUndefined as _RealPydanticUndefined  # pyright: ignore[reportMissingImports]
-    except ModuleNotFoundError:  # pragma: no cover
-        _RealPydanticUndefined = object()
-
-PydanticUndefined: Any = _RealPydanticUndefined
+try:  # pragma: no cover - optional dependency
+    _pydantic_core = importlib.import_module("pydantic_core")
+except ModuleNotFoundError:  # pragma: no cover
+    PydanticUndefined: Any = object()
+else:
+    PydanticUndefined = cast(Any, getattr(_pydantic_core, "PydanticUndefined", object()))
 
 _T = TypeVar("_T")
 _ModelT = TypeVar("_ModelT", bound=pydantic.BaseModel)
@@ -128,7 +124,7 @@ def get_model_config(model: type[pydantic.BaseModel]) -> Any:
 def get_model_fields(model: type[pydantic.BaseModel]) -> dict[str, FieldInfo]:
     if PYDANTIC_V1:
         return model.__fields__  # type: ignore
-    return cast(Any, model).model_fields
+    return cast(dict[str, FieldInfo], cast(Any, model).model_fields)
 
 
 def model_copy(model: _ModelT, *, deep: bool = False) -> _ModelT:
@@ -154,13 +150,16 @@ def model_dump(
 ) -> dict[str, Any]:
     if (not PYDANTIC_V1) or hasattr(model, "model_dump"):
         model_any = cast(Any, model)
-        return model_any.model_dump(
-            mode=mode,
-            exclude=exclude,
-            exclude_unset=exclude_unset,
-            exclude_defaults=exclude_defaults,
-            # warnings are not supported in Pydantic v1
-            warnings=True if PYDANTIC_V1 else warnings,
+        return cast(
+            dict[str, Any],
+            model_any.model_dump(
+                mode=mode,
+                exclude=exclude,
+                exclude_unset=exclude_unset,
+                exclude_defaults=exclude_defaults,
+                # warnings are not supported in Pydantic v1
+                warnings=True if PYDANTIC_V1 else warnings,
+            ),
         )
     return cast(
         "dict[str, Any]",
