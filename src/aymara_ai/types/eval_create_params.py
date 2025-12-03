@@ -70,6 +70,12 @@ class EvalCreateParams(TypedDict, total=False):
     status: Optional[Status]
     """Resource status."""
 
+    task_timeout: Optional[int]
+    """Custom timeout in seconds for task execution warning threshold.
+
+    If not set, defaults to 180 seconds.
+    """
+
     updated_at: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
     """Timestamp when the eval was last updated."""
 
