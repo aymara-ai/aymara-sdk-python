@@ -72,6 +72,12 @@ class Eval(BaseModel):
     status: Optional[Status] = None
     """Resource status."""
 
+    task_timeout: Optional[int] = None
+    """Custom timeout in seconds for task execution warning threshold.
+
+    If not set, defaults to 180 seconds.
+    """
+
     updated_at: Optional[datetime] = None
     """Timestamp when the eval was last updated."""
 
