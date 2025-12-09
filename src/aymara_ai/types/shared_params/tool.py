@@ -9,6 +9,8 @@ __all__ = ["Tool"]
 
 
 class Tool(TypedDict, total=False):
+    """Tools the agent has access to."""
+
     content: Required[Union[str, object, None]]
 
     name: Required[str]

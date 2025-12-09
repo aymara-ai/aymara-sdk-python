@@ -9,6 +9,8 @@ __all__ = ["ToolString"]
 
 
 class ToolString(BaseModel):
+    """Container for string-based tool instructions"""
+
     value: str
 
     type: Optional[Literal["string"]] = None

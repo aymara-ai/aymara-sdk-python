@@ -43,6 +43,8 @@ class ManuallyUpdatedByWorkspace(BaseModel):
 
 
 class ManuallyUpdatedBy(BaseModel):
+    """User who last manually updated this response."""
+
     email: str
 
     feature_flags: ManuallyUpdatedByFeatureFlags
@@ -59,6 +61,8 @@ class ManuallyUpdatedBy(BaseModel):
 
 
 class ScoredResponse(BaseModel):
+    """Schema for returning AI response data."""
+
     prompt_uuid: str
     """Unique identifier for the prompt."""
 
