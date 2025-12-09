@@ -11,6 +11,8 @@ __all__ = ["ToolDict"]
 
 
 class ToolDict(BaseModel):
+    """Container for a tool dictionary"""
+
     value: object
 
     type: Optional[Literal["dict"]] = None

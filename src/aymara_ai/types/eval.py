@@ -20,6 +20,8 @@ GroundTruth: TypeAlias = Union[str, FileReference, None]
 
 
 class Eval(BaseModel):
+    """Schema for configuring an Eval based on a eval_type."""
+
     ai_description: str
     """Description of the AI under evaluation."""
 

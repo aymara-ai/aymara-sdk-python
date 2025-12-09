@@ -13,6 +13,8 @@ __all__ = ["EvalRunResult"]
 
 
 class EvalRunResult(BaseModel):
+    """Schema for returning eval run data."""
+
     created_at: datetime
     """Timestamp when the eval run was created."""
 
