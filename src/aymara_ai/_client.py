@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, Mapping, cast
+from typing import TYPE_CHECKING, Any, Dict, Mapping, cast
 from typing_extensions import Self, Literal, override
 
 import httpx
@@ -20,8 +20,8 @@ from ._types import (
     not_given,
 )
 from ._utils import is_given, get_async_library, maybe_coerce_boolean
+from ._compat import cached_property
 from ._version import __version__
-from .resources import files, health, reports, eval_types
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import AymaraAIError, APIStatusError
 from ._base_client import (
@@ -29,7 +29,14 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
-from .resources.evals import evals
+
+if TYPE_CHECKING:
+    from .resources import evals, files, health, reports, eval_types
+    from .resources.files import FilesResource, AsyncFilesResource
+    from .resources.health import HealthResource, AsyncHealthResource
+    from .resources.reports import ReportsResource, AsyncReportsResource
+    from .resources.eval_types import EvalTypesResource, AsyncEvalTypesResource
+    from .resources.evals.evals import EvalsResource, AsyncEvalsResource
 
 __all__ = [
     "ENVIRONMENTS",
@@ -51,14 +58,6 @@ ENVIRONMENTS: Dict[str, str] = {
 
 
 class AymaraAI(SyncAPIClient):
-    health: health.HealthResource
-    evals: evals.EvalsResource
-    eval_types: eval_types.EvalTypesResource
-    reports: reports.ReportsResource
-    files: files.FilesResource
-    with_raw_response: AymaraAIWithRawResponse
-    with_streaming_response: AymaraAIWithStreamedResponse
-
     # client options
     api_key: str
     bearer_token: str | None
@@ -152,13 +151,43 @@ class AymaraAI(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.health = health.HealthResource(self)
-        self.evals = evals.EvalsResource(self)
-        self.eval_types = eval_types.EvalTypesResource(self)
-        self.reports = reports.ReportsResource(self)
-        self.files = files.FilesResource(self)
-        self.with_raw_response = AymaraAIWithRawResponse(self)
-        self.with_streaming_response = AymaraAIWithStreamedResponse(self)
+    @cached_property
+    def health(self) -> HealthResource:
+        from .resources.health import HealthResource
+
+        return HealthResource(self)
+
+    @cached_property
+    def evals(self) -> EvalsResource:
+        from .resources.evals import EvalsResource
+
+        return EvalsResource(self)
+
+    @cached_property
+    def eval_types(self) -> EvalTypesResource:
+        from .resources.eval_types import EvalTypesResource
+
+        return EvalTypesResource(self)
+
+    @cached_property
+    def reports(self) -> ReportsResource:
+        from .resources.reports import ReportsResource
+
+        return ReportsResource(self)
+
+    @cached_property
+    def files(self) -> FilesResource:
+        from .resources.files import FilesResource
+
+        return FilesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AymaraAIWithRawResponse:
+        return AymaraAIWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AymaraAIWithStreamedResponse:
+        return AymaraAIWithStreamedResponse(self)
 
     @property
     @override
@@ -284,14 +313,6 @@ class AymaraAI(SyncAPIClient):
 
 
 class AsyncAymaraAI(AsyncAPIClient):
-    health: health.AsyncHealthResource
-    evals: evals.AsyncEvalsResource
-    eval_types: eval_types.AsyncEvalTypesResource
-    reports: reports.AsyncReportsResource
-    files: files.AsyncFilesResource
-    with_raw_response: AsyncAymaraAIWithRawResponse
-    with_streaming_response: AsyncAymaraAIWithStreamedResponse
-
     # client options
     api_key: str
     bearer_token: str | None
@@ -385,13 +406,43 @@ class AsyncAymaraAI(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.health = health.AsyncHealthResource(self)
-        self.evals = evals.AsyncEvalsResource(self)
-        self.eval_types = eval_types.AsyncEvalTypesResource(self)
-        self.reports = reports.AsyncReportsResource(self)
-        self.files = files.AsyncFilesResource(self)
-        self.with_raw_response = AsyncAymaraAIWithRawResponse(self)
-        self.with_streaming_response = AsyncAymaraAIWithStreamedResponse(self)
+    @cached_property
+    def health(self) -> AsyncHealthResource:
+        from .resources.health import AsyncHealthResource
+
+        return AsyncHealthResource(self)
+
+    @cached_property
+    def evals(self) -> AsyncEvalsResource:
+        from .resources.evals import AsyncEvalsResource
+
+        return AsyncEvalsResource(self)
+
+    @cached_property
+    def eval_types(self) -> AsyncEvalTypesResource:
+        from .resources.eval_types import AsyncEvalTypesResource
+
+        return AsyncEvalTypesResource(self)
+
+    @cached_property
+    def reports(self) -> AsyncReportsResource:
+        from .resources.reports import AsyncReportsResource
+
+        return AsyncReportsResource(self)
+
+    @cached_property
+    def files(self) -> AsyncFilesResource:
+        from .resources.files import AsyncFilesResource
+
+        return AsyncFilesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncAymaraAIWithRawResponse:
+        return AsyncAymaraAIWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncAymaraAIWithStreamedResponse:
+        return AsyncAymaraAIWithStreamedResponse(self)
 
     @property
     @override
@@ -517,39 +568,151 @@ class AsyncAymaraAI(AsyncAPIClient):
 
 
 class AymaraAIWithRawResponse:
+    _client: AymaraAI
+
     def __init__(self, client: AymaraAI) -> None:
-        self.health = health.HealthResourceWithRawResponse(client.health)
-        self.evals = evals.EvalsResourceWithRawResponse(client.evals)
-        self.eval_types = eval_types.EvalTypesResourceWithRawResponse(client.eval_types)
-        self.reports = reports.ReportsResourceWithRawResponse(client.reports)
-        self.files = files.FilesResourceWithRawResponse(client.files)
+        self._client = client
+
+    @cached_property
+    def health(self) -> health.HealthResourceWithRawResponse:
+        from .resources.health import HealthResourceWithRawResponse
+
+        return HealthResourceWithRawResponse(self._client.health)
+
+    @cached_property
+    def evals(self) -> evals.EvalsResourceWithRawResponse:
+        from .resources.evals import EvalsResourceWithRawResponse
+
+        return EvalsResourceWithRawResponse(self._client.evals)
+
+    @cached_property
+    def eval_types(self) -> eval_types.EvalTypesResourceWithRawResponse:
+        from .resources.eval_types import EvalTypesResourceWithRawResponse
+
+        return EvalTypesResourceWithRawResponse(self._client.eval_types)
+
+    @cached_property
+    def reports(self) -> reports.ReportsResourceWithRawResponse:
+        from .resources.reports import ReportsResourceWithRawResponse
+
+        return ReportsResourceWithRawResponse(self._client.reports)
+
+    @cached_property
+    def files(self) -> files.FilesResourceWithRawResponse:
+        from .resources.files import FilesResourceWithRawResponse
+
+        return FilesResourceWithRawResponse(self._client.files)
 
 
 class AsyncAymaraAIWithRawResponse:
+    _client: AsyncAymaraAI
+
     def __init__(self, client: AsyncAymaraAI) -> None:
-        self.health = health.AsyncHealthResourceWithRawResponse(client.health)
-        self.evals = evals.AsyncEvalsResourceWithRawResponse(client.evals)
-        self.eval_types = eval_types.AsyncEvalTypesResourceWithRawResponse(client.eval_types)
-        self.reports = reports.AsyncReportsResourceWithRawResponse(client.reports)
-        self.files = files.AsyncFilesResourceWithRawResponse(client.files)
+        self._client = client
+
+    @cached_property
+    def health(self) -> health.AsyncHealthResourceWithRawResponse:
+        from .resources.health import AsyncHealthResourceWithRawResponse
+
+        return AsyncHealthResourceWithRawResponse(self._client.health)
+
+    @cached_property
+    def evals(self) -> evals.AsyncEvalsResourceWithRawResponse:
+        from .resources.evals import AsyncEvalsResourceWithRawResponse
+
+        return AsyncEvalsResourceWithRawResponse(self._client.evals)
+
+    @cached_property
+    def eval_types(self) -> eval_types.AsyncEvalTypesResourceWithRawResponse:
+        from .resources.eval_types import AsyncEvalTypesResourceWithRawResponse
+
+        return AsyncEvalTypesResourceWithRawResponse(self._client.eval_types)
+
+    @cached_property
+    def reports(self) -> reports.AsyncReportsResourceWithRawResponse:
+        from .resources.reports import AsyncReportsResourceWithRawResponse
+
+        return AsyncReportsResourceWithRawResponse(self._client.reports)
+
+    @cached_property
+    def files(self) -> files.AsyncFilesResourceWithRawResponse:
+        from .resources.files import AsyncFilesResourceWithRawResponse
+
+        return AsyncFilesResourceWithRawResponse(self._client.files)
 
 
 class AymaraAIWithStreamedResponse:
+    _client: AymaraAI
+
     def __init__(self, client: AymaraAI) -> None:
-        self.health = health.HealthResourceWithStreamingResponse(client.health)
-        self.evals = evals.EvalsResourceWithStreamingResponse(client.evals)
-        self.eval_types = eval_types.EvalTypesResourceWithStreamingResponse(client.eval_types)
-        self.reports = reports.ReportsResourceWithStreamingResponse(client.reports)
-        self.files = files.FilesResourceWithStreamingResponse(client.files)
+        self._client = client
+
+    @cached_property
+    def health(self) -> health.HealthResourceWithStreamingResponse:
+        from .resources.health import HealthResourceWithStreamingResponse
+
+        return HealthResourceWithStreamingResponse(self._client.health)
+
+    @cached_property
+    def evals(self) -> evals.EvalsResourceWithStreamingResponse:
+        from .resources.evals import EvalsResourceWithStreamingResponse
+
+        return EvalsResourceWithStreamingResponse(self._client.evals)
+
+    @cached_property
+    def eval_types(self) -> eval_types.EvalTypesResourceWithStreamingResponse:
+        from .resources.eval_types import EvalTypesResourceWithStreamingResponse
+
+        return EvalTypesResourceWithStreamingResponse(self._client.eval_types)
+
+    @cached_property
+    def reports(self) -> reports.ReportsResourceWithStreamingResponse:
+        from .resources.reports import ReportsResourceWithStreamingResponse
+
+        return ReportsResourceWithStreamingResponse(self._client.reports)
+
+    @cached_property
+    def files(self) -> files.FilesResourceWithStreamingResponse:
+        from .resources.files import FilesResourceWithStreamingResponse
+
+        return FilesResourceWithStreamingResponse(self._client.files)
 
 
 class AsyncAymaraAIWithStreamedResponse:
+    _client: AsyncAymaraAI
+
     def __init__(self, client: AsyncAymaraAI) -> None:
-        self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
-        self.evals = evals.AsyncEvalsResourceWithStreamingResponse(client.evals)
-        self.eval_types = eval_types.AsyncEvalTypesResourceWithStreamingResponse(client.eval_types)
-        self.reports = reports.AsyncReportsResourceWithStreamingResponse(client.reports)
-        self.files = files.AsyncFilesResourceWithStreamingResponse(client.files)
+        self._client = client
+
+    @cached_property
+    def health(self) -> health.AsyncHealthResourceWithStreamingResponse:
+        from .resources.health import AsyncHealthResourceWithStreamingResponse
+
+        return AsyncHealthResourceWithStreamingResponse(self._client.health)
+
+    @cached_property
+    def evals(self) -> evals.AsyncEvalsResourceWithStreamingResponse:
+        from .resources.evals import AsyncEvalsResourceWithStreamingResponse
+
+        return AsyncEvalsResourceWithStreamingResponse(self._client.evals)
+
+    @cached_property
+    def eval_types(self) -> eval_types.AsyncEvalTypesResourceWithStreamingResponse:
+        from .resources.eval_types import AsyncEvalTypesResourceWithStreamingResponse
+
+        return AsyncEvalTypesResourceWithStreamingResponse(self._client.eval_types)
+
+    @cached_property
+    def reports(self) -> reports.AsyncReportsResourceWithStreamingResponse:
+        from .resources.reports import AsyncReportsResourceWithStreamingResponse
+
+        return AsyncReportsResourceWithStreamingResponse(self._client.reports)
+
+    @cached_property
+    def files(self) -> files.AsyncFilesResourceWithStreamingResponse:
+        from .resources.files import AsyncFilesResourceWithStreamingResponse
+
+        return AsyncFilesResourceWithStreamingResponse(self._client.files)
 
 
 Client = AymaraAI
