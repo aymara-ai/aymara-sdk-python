@@ -65,9 +65,6 @@ from ._compat import (
 )
 from ._constants import RAW_RESPONSE_HEADER
 
-if TYPE_CHECKING:
-    from pydantic_core.core_schema import ModelField, ModelSchema, LiteralSchema, ModelFieldsSchema
-
 __all__ = ["BaseModel", "GenericModel"]
 
 _T = TypeVar("_T")
@@ -85,7 +82,6 @@ class BaseModel(pydantic.BaseModel):
     if PYDANTIC_V1:
 
         @property
-        @override
         def model_fields_set(self) -> set[str]:
             # a forwards-compat shim for pydantic v2
             return self.__fields_set__  # type: ignore
@@ -93,8 +89,12 @@ class BaseModel(pydantic.BaseModel):
         class Config(pydantic.BaseConfig):  # pyright: ignore[reportDeprecated]
             extra: Any = pydantic.Extra.allow  # type: ignore
     else:
-        model_config: ClassVar[ConfigDict] = ConfigDict(
-            extra="allow", defer_build=coerce_boolean(os.environ.get("DEFER_PYDANTIC_BUILD", "true"))
+        model_config: ClassVar[ConfigDict] = cast(
+            ConfigDict,
+            {
+                "extra": "allow",
+                "defer_build": coerce_boolean(os.environ.get("DEFER_PYDANTIC_BUILD", "true")),
+            },
         )
 
     def to_dict(
@@ -250,7 +250,6 @@ class BaseModel(pydantic.BaseModel):
         # a specific pydantic version as some users may not know which
         # pydantic version they are currently using
 
-        @override
         def model_dump(
             self,
             *,
@@ -311,8 +310,8 @@ class BaseModel(pydantic.BaseModel):
             if exclude_computed_fields != False:
                 raise ValueError("exclude_computed_fields is only supported in Pydantic v2")
             dumped = super().dict(  # pyright: ignore[reportDeprecated]
-                include=include,
-                exclude=exclude,
+                include=cast(Any, include),
+                exclude=cast(Any, exclude),
                 by_alias=by_alias if by_alias is not None else False,
                 exclude_unset=exclude_unset,
                 exclude_defaults=exclude_defaults,
@@ -321,7 +320,6 @@ class BaseModel(pydantic.BaseModel):
 
             return cast("dict[str, Any]", json_safe(dumped)) if mode == "json" else dumped
 
-        @override
         def model_dump_json(
             self,
             *,
@@ -374,8 +372,8 @@ class BaseModel(pydantic.BaseModel):
                 raise ValueError("exclude_computed_fields is only supported in Pydantic v2")
             return super().json(  # type: ignore[reportDeprecated]
                 indent=indent,
-                include=include,
-                exclude=exclude,
+                include=cast(Any, include),
+                exclude=cast(Any, exclude),
                 by_alias=by_alias if by_alias is not None else False,
                 exclude_unset=exclude_unset,
                 exclude_defaults=exclude_defaults,
@@ -387,10 +385,11 @@ def _construct_field(value: object, field: FieldInfo, key: str) -> object:
     if value is None:
         return field_get_default(field)
 
+    field_any = cast(Any, field)
     if PYDANTIC_V1:
-        type_ = cast(type, field.outer_type_)  # type: ignore
+        type_ = cast(type, field_any.outer_type_)  # type: ignore
     else:
-        type_ = field.annotation  # type: ignore
+        type_ = cast(type | None, field_any.annotation)  # type: ignore
 
     if type_ is None:
         raise RuntimeError(f"Unexpected field type is None for {key}")
@@ -403,7 +402,9 @@ def _get_extra_fields_type(cls: type[pydantic.BaseModel]) -> type | None:
         # TODO
         return None
 
-    schema = cls.__pydantic_core_schema__
+    schema = cast(Any, getattr(cls, "__pydantic_core_schema__", None))
+    if schema is None:
+        return None
     if schema["type"] == "model":
         fields = schema["schema"]
         if fields["type"] == "model-fields":
@@ -674,12 +675,12 @@ def _build_discriminated_union_meta(*, union: type, meta_annotations: tuple[Any,
                     continue
 
                 # Note: if one variant defines an alias then they all should
-                discriminator_alias = field.get("serialization_alias")
+                discriminator_alias = cast("str | None", field.get("serialization_alias"))
 
-                field_schema = field["schema"]
+                field_schema = cast(dict[str, Any], field.get("schema") or {})
 
-                if field_schema["type"] == "literal":
-                    for entry in cast("LiteralSchema", field_schema)["expected"]:
+                if field_schema.get("type") == "literal":
+                    for entry in cast(list[Any], field_schema.get("expected", [])):
                         if isinstance(entry, str):
                             mapping[entry] = variant
 
@@ -695,25 +696,27 @@ def _build_discriminated_union_meta(*, union: type, meta_annotations: tuple[Any,
     return details
 
 
-def _extract_field_schema_pv2(model: type[BaseModel], field_name: str) -> ModelField | None:
-    schema = model.__pydantic_core_schema__
+def _extract_field_schema_pv2(model: type[BaseModel], field_name: str) -> dict[str, Any] | None:
+    schema: Any = getattr(model, "__pydantic_core_schema__", None)
+    if schema is None:
+        return None
     if schema["type"] == "definitions":
         schema = schema["schema"]
 
     if schema["type"] != "model":
         return None
 
-    schema = cast("ModelSchema", schema)
-    fields_schema = schema["schema"]
-    if fields_schema["type"] != "model-fields":
+    schema = cast(dict[str, Any], schema)
+    fields_schema = cast(dict[str, Any], schema.get("schema") or {})
+    if fields_schema.get("type") != "model-fields":
         return None
 
-    fields_schema = cast("ModelFieldsSchema", fields_schema)
-    field = fields_schema["fields"].get(field_name)
+    field_map = cast(dict[str, Any], fields_schema.get("fields") or {})
+    field = cast("dict[str, Any] | None", field_map.get(field_name))
     if not field:
         return None
 
-    return cast("ModelField", field)  # pyright: ignore[reportUnnecessaryCast]
+    return field
 
 
 def validate_type(*, type_: type[_T], value: object) -> _T:
@@ -743,17 +746,24 @@ else:
 
 
 if not PYDANTIC_V1:
-    from pydantic import TypeAdapter as _TypeAdapter
+    from pydantic import TypeAdapter as _TypeAdapter  # type: ignore[attr-defined]
 
-    _CachedTypeAdapter = cast("TypeAdapter[object]", lru_cache(maxsize=None)(_TypeAdapter))
+    class _TypeAdapterProtocol(Protocol):
+        def validate_python(self, value: object) -> Any: ...
 
     if TYPE_CHECKING:
-        from pydantic import TypeAdapter
-    else:
-        TypeAdapter = _CachedTypeAdapter
 
-    def _validate_non_model_type(*, type_: type[_T], value: object) -> _T:
-        return TypeAdapter(type_).validate_python(value)
+        def _validate_non_model_type(*, type_: type[_T], value: object) -> _T: ...
+
+    else:
+
+        @lru_cache(maxsize=None)
+        def _cached_type_adapter(type_: type[Any]) -> _TypeAdapterProtocol:
+            return cast(_TypeAdapterProtocol, _TypeAdapter(type_))
+
+        def _validate_non_model_type(*, type_: type[_T], value: object) -> _T:
+            adapter = cast(_TypeAdapterProtocol, _cached_type_adapter(type_))
+            return cast(_T, adapter.validate_python(value))
 
 elif not TYPE_CHECKING:  # TODO: condition is weird
 
@@ -850,7 +860,8 @@ class FinalRequestOptions(pydantic.BaseModel):
         }
         if PYDANTIC_V1:
             return cast(FinalRequestOptions, super().construct(_fields_set, **kwargs))  # pyright: ignore[reportDeprecated]
-        return super().model_construct(_fields_set, **kwargs)
+        model_base = cast(Any, super())
+        return cast(FinalRequestOptions, model_base.model_construct(_fields_set, **kwargs))
 
     if not TYPE_CHECKING:
         # type checkers incorrectly complain about this assignment
