@@ -11,8 +11,10 @@ from .shared.status import Status
 from .shared.content_type import ContentType
 from .prompt_example_param import PromptExampleParam
 from .shared_params.file_reference import FileReference
+from .shared_params.agent_instructions import AgentInstructions
+from .shared_params.workflow_instructions import WorkflowInstructions
 
-__all__ = ["EvalCreateParams", "GroundTruth"]
+__all__ = ["EvalCreateParams", "AIInstructions", "GroundTruth"]
 
 
 class EvalCreateParams(TypedDict, total=False):
@@ -22,8 +24,12 @@ class EvalCreateParams(TypedDict, total=False):
     eval_type: Required[str]
     """Type of the eval (safety, accuracy, etc.)"""
 
-    ai_instructions: Optional[str]
-    """Instructions the AI should follow."""
+    ai_instructions: Optional[AIInstructions]
+    """Instructions the AI should follow.
+
+    String for normal evals, AgentInstructions for single-agent evals,
+    WorkflowInstructions for multi-agent workflows.
+    """
 
     created_at: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
     """Timestamp when the eval was created."""
@@ -64,11 +70,19 @@ class EvalCreateParams(TypedDict, total=False):
     status: Optional[Status]
     """Resource status."""
 
+    task_timeout: Optional[int]
+    """Custom timeout in seconds for task execution warning threshold.
+
+    If not set, defaults to 180 seconds.
+    """
+
     updated_at: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
     """Timestamp when the eval was last updated."""
 
     workspace_uuid: Optional[str]
     """UUID of the associated workspace, if any."""
 
+
+AIInstructions: TypeAlias = Union[str, AgentInstructions, WorkflowInstructions]
 
 GroundTruth: TypeAlias = Union[str, FileReference]

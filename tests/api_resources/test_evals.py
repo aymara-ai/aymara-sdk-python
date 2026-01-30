@@ -38,7 +38,7 @@ class TestEvals:
         eval = client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            ai_instructions="ai_instructions",
+            ai_instructions="string",
             created_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             created_by="created_by",
             eval_instructions="eval_instructions",
@@ -59,6 +59,7 @@ class TestEvals:
                 }
             ],
             status="created",
+            task_timeout=0,
             updated_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             workspace_uuid="workspace_uuid",
         )
@@ -107,7 +108,7 @@ class TestEvals:
             eval_uuid="eval_uuid",
             workspace_uuid="workspace_uuid",
             ai_description="ai_description",
-            ai_instructions="ai_instructions",
+            ai_instructions="string",
             eval_instructions="eval_instructions",
             ground_truth="string",
             name="name",
@@ -432,7 +433,7 @@ class TestAsyncEvals:
         eval = await async_client.evals.create(
             ai_description="ai_description",
             eval_type="eval_type",
-            ai_instructions="ai_instructions",
+            ai_instructions="string",
             created_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             created_by="created_by",
             eval_instructions="eval_instructions",
@@ -453,6 +454,7 @@ class TestAsyncEvals:
                 }
             ],
             status="created",
+            task_timeout=0,
             updated_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             workspace_uuid="workspace_uuid",
         )
@@ -501,7 +503,7 @@ class TestAsyncEvals:
             eval_uuid="eval_uuid",
             workspace_uuid="workspace_uuid",
             ai_description="ai_description",
-            ai_instructions="ai_instructions",
+            ai_instructions="string",
             eval_instructions="eval_instructions",
             ground_truth="string",
             name="name",

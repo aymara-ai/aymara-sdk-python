@@ -1,6 +1,6 @@
 [project]
 name = "aymara-ai-sdk"
-version = "1.1.1"
+version = "1.2.0"
 description = "The official Python library for the aymara-ai API"
 dynamic = ["readme"]
 license = "Apache-2.0"
@@ -33,6 +33,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Operating System :: OS Independent",
   "Operating System :: POSIX",
   "Operating System :: MacOS",
@@ -164,7 +165,7 @@ filterwarnings = [
 # there are a couple of flags that are still disabled by
 # default in strict mode as they are experimental and niche.
 typeCheckingMode = "strict"
-pythonVersion = "3.8"
+pythonVersion = "3.9"
 
 exclude = [
     "_dev",

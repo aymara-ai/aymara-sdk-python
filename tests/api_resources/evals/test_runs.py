@@ -13,6 +13,7 @@ from aymara_ai.pagination import SyncOffsetPage, AsyncOffsetPage
 from aymara_ai.types.evals import (
     EvalRunResult,
     ScoredResponse,
+    RunGetResponseHistoryResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -236,6 +237,68 @@ class TestRuns:
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
+    def test_method_get_response_history(self, client: AymaraAI) -> None:
+        run = client.evals.runs.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+        )
+        assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_get_response_history_with_all_params(self, client: AymaraAI) -> None:
+        run = client.evals.runs.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            workspace_uuid="workspace_uuid",
+        )
+        assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_raw_response_get_response_history(self, client: AymaraAI) -> None:
+        response = client.evals.runs.with_raw_response.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        run = response.parse()
+        assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_streaming_response_get_response_history(self, client: AymaraAI) -> None:
+        with client.evals.runs.with_streaming_response.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            run = response.parse()
+            assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_path_params_get_response_history(self, client: AymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
+            client.evals.runs.with_raw_response.get_response_history(
+                response_uuid="response_uuid",
+                eval_run_uuid="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `response_uuid` but received ''"):
+            client.evals.runs.with_raw_response.get_response_history(
+                response_uuid="",
+                eval_run_uuid="eval_run_uuid",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
     def test_method_list_responses(self, client: AymaraAI) -> None:
         run = client.evals.runs.list_responses(
             eval_run_uuid="eval_run_uuid",
@@ -358,6 +421,81 @@ class TestRuns:
             assert_matches_type(EvalRunResult, run, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_update_response(self, client: AymaraAI) -> None:
+        run = client.evals.runs.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+        )
+        assert_matches_type(ScoredResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_update_response_with_all_params(self, client: AymaraAI) -> None:
+        run = client.evals.runs.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+            workspace_uuid="workspace_uuid",
+            is_passed=True,
+        )
+        assert_matches_type(ScoredResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_raw_response_update_response(self, client: AymaraAI) -> None:
+        response = client.evals.runs.with_raw_response.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        run = response.parse()
+        assert_matches_type(ScoredResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_streaming_response_update_response(self, client: AymaraAI) -> None:
+        with client.evals.runs.with_streaming_response.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            run = response.parse()
+            assert_matches_type(ScoredResponse, run, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_path_params_update_response(self, client: AymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
+            client.evals.runs.with_raw_response.update_response(
+                response_uuid="response_uuid",
+                eval_run_uuid="",
+                confidence=0,
+                explanation="explanation",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `response_uuid` but received ''"):
+            client.evals.runs.with_raw_response.update_response(
+                response_uuid="",
+                eval_run_uuid="eval_run_uuid",
+                confidence=0,
+                explanation="explanation",
+            )
 
 
 class TestAsyncRuns:
@@ -580,6 +718,68 @@ class TestAsyncRuns:
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
+    async def test_method_get_response_history(self, async_client: AsyncAymaraAI) -> None:
+        run = await async_client.evals.runs.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+        )
+        assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_get_response_history_with_all_params(self, async_client: AsyncAymaraAI) -> None:
+        run = await async_client.evals.runs.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            workspace_uuid="workspace_uuid",
+        )
+        assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_raw_response_get_response_history(self, async_client: AsyncAymaraAI) -> None:
+        response = await async_client.evals.runs.with_raw_response.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        run = await response.parse()
+        assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_streaming_response_get_response_history(self, async_client: AsyncAymaraAI) -> None:
+        async with async_client.evals.runs.with_streaming_response.get_response_history(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            run = await response.parse()
+            assert_matches_type(RunGetResponseHistoryResponse, run, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_path_params_get_response_history(self, async_client: AsyncAymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
+            await async_client.evals.runs.with_raw_response.get_response_history(
+                response_uuid="response_uuid",
+                eval_run_uuid="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `response_uuid` but received ''"):
+            await async_client.evals.runs.with_raw_response.get_response_history(
+                response_uuid="",
+                eval_run_uuid="eval_run_uuid",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
     async def test_method_list_responses(self, async_client: AsyncAymaraAI) -> None:
         run = await async_client.evals.runs.list_responses(
             eval_run_uuid="eval_run_uuid",
@@ -702,3 +902,78 @@ class TestAsyncRuns:
             assert_matches_type(EvalRunResult, run, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_update_response(self, async_client: AsyncAymaraAI) -> None:
+        run = await async_client.evals.runs.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+        )
+        assert_matches_type(ScoredResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_update_response_with_all_params(self, async_client: AsyncAymaraAI) -> None:
+        run = await async_client.evals.runs.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+            workspace_uuid="workspace_uuid",
+            is_passed=True,
+        )
+        assert_matches_type(ScoredResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_raw_response_update_response(self, async_client: AsyncAymaraAI) -> None:
+        response = await async_client.evals.runs.with_raw_response.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        run = await response.parse()
+        assert_matches_type(ScoredResponse, run, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_streaming_response_update_response(self, async_client: AsyncAymaraAI) -> None:
+        async with async_client.evals.runs.with_streaming_response.update_response(
+            response_uuid="response_uuid",
+            eval_run_uuid="eval_run_uuid",
+            confidence=0,
+            explanation="explanation",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            run = await response.parse()
+            assert_matches_type(ScoredResponse, run, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_path_params_update_response(self, async_client: AsyncAymaraAI) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `eval_run_uuid` but received ''"):
+            await async_client.evals.runs.with_raw_response.update_response(
+                response_uuid="response_uuid",
+                eval_run_uuid="",
+                confidence=0,
+                explanation="explanation",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `response_uuid` but received ''"):
+            await async_client.evals.runs.with_raw_response.update_response(
+                response_uuid="",
+                eval_run_uuid="eval_run_uuid",
+                confidence=0,
+                explanation="explanation",
+            )

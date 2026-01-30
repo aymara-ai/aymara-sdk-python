@@ -76,7 +76,7 @@ class EvalsResource(SyncAPIResource):
         *,
         ai_description: str,
         eval_type: str,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_create_params.AIInstructions] | Omit = omit,
         created_at: Union[str, datetime, None] | Omit = omit,
         created_by: Optional[str] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
@@ -90,6 +90,7 @@ class EvalsResource(SyncAPIResource):
         num_prompts: Optional[int] | Omit = omit,
         prompt_examples: Optional[Iterable[PromptExampleParam]] | Omit = omit,
         status: Optional[Status] | Omit = omit,
+        task_timeout: Optional[int] | Omit = omit,
         updated_at: Union[str, datetime, None] | Omit = omit,
         workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -116,7 +117,8 @@ class EvalsResource(SyncAPIResource):
 
           eval_type: Type of the eval (safety, accuracy, etc.)
 
-          ai_instructions: Instructions the AI should follow.
+          ai_instructions: Instructions the AI should follow. String for normal evals, AgentInstructions
+              for single-agent evals, WorkflowInstructions for multi-agent workflows.
 
           created_at: Timestamp when the eval was created.
 
@@ -143,6 +145,9 @@ class EvalsResource(SyncAPIResource):
           prompt_examples: List of example prompts for the eval.
 
           status: Resource status.
+
+          task_timeout: Custom timeout in seconds for task execution warning threshold. If not set,
+              defaults to 180 seconds.
 
           updated_at: Timestamp when the eval was last updated.
 
@@ -176,6 +181,7 @@ class EvalsResource(SyncAPIResource):
                     "num_prompts": num_prompts,
                     "prompt_examples": prompt_examples,
                     "status": status,
+                    "task_timeout": task_timeout,
                     "updated_at": updated_at,
                     "workspace_uuid": workspace_uuid,
                 },
@@ -193,7 +199,7 @@ class EvalsResource(SyncAPIResource):
         *,
         workspace_uuid: str | Omit = omit,
         ai_description: Optional[str] | Omit = omit,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_update_params.AIInstructions] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
         ground_truth: Optional[eval_update_params.GroundTruth] | Omit = omit,
         name: Optional[str] | Omit = omit,
@@ -226,7 +232,9 @@ class EvalsResource(SyncAPIResource):
         Args:
           ai_description: New description of the AI under evaluation.
 
-          ai_instructions: New instructions the AI should follow.
+          ai_instructions: New instructions the AI should follow. String for normal evals,
+              AgentInstructions for single-agent evals, WorkflowInstructions for multi-agent
+              workflows.
 
           eval_instructions: New additional instructions for the eval.
 
@@ -648,7 +656,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         *,
         ai_description: str,
         eval_type: str,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_create_params.AIInstructions] | Omit = omit,
         created_at: Union[str, datetime, None] | Omit = omit,
         created_by: Optional[str] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
@@ -662,6 +670,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         num_prompts: Optional[int] | Omit = omit,
         prompt_examples: Optional[Iterable[PromptExampleParam]] | Omit = omit,
         status: Optional[Status] | Omit = omit,
+        task_timeout: Optional[int] | Omit = omit,
         updated_at: Union[str, datetime, None] | Omit = omit,
         workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -688,7 +697,8 @@ class AsyncEvalsResource(AsyncAPIResource):
 
           eval_type: Type of the eval (safety, accuracy, etc.)
 
-          ai_instructions: Instructions the AI should follow.
+          ai_instructions: Instructions the AI should follow. String for normal evals, AgentInstructions
+              for single-agent evals, WorkflowInstructions for multi-agent workflows.
 
           created_at: Timestamp when the eval was created.
 
@@ -715,6 +725,9 @@ class AsyncEvalsResource(AsyncAPIResource):
           prompt_examples: List of example prompts for the eval.
 
           status: Resource status.
+
+          task_timeout: Custom timeout in seconds for task execution warning threshold. If not set,
+              defaults to 180 seconds.
 
           updated_at: Timestamp when the eval was last updated.
 
@@ -748,6 +761,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     "num_prompts": num_prompts,
                     "prompt_examples": prompt_examples,
                     "status": status,
+                    "task_timeout": task_timeout,
                     "updated_at": updated_at,
                     "workspace_uuid": workspace_uuid,
                 },
@@ -765,7 +779,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         *,
         workspace_uuid: str | Omit = omit,
         ai_description: Optional[str] | Omit = omit,
-        ai_instructions: Optional[str] | Omit = omit,
+        ai_instructions: Optional[eval_update_params.AIInstructions] | Omit = omit,
         eval_instructions: Optional[str] | Omit = omit,
         ground_truth: Optional[eval_update_params.GroundTruth] | Omit = omit,
         name: Optional[str] | Omit = omit,
@@ -798,7 +812,9 @@ class AsyncEvalsResource(AsyncAPIResource):
         Args:
           ai_description: New description of the AI under evaluation.
 
-          ai_instructions: New instructions the AI should follow.
+          ai_instructions: New instructions the AI should follow. String for normal evals,
+              AgentInstructions for single-agent evals, WorkflowInstructions for multi-agent
+              workflows.
 
           eval_instructions: New additional instructions for the eval.
 

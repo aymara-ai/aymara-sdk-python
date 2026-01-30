@@ -1,7 +1,17 @@
 # Shared Types
 
 ```python
-from aymara_ai.types import ContentType, FileReference, Status
+from aymara_ai.types import (
+    AgentInstructions,
+    ContentType,
+    FileReference,
+    Status,
+    Tool,
+    ToolArray,
+    ToolDict,
+    ToolString,
+    WorkflowInstructions,
+)
 ```
 
 # Health
@@ -41,7 +51,15 @@ Methods:
 Types:
 
 ```python
-from aymara_ai.types.evals import EvalRunExample, EvalRunRequest, EvalRunResult, ScoredResponse
+from aymara_ai.types.evals import (
+    AnswerHistory,
+    AnswerUpdateRequest,
+    EvalRunExample,
+    EvalRunRequest,
+    EvalRunResult,
+    ScoredResponse,
+    RunGetResponseHistoryResponse,
+)
 ```
 
 Methods:
@@ -50,8 +68,10 @@ Methods:
 - <code title="get /v2/eval-runs">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list</a>(\*\*<a href="src/aymara_ai/types/evals/run_list_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">SyncOffsetPage[EvalRunResult]</a></code>
 - <code title="delete /v2/eval-runs/{eval_run_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">delete</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_delete_params.py">params</a>) -> None</code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">get</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_get_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
+- <code title="get /v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">get_response_history</a>(response_uuid, \*, eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_get_response_history_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/run_get_response_history_response.py">RunGetResponseHistoryResponse</a></code>
 - <code title="get /v2/eval-runs/{eval_run_uuid}/responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">list_responses</a>(eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_list_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/scored_response.py">SyncOffsetPage[ScoredResponse]</a></code>
 - <code title="post /v2/eval-runs/-/score-responses">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">score_responses</a>(\*\*<a href="src/aymara_ai/types/evals/run_score_responses_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/eval_run_result.py">EvalRunResult</a></code>
+- <code title="patch /v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}">client.evals.runs.<a href="./src/aymara_ai/resources/evals/runs.py">update_response</a>(response_uuid, \*, eval_run_uuid, \*\*<a href="src/aymara_ai/types/evals/run_update_response_params.py">params</a>) -> <a href="./src/aymara_ai/types/evals/scored_response.py">ScoredResponse</a></code>
 
 # EvalTypes
 
