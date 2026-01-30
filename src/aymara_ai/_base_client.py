@@ -225,6 +225,7 @@ class BasePage(GenericModel, Generic[_T]):
 
 class BaseSyncPage(BasePage[_T], Generic[_T]):
     _client: SyncAPIClient = pydantic.PrivateAttr()
+    __pydantic_private__: dict[str, Any]
 
     def _set_private_attributes(
         self,
@@ -313,6 +314,7 @@ class AsyncPaginator(Generic[_T, AsyncPageT]):
 
 class BaseAsyncPage(BasePage[_T], Generic[_T]):
     _client: AsyncAPIClient = pydantic.PrivateAttr()
+    __pydantic_private__: dict[str, Any]
 
     def _set_private_attributes(
         self,
