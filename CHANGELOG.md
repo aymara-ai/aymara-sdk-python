@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 (2026-01-30)
+
+Full Changelog: [v1.2.0...v1.2.1](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.2.0...v1.2.1)
+
 ## 1.2.0 (2025-12-04)
 
 Full Changelog: [v1.1.1...v1.2.0](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.1...v1.2.0)
