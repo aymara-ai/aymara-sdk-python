@@ -428,8 +428,6 @@ class TestRuns:
         run = client.evals.runs.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
-            confidence=0,
-            explanation="explanation",
         )
         assert_matches_type(ScoredResponse, run, path=["response"])
 
@@ -439,9 +437,9 @@ class TestRuns:
         run = client.evals.runs.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
+            workspace_uuid="workspace_uuid",
             confidence=0,
             explanation="explanation",
-            workspace_uuid="workspace_uuid",
             is_passed=True,
         )
         assert_matches_type(ScoredResponse, run, path=["response"])
@@ -452,8 +450,6 @@ class TestRuns:
         response = client.evals.runs.with_raw_response.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
-            confidence=0,
-            explanation="explanation",
         )
 
         assert response.is_closed is True
@@ -467,8 +463,6 @@ class TestRuns:
         with client.evals.runs.with_streaming_response.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
-            confidence=0,
-            explanation="explanation",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -485,16 +479,12 @@ class TestRuns:
             client.evals.runs.with_raw_response.update_response(
                 response_uuid="response_uuid",
                 eval_run_uuid="",
-                confidence=0,
-                explanation="explanation",
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `response_uuid` but received ''"):
             client.evals.runs.with_raw_response.update_response(
                 response_uuid="",
                 eval_run_uuid="eval_run_uuid",
-                confidence=0,
-                explanation="explanation",
             )
 
 
@@ -909,8 +899,6 @@ class TestAsyncRuns:
         run = await async_client.evals.runs.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
-            confidence=0,
-            explanation="explanation",
         )
         assert_matches_type(ScoredResponse, run, path=["response"])
 
@@ -920,9 +908,9 @@ class TestAsyncRuns:
         run = await async_client.evals.runs.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
+            workspace_uuid="workspace_uuid",
             confidence=0,
             explanation="explanation",
-            workspace_uuid="workspace_uuid",
             is_passed=True,
         )
         assert_matches_type(ScoredResponse, run, path=["response"])
@@ -933,8 +921,6 @@ class TestAsyncRuns:
         response = await async_client.evals.runs.with_raw_response.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
-            confidence=0,
-            explanation="explanation",
         )
 
         assert response.is_closed is True
@@ -948,8 +934,6 @@ class TestAsyncRuns:
         async with async_client.evals.runs.with_streaming_response.update_response(
             response_uuid="response_uuid",
             eval_run_uuid="eval_run_uuid",
-            confidence=0,
-            explanation="explanation",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -966,14 +950,10 @@ class TestAsyncRuns:
             await async_client.evals.runs.with_raw_response.update_response(
                 response_uuid="response_uuid",
                 eval_run_uuid="",
-                confidence=0,
-                explanation="explanation",
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `response_uuid` but received ''"):
             await async_client.evals.runs.with_raw_response.update_response(
                 response_uuid="",
                 eval_run_uuid="eval_run_uuid",
-                confidence=0,
-                explanation="explanation",
             )

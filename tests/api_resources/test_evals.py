@@ -59,7 +59,6 @@ class TestEvals:
                 }
             ],
             status="created",
-            task_timeout=0,
             updated_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             workspace_uuid="workspace_uuid",
         )
@@ -454,7 +453,6 @@ class TestAsyncEvals:
                 }
             ],
             status="created",
-            task_timeout=0,
             updated_at=parse_datetime("2019-12-27T18:11:19.117Z"),
             workspace_uuid="workspace_uuid",
         )
