@@ -47,6 +47,7 @@ class ReportsResource(SyncAPIResource):
         *,
         eval_run_uuids: SequenceNotStr[str],
         workspace_uuid: str | Omit = omit,
+        proceed_with_missing_turns: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -60,6 +61,9 @@ class ReportsResource(SyncAPIResource):
         Args:
           eval_run_uuids: List of eval run UUIDs to include in the suite summary.
 
+          proceed_with_missing_turns: If True, proceed with report creation even if some turn score runs are missing
+              for multi-turn evals.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -70,7 +74,13 @@ class ReportsResource(SyncAPIResource):
         """
         return self._post(
             "/v2/eval-reports",
-            body=maybe_transform({"eval_run_uuids": eval_run_uuids}, report_create_params.ReportCreateParams),
+            body=maybe_transform(
+                {
+                    "eval_run_uuids": eval_run_uuids,
+                    "proceed_with_missing_turns": proceed_with_missing_turns,
+                },
+                report_create_params.ReportCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -229,6 +239,7 @@ class AsyncReportsResource(AsyncAPIResource):
         *,
         eval_run_uuids: SequenceNotStr[str],
         workspace_uuid: str | Omit = omit,
+        proceed_with_missing_turns: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -242,6 +253,9 @@ class AsyncReportsResource(AsyncAPIResource):
         Args:
           eval_run_uuids: List of eval run UUIDs to include in the suite summary.
 
+          proceed_with_missing_turns: If True, proceed with report creation even if some turn score runs are missing
+              for multi-turn evals.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -253,7 +267,11 @@ class AsyncReportsResource(AsyncAPIResource):
         return await self._post(
             "/v2/eval-reports",
             body=await async_maybe_transform(
-                {"eval_run_uuids": eval_run_uuids}, report_create_params.ReportCreateParams
+                {
+                    "eval_run_uuids": eval_run_uuids,
+                    "proceed_with_missing_turns": proceed_with_missing_turns,
+                },
+                report_create_params.ReportCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers,
