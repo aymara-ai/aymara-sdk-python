@@ -147,6 +147,7 @@ def model_dump(
     exclude_defaults: bool = False,
     warnings: bool = True,
     mode: Literal["json", "python"] = "python",
+    by_alias: bool = False,
 ) -> dict[str, Any]:
     if (not PYDANTIC_V1) or hasattr(model, "model_dump"):
         model_any = cast(Any, model)
@@ -157,6 +158,7 @@ def model_dump(
                 exclude=exclude,
                 exclude_unset=exclude_unset,
                 exclude_defaults=exclude_defaults,
+                by_alias=by_alias,
                 # warnings are not supported in Pydantic v1
                 warnings=True if PYDANTIC_V1 else warnings,
             ),
@@ -167,6 +169,7 @@ def model_dump(
             exclude=cast(Any, exclude),
             exclude_unset=exclude_unset,
             exclude_defaults=exclude_defaults,
+            by_alias=by_alias,
         ),
     )
 
