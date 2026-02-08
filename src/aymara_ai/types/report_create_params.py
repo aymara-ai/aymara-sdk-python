@@ -14,3 +14,9 @@ class ReportCreateParams(TypedDict, total=False):
     """List of eval run UUIDs to include in the suite summary."""
 
     workspace_uuid: str
+
+    proceed_with_missing_turns: bool
+    """
+    If True, proceed with report creation even if some turn score runs are missing
+    for multi-turn evals.
+    """
