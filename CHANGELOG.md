@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.3.0 (2026-02-09)
+
+Full Changelog: [v1.2.1...v1.3.0](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.2.1...v1.3.0)
+
+### Features
+
+* **api:** api update ([2d32cae](https://github.com/aymara-ai/aymara-sdk-python/commit/2d32cae6bb544bb055eb34f36debbc994d774fb3))
+* **api:** api update ([35c60e5](https://github.com/aymara-ai/aymara-sdk-python/commit/35c60e580328fc794dd60d16dd3a8fc2b376b39d))
+* **client:** add custom JSON encoder for extended type support ([c6f4871](https://github.com/aymara-ai/aymara-sdk-python/commit/c6f487114cafde5c733e0896e85de7fe7a3be841))
+
+
+### Bug Fixes
+
+* **types:** allow pyright to infer TypedDict types within SequenceNotStr ([3c302b2](https://github.com/aymara-ai/aymara-sdk-python/commit/3c302b2a665b0b3afdad9b6a7ef1efd59ee5c03a))
+* use async_to_httpx_files in patch method ([5a0914b](https://github.com/aymara-ai/aymara-sdk-python/commit/5a0914b737b8d86c6ca93e0a1212f5e0be49d557))
+
+
+### Chores
+
+* add missing docstrings ([69dedfa](https://github.com/aymara-ai/aymara-sdk-python/commit/69dedfa3958e39146b28a7277eec90a29c1e22fb))
+* **deps:** mypy 1.18.1 has a regression, pin to 1.17 ([95a29b7](https://github.com/aymara-ai/aymara-sdk-python/commit/95a29b7bd6bb5e476017675ec6132cd503c651b5))
+* **docs:** use environment variables for authentication in code snippets ([1781507](https://github.com/aymara-ai/aymara-sdk-python/commit/1781507d6f5da5943777d86a75ddfa2e5260a99a))
+* **internal:** add `--fix` argument to lint script ([cff7b50](https://github.com/aymara-ai/aymara-sdk-python/commit/cff7b50849ac38e0fe46b0cb29bdb81363f88448))
+* **internal:** add missing files argument to base client ([52bd065](https://github.com/aymara-ai/aymara-sdk-python/commit/52bd065b84fdcfc2b95f05d0efbca9defc96e6e5))
+* **internal:** codegen related update ([0b87735](https://github.com/aymara-ai/aymara-sdk-python/commit/0b87735ae80dd068a502b5f1b76ad2d6a540b2dd))
+* speedup initial import ([5f35540](https://github.com/aymara-ai/aymara-sdk-python/commit/5f355404ac5548d014145b16aa05ac990815f83c))
+* update lockfile ([aeaae87](https://github.com/aymara-ai/aymara-sdk-python/commit/aeaae87e004d4971c0b03a7504bac9a1803b679e))
+
 ## 1.2.0 (2025-12-04)
 
 Full Changelog: [v1.1.1...v1.2.0](https://github.com/aymara-ai/aymara-sdk-python/compare/v1.1.1...v1.2.0)
