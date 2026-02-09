@@ -291,7 +291,7 @@ ml-dtypes==0.2.0
 multidict==6.7.0
     # via aiohttp
     # via yarl
-mypy==1.14.1
+mypy==1.17.0
 mypy-extensions==1.0.0
     # via mypy
 nbclient==0.10.2
