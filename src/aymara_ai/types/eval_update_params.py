@@ -47,6 +47,8 @@ GroundTruth: TypeAlias = Union[str, FileReference]
 
 
 class PromptCreate(TypedDict, total=False):
+    """Schema for creating new prompts."""
+
     content: Required[str]
     """Content of the new prompt."""
 
@@ -55,6 +57,8 @@ class PromptCreate(TypedDict, total=False):
 
 
 class PromptUpdate(TypedDict, total=False):
+    """Schema for updating existing prompts."""
+
     prompt_uuid: Required[str]
     """UUID of the prompt to update or delete."""
 

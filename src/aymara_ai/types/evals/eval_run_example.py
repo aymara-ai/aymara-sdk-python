@@ -9,6 +9,8 @@ __all__ = ["EvalRunExample"]
 
 
 class EvalRunExample(BaseModel):
+    """Schema for examples to include with an eval run."""
+
     prompt: str
     """Prompt text for the example."""
 

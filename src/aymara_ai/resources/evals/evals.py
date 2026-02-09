@@ -90,6 +90,7 @@ class EvalsResource(SyncAPIResource):
         num_prompts: Optional[int] | Omit = omit,
         prompt_examples: Optional[Iterable[PromptExampleParam]] | Omit = omit,
         status: Optional[Status] | Omit = omit,
+        task_timeout: Optional[int] | Omit = omit,
         updated_at: Union[str, datetime, None] | Omit = omit,
         workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -145,6 +146,9 @@ class EvalsResource(SyncAPIResource):
 
           status: Resource status.
 
+          task_timeout: Custom timeout in seconds for task execution warning threshold. If not set,
+              defaults to 180 seconds.
+
           updated_at: Timestamp when the eval was last updated.
 
           workspace_uuid: UUID of the associated workspace, if any.
@@ -177,6 +181,7 @@ class EvalsResource(SyncAPIResource):
                     "num_prompts": num_prompts,
                     "prompt_examples": prompt_examples,
                     "status": status,
+                    "task_timeout": task_timeout,
                     "updated_at": updated_at,
                     "workspace_uuid": workspace_uuid,
                 },
@@ -665,6 +670,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         num_prompts: Optional[int] | Omit = omit,
         prompt_examples: Optional[Iterable[PromptExampleParam]] | Omit = omit,
         status: Optional[Status] | Omit = omit,
+        task_timeout: Optional[int] | Omit = omit,
         updated_at: Union[str, datetime, None] | Omit = omit,
         workspace_uuid: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -720,6 +726,9 @@ class AsyncEvalsResource(AsyncAPIResource):
 
           status: Resource status.
 
+          task_timeout: Custom timeout in seconds for task execution warning threshold. If not set,
+              defaults to 180 seconds.
+
           updated_at: Timestamp when the eval was last updated.
 
           workspace_uuid: UUID of the associated workspace, if any.
@@ -752,6 +761,7 @@ class AsyncEvalsResource(AsyncAPIResource):
                     "num_prompts": num_prompts,
                     "prompt_examples": prompt_examples,
                     "status": status,
+                    "task_timeout": task_timeout,
                     "updated_at": updated_at,
                     "workspace_uuid": workspace_uuid,
                 },

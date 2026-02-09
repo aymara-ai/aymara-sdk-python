@@ -8,6 +8,8 @@ __all__ = ["EvalType"]
 
 
 class EvalType(BaseModel):
+    """Schema for eval eval_types."""
+
     description: str
     """Description of the eval type."""
 

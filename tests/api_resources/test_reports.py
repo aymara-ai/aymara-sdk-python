@@ -34,6 +34,7 @@ class TestReports:
         report = client.reports.create(
             eval_run_uuids=["string"],
             workspace_uuid="workspace_uuid",
+            proceed_with_missing_turns=True,
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 
@@ -223,6 +224,7 @@ class TestAsyncReports:
         report = await async_client.reports.create(
             eval_run_uuids=["string"],
             workspace_uuid="workspace_uuid",
+            proceed_with_missing_turns=True,
         )
         assert_matches_type(EvalSuiteReport, report, path=["response"])
 

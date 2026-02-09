@@ -47,7 +47,7 @@ async-lru==2.0.5
     # via jupyterlab
 async-timeout==5.0.1
     # via aiohttp
-attrs==25.3.0
+attrs==25.4.0
     # via aiohttp
     # via jsonschema
     # via referencing
@@ -101,7 +101,7 @@ defusedxml==0.7.1
 dirty-equals==0.6.0
 distlib==0.3.7
     # via virtualenv
-distro==1.8.0
+distro==1.9.0
     # via aymara-ai-sdk
     # via openai
 eliot==1.17.5
@@ -113,7 +113,7 @@ exceptiongroup==1.2.2
     # via anyio
     # via ipython
     # via pytest
-execnet==2.1.1
+execnet==2.1.2
     # via pytest-xdist
 executing==2.2.0
     # via stack-data
@@ -164,7 +164,9 @@ httpx==0.28.1
     # via respx
 httpx-aiohttp==0.1.9
     # via aymara-ai-sdk
-idna==3.4
+humanize==4.13.0
+    # via nox
+idna==3.11
     # via anyio
     # via httpx
     # via jsonschema
@@ -291,8 +293,8 @@ ml-dtypes==0.2.0
 multidict==6.7.0
     # via aiohttp
     # via yarl
-mypy==1.14.1
-mypy-extensions==1.0.0
+mypy==1.17.0
+mypy-extensions==1.1.0
     # via mypy
 nbclient==0.10.2
     # via nbconvert
@@ -357,7 +359,7 @@ pillow==11.2.1
 platformdirs==3.11.0
     # via jupyter-core
     # via virtualenv
-pluggy==1.5.0
+pluggy==1.6.0
     # via pytest
 prometheus-client==0.21.1
     # via jupyter-server
@@ -508,6 +510,7 @@ tinycss2==1.4.0
 tomli==2.0.2
     # via jupyterlab
     # via mypy
+    # via nox
     # via pytest
 toolz==1.1.0
     # via eliot-tree
@@ -594,7 +597,7 @@ wrapt==1.14.2
     # via tensorflow
 yarl==1.22.0
     # via aiohttp
-zipp==3.17.0
+zipp==3.23.0
     # via importlib-metadata
     # via importlib-resources
 zope-interface==8.0.1

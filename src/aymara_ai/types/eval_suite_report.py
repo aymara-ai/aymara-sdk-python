@@ -31,6 +31,8 @@ class EvalRunReport(BaseModel):
 
 
 class EvalSuiteReport(BaseModel):
+    """Schema for returning eval run suite summary data."""
+
     created_at: datetime
     """Timestamp when the eval suite report was created."""
 

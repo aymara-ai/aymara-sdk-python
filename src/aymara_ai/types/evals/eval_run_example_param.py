@@ -9,6 +9,8 @@ __all__ = ["EvalRunExampleParam"]
 
 
 class EvalRunExampleParam(TypedDict, total=False):
+    """Schema for examples to include with an eval run."""
+
     prompt: Required[str]
     """Prompt text for the example."""
 

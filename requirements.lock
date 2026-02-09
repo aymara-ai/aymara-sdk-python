@@ -45,7 +45,7 @@ async-lru==2.0.5
     # via jupyterlab
 async-timeout==5.0.1
     # via aiohttp
-attrs==25.3.0
+attrs==25.4.0
     # via aiohttp
     # via jsonschema
     # via referencing
@@ -152,7 +152,7 @@ httpx==0.28.1
     # via openai
 httpx-aiohttp==0.1.9
     # via aymara-ai-sdk
-idna==3.4
+idna==3.11
     # via anyio
     # via httpx
     # via jsonschema

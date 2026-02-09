@@ -9,6 +9,8 @@ __all__ = ["FileStatus"]
 
 
 class FileStatus(BaseModel):
+    """Schema for file processing status endpoint."""
+
     created_at: datetime
     """Timestamp when the file was created."""
 

@@ -20,6 +20,8 @@ GroundTruth: TypeAlias = Union[str, FileReference, None]
 
 
 class Eval(BaseModel):
+    """Schema for configuring an Eval based on a eval_type."""
+
     ai_description: str
     """Description of the AI under evaluation."""
 
@@ -71,6 +73,12 @@ class Eval(BaseModel):
 
     status: Optional[Status] = None
     """Resource status."""
+
+    task_timeout: Optional[int] = None
+    """Custom timeout in seconds for task execution warning threshold.
+
+    If not set, defaults to 180 seconds.
+    """
 
     updated_at: Optional[datetime] = None
     """Timestamp when the eval was last updated."""

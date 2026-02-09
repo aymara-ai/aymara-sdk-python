@@ -14,6 +14,8 @@ Content: TypeAlias = Union[str, FileReference]
 
 
 class EvalResponseParam(TypedDict, total=False):
+    """Schema for submitting AI responses to eval prompts."""
+
     prompt_uuid: Required[str]
     """Unique identifier for the prompt."""
 

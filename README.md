@@ -99,6 +99,7 @@ pip install aymara-ai-sdk[aiohttp]
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
+import os
 import asyncio
 from aymara_ai import DefaultAioHttpClient
 from aymara_ai import AsyncAymaraAI
@@ -106,7 +107,7 @@ from aymara_ai import AsyncAymaraAI
 
 async def main() -> None:
     async with AsyncAymaraAI(
-        api_key="My API Key",
+        api_key=os.environ.get("AYMARA_AI_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
         eval_run_result = await client.evals.runs.create(
