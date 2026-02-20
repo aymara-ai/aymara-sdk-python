@@ -24,7 +24,7 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestFiles:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create(self, client: AymaraAI) -> None:
         file = client.files.create(
@@ -32,7 +32,7 @@ class TestFiles:
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: AymaraAI) -> None:
         file = client.files.create(
@@ -47,7 +47,7 @@ class TestFiles:
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.create(
@@ -59,7 +59,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.create(
@@ -73,13 +73,13 @@ class TestFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: AymaraAI) -> None:
         file = client.files.list()
         assert_matches_type(SyncOffsetPage[FileDetail], file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: AymaraAI) -> None:
         file = client.files.list(
@@ -90,7 +90,7 @@ class TestFiles:
         )
         assert_matches_type(SyncOffsetPage[FileDetail], file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.list()
@@ -100,7 +100,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(SyncOffsetPage[FileDetail], file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.list() as response:
@@ -112,7 +112,7 @@ class TestFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_delete(self, client: AymaraAI) -> None:
         file = client.files.delete(
@@ -120,7 +120,7 @@ class TestFiles:
         )
         assert file is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_delete(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.delete(
@@ -132,7 +132,7 @@ class TestFiles:
         file = response.parse()
         assert file is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_delete(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.delete(
@@ -146,7 +146,7 @@ class TestFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_delete(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -154,7 +154,7 @@ class TestFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_get(self, client: AymaraAI) -> None:
         file = client.files.get(
@@ -162,7 +162,7 @@ class TestFiles:
         )
         assert_matches_type(FileDetail, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_get(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.get(
@@ -174,7 +174,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(FileDetail, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_get(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.get(
@@ -188,7 +188,7 @@ class TestFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_get(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -196,7 +196,7 @@ class TestFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_get_frames(self, client: AymaraAI) -> None:
         file = client.files.get_frames(
@@ -204,7 +204,7 @@ class TestFiles:
         )
         assert_matches_type(FileFrames, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_get_frames(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.get_frames(
@@ -216,7 +216,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(FileFrames, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_get_frames(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.get_frames(
@@ -230,7 +230,7 @@ class TestFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_get_frames(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -238,7 +238,7 @@ class TestFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_get_status(self, client: AymaraAI) -> None:
         file = client.files.get_status(
@@ -246,7 +246,7 @@ class TestFiles:
         )
         assert_matches_type(FileStatus, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_get_status(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.get_status(
@@ -258,7 +258,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(FileStatus, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_get_status(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.get_status(
@@ -272,7 +272,7 @@ class TestFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_get_status(self, client: AymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -280,7 +280,7 @@ class TestFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_upload(self, client: AymaraAI) -> None:
         file = client.files.upload(
@@ -288,7 +288,7 @@ class TestFiles:
         )
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_upload_with_all_params(self, client: AymaraAI) -> None:
         file = client.files.upload(
@@ -297,7 +297,7 @@ class TestFiles:
         )
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_upload(self, client: AymaraAI) -> None:
         response = client.files.with_raw_response.upload(
@@ -309,7 +309,7 @@ class TestFiles:
         file = response.parse()
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_upload(self, client: AymaraAI) -> None:
         with client.files.with_streaming_response.upload(
@@ -329,7 +329,7 @@ class TestAsyncFiles:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.create(
@@ -337,7 +337,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.create(
@@ -352,7 +352,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.create(
@@ -364,7 +364,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(FileCreateResponse, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.create(
@@ -378,13 +378,13 @@ class TestAsyncFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.list()
         assert_matches_type(AsyncOffsetPage[FileDetail], file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.list(
@@ -395,7 +395,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(AsyncOffsetPage[FileDetail], file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.list()
@@ -405,7 +405,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(AsyncOffsetPage[FileDetail], file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.list() as response:
@@ -417,7 +417,7 @@ class TestAsyncFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_delete(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.delete(
@@ -425,7 +425,7 @@ class TestAsyncFiles:
         )
         assert file is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.delete(
@@ -437,7 +437,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert file is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.delete(
@@ -451,7 +451,7 @@ class TestAsyncFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_delete(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -459,7 +459,7 @@ class TestAsyncFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_get(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.get(
@@ -467,7 +467,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileDetail, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_get(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.get(
@@ -479,7 +479,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(FileDetail, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_get(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.get(
@@ -493,7 +493,7 @@ class TestAsyncFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_get(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -501,7 +501,7 @@ class TestAsyncFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_get_frames(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.get_frames(
@@ -509,7 +509,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileFrames, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_get_frames(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.get_frames(
@@ -521,7 +521,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(FileFrames, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_get_frames(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.get_frames(
@@ -535,7 +535,7 @@ class TestAsyncFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_get_frames(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -543,7 +543,7 @@ class TestAsyncFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_get_status(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.get_status(
@@ -551,7 +551,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileStatus, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_get_status(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.get_status(
@@ -563,7 +563,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(FileStatus, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_get_status(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.get_status(
@@ -577,7 +577,7 @@ class TestAsyncFiles:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_get_status(self, async_client: AsyncAymaraAI) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `file_uuid` but received ''"):
@@ -585,7 +585,7 @@ class TestAsyncFiles:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_upload(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.upload(
@@ -593,7 +593,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_upload_with_all_params(self, async_client: AsyncAymaraAI) -> None:
         file = await async_client.files.upload(
@@ -602,7 +602,7 @@ class TestAsyncFiles:
         )
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_upload(self, async_client: AsyncAymaraAI) -> None:
         response = await async_client.files.with_raw_response.upload(
@@ -614,7 +614,7 @@ class TestAsyncFiles:
         file = await response.parse()
         assert_matches_type(FileUpload, file, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_upload(self, async_client: AsyncAymaraAI) -> None:
         async with async_client.files.with_streaming_response.upload(
