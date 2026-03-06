@@ -2,18 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union
-from typing_extensions import Literal, Required, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, TypedDict
 
 __all__ = ["ToolDict"]
 
 
-class ToolDictTyped(TypedDict, total=False):
+class ToolDict(TypedDict, total=False, extra_items=object):  # type: ignore[call-arg]
     """Container for a tool dictionary"""
 
     value: Required[object]
 
     type: Literal["dict"]
-
-
-ToolDict: TypeAlias = Union[ToolDictTyped, Dict[str, object]]
