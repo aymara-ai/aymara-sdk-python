@@ -7,7 +7,7 @@ from typing import Iterable, Optional
 import httpx
 
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -239,7 +239,7 @@ class RunsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
-            f"/v2/eval-runs/{eval_run_uuid}",
+            path_template("/v2/eval-runs/{eval_run_uuid}", eval_run_uuid=eval_run_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -287,7 +287,7 @@ class RunsResource(SyncAPIResource):
         if not eval_run_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return self._get(
-            f"/v2/eval-runs/{eval_run_uuid}",
+            path_template("/v2/eval-runs/{eval_run_uuid}", eval_run_uuid=eval_run_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -338,7 +338,11 @@ class RunsResource(SyncAPIResource):
         if not response_uuid:
             raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
         return self._get(
-            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history",
+            path_template(
+                "/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history",
+                eval_run_uuid=eval_run_uuid,
+                response_uuid=response_uuid,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -390,7 +394,7 @@ class RunsResource(SyncAPIResource):
         if not eval_run_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return self._get_api_list(
-            f"/v2/eval-runs/{eval_run_uuid}/responses",
+            path_template("/v2/eval-runs/{eval_run_uuid}/responses", eval_run_uuid=eval_run_uuid),
             page=SyncOffsetPage[ScoredResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -547,7 +551,11 @@ class RunsResource(SyncAPIResource):
         if not response_uuid:
             raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
         return self._patch(
-            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}",
+            path_template(
+                "/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}",
+                eval_run_uuid=eval_run_uuid,
+                response_uuid=response_uuid,
+            ),
             body=maybe_transform(
                 {
                     "confidence": confidence,
@@ -771,7 +779,7 @@ class AsyncRunsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
-            f"/v2/eval-runs/{eval_run_uuid}",
+            path_template("/v2/eval-runs/{eval_run_uuid}", eval_run_uuid=eval_run_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -821,7 +829,7 @@ class AsyncRunsResource(AsyncAPIResource):
         if not eval_run_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return await self._get(
-            f"/v2/eval-runs/{eval_run_uuid}",
+            path_template("/v2/eval-runs/{eval_run_uuid}", eval_run_uuid=eval_run_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -872,7 +880,11 @@ class AsyncRunsResource(AsyncAPIResource):
         if not response_uuid:
             raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
         return await self._get(
-            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history",
+            path_template(
+                "/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}/history",
+                eval_run_uuid=eval_run_uuid,
+                response_uuid=response_uuid,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -924,7 +936,7 @@ class AsyncRunsResource(AsyncAPIResource):
         if not eval_run_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_run_uuid` but received {eval_run_uuid!r}")
         return self._get_api_list(
-            f"/v2/eval-runs/{eval_run_uuid}/responses",
+            path_template("/v2/eval-runs/{eval_run_uuid}/responses", eval_run_uuid=eval_run_uuid),
             page=AsyncOffsetPage[ScoredResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -1081,7 +1093,11 @@ class AsyncRunsResource(AsyncAPIResource):
         if not response_uuid:
             raise ValueError(f"Expected a non-empty value for `response_uuid` but received {response_uuid!r}")
         return await self._patch(
-            f"/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}",
+            path_template(
+                "/v2/eval-runs/{eval_run_uuid}/responses/{response_uuid}",
+                eval_run_uuid=eval_run_uuid,
+                response_uuid=response_uuid,
+            ),
             body=await async_maybe_transform(
                 {
                     "confidence": confidence,

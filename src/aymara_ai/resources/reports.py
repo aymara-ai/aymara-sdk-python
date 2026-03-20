@@ -6,7 +6,7 @@ import httpx
 
 from ..types import report_get_params, report_list_params, report_create_params, report_delete_params
 from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -164,7 +164,7 @@ class ReportsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
-            f"/v2/eval-reports/{report_uuid}",
+            path_template("/v2/eval-reports/{report_uuid}", report_uuid=report_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -202,7 +202,7 @@ class ReportsResource(SyncAPIResource):
         if not report_uuid:
             raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
         return self._get(
-            f"/v2/eval-reports/{report_uuid}",
+            path_template("/v2/eval-reports/{report_uuid}", report_uuid=report_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -358,7 +358,7 @@ class AsyncReportsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
-            f"/v2/eval-reports/{report_uuid}",
+            path_template("/v2/eval-reports/{report_uuid}", report_uuid=report_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -398,7 +398,7 @@ class AsyncReportsResource(AsyncAPIResource):
         if not report_uuid:
             raise ValueError(f"Expected a non-empty value for `report_uuid` but received {report_uuid!r}")
         return await self._get(
-            f"/v2/eval-reports/{report_uuid}",
+            path_template("/v2/eval-reports/{report_uuid}", report_uuid=report_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

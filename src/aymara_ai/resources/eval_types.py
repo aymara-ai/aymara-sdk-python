@@ -6,7 +6,7 @@ import httpx
 
 from ..types import eval_type_list_params, eval_type_find_instructions_params, eval_type_list_instructions_params
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from .._utils import maybe_transform
+from .._utils import path_template, maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -179,7 +179,7 @@ class EvalTypesResource(SyncAPIResource):
         if not eval_type_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
         return self._get(
-            f"/v2/eval-types/{eval_type_uuid}",
+            path_template("/v2/eval-types/{eval_type_uuid}", eval_type_uuid=eval_type_uuid),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -222,7 +222,7 @@ class EvalTypesResource(SyncAPIResource):
         if not eval_type_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
         return self._get_api_list(
-            f"/v2/eval-types/{eval_type_uuid}/instructions",
+            path_template("/v2/eval-types/{eval_type_uuid}/instructions", eval_type_uuid=eval_type_uuid),
             page=SyncOffsetPage[AIInstruction],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -397,7 +397,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         if not eval_type_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
         return await self._get(
-            f"/v2/eval-types/{eval_type_uuid}",
+            path_template("/v2/eval-types/{eval_type_uuid}", eval_type_uuid=eval_type_uuid),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -440,7 +440,7 @@ class AsyncEvalTypesResource(AsyncAPIResource):
         if not eval_type_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_type_uuid` but received {eval_type_uuid!r}")
         return self._get_api_list(
-            f"/v2/eval-types/{eval_type_uuid}/instructions",
+            path_template("/v2/eval-types/{eval_type_uuid}/instructions", eval_type_uuid=eval_type_uuid),
             page=AsyncOffsetPage[AIInstruction],
             options=make_request_options(
                 extra_headers=extra_headers,

@@ -26,7 +26,7 @@ from ...types import (
     eval_list_prompts_params,
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -257,7 +257,7 @@ class EvalsResource(SyncAPIResource):
         if not eval_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         return self._put(
-            f"/v2/evals/{eval_uuid}",
+            path_template("/v2/evals/{eval_uuid}", eval_uuid=eval_uuid),
             body=maybe_transform(
                 {
                     "ai_description": ai_description,
@@ -372,7 +372,7 @@ class EvalsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
-            f"/v2/evals/{eval_uuid}",
+            path_template("/v2/evals/{eval_uuid}", eval_uuid=eval_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -558,7 +558,7 @@ class EvalsResource(SyncAPIResource):
         if not eval_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         return self._get(
-            f"/v2/evals/{eval_uuid}",
+            path_template("/v2/evals/{eval_uuid}", eval_uuid=eval_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -607,7 +607,7 @@ class EvalsResource(SyncAPIResource):
         if not eval_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         return self._get_api_list(
-            f"/v2/evals/{eval_uuid}/prompts",
+            path_template("/v2/evals/{eval_uuid}/prompts", eval_uuid=eval_uuid),
             page=SyncOffsetPage[EvalPrompt],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -837,7 +837,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         if not eval_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         return await self._put(
-            f"/v2/evals/{eval_uuid}",
+            path_template("/v2/evals/{eval_uuid}", eval_uuid=eval_uuid),
             body=await async_maybe_transform(
                 {
                     "ai_description": ai_description,
@@ -954,7 +954,7 @@ class AsyncEvalsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
-            f"/v2/evals/{eval_uuid}",
+            path_template("/v2/evals/{eval_uuid}", eval_uuid=eval_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -1142,7 +1142,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         if not eval_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         return await self._get(
-            f"/v2/evals/{eval_uuid}",
+            path_template("/v2/evals/{eval_uuid}", eval_uuid=eval_uuid),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -1191,7 +1191,7 @@ class AsyncEvalsResource(AsyncAPIResource):
         if not eval_uuid:
             raise ValueError(f"Expected a non-empty value for `eval_uuid` but received {eval_uuid!r}")
         return self._get_api_list(
-            f"/v2/evals/{eval_uuid}/prompts",
+            path_template("/v2/evals/{eval_uuid}/prompts", eval_uuid=eval_uuid),
             page=AsyncOffsetPage[EvalPrompt],
             options=make_request_options(
                 extra_headers=extra_headers,
